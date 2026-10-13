@@ -4,7 +4,7 @@
 Portal donde varias inmobiliarias (cada una con sus agentes) publican propiedades y lotes en venta y alquiler en Tandil (Buenos Aires, Argentina). Los visitantes buscan y contactan. Proyecto personal, sin monetización por ahora.
 
 ## Alcance
-- Ciudad: Tandil. Moneda: USD (campo `currency`, solo se usa USD en v1).
+- Ciudad: Tandil. Monedas: USD y ARS (pesos), campo `currency` por propiedad; sin conversión automática en v1. Los filtros de precio se aplican por moneda.
 - Idiomas: español (por defecto) e inglés.
 - Operaciones: venta, alquiler.
 - Tipos: casa, departamento, PH, lote/terreno, local, oficina, cochera.
@@ -29,13 +29,15 @@ Portal donde varias inmobiliarias (cada una con sus agentes) publican propiedade
 8. Página pública de agencia (logo, propiedades, agentes)
 
 ## Fuera de v1
-Mapa avanzado, pagos, firma de contratos, tours virtuales, app móvil, multi-ciudad, multi-moneda, chat en tiempo real, destacados pagos.
+Mapa avanzado, pagos, firma de contratos, tours virtuales, app móvil, multi-ciudad, conversión automática de moneda, chat en tiempo real, destacados pagos.
 
 ## Decisiones clave
 - Multi-tenant desde el día uno: toda propiedad pertenece a una agencia; aislamiento por agencia.
 - Zonas/barrios como TABLA de datos editable (no hardcodeada). Se cargan desde la Municipalidad de Tandil y las agencias piloto.
 - i18n desde el inicio (es/en); contenido de fichas en el idioma que cargue el agente.
-- Estados de publicación: borrador, activa, reservada, vendida/alquilada, pausada.
+- Estados de publicación: borrador, activa, reservada, vendida/alquilada, pausada. Reservada y vendida/alquilada se muestran en público con un cartel.
+- Botón de WhatsApp en la ficha (enlace wa.me al número público del agente), además del formulario.
+- Agentes: los da de alta el admin de agencia por invitación.
 - Campos obligatorios para evitar fichas pobres (mín. fotos, precio, zona, tipo).
 
 ## Riesgos
@@ -46,4 +48,4 @@ Mapa avanzado, pagos, firma de contratos, tours virtuales, app móvil, multi-ciu
 ## Pendiente de definir
 - Lista oficial de barrios/zonas de Tandil.
 - Agencias piloto.
-- Stack final (lo propone el agente Plan).
+- Referencias de diseño/UI.
