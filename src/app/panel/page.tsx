@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { LogoutButton } from "@/components/logout-button";
 import { getActor } from "@/server/auth/get-actor";
 
 async function RoleLabel() {
@@ -17,7 +18,10 @@ async function RoleLabel() {
 export default function PanelPage() {
   return (
     <main className="mx-auto max-w-2xl p-6">
-      <h1 className="text-2xl font-semibold">Panel</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold">Panel</h1>
+        <LogoutButton />
+      </div>
       <Suspense fallback={<p className="mt-2 text-zinc-400">Cargando…</p>}>
         <RoleLabel />
       </Suspense>
