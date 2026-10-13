@@ -1,5 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { cache } from "react";
+import { connection } from "next/server";
 import type { Actor } from "@/contracts";
 import { createClient } from "@/lib/supabase/server";
 import { db } from "@/server/db/client";
@@ -8,6 +9,7 @@ import { buildActor } from "./actor";
 
 /** Actor de la petición actual. Siempre se deriva de la sesión, nunca de datos del cliente. */
 export const getActor = cache(async (): Promise<Actor> => {
+  await connection(); // depende de la sesión: nunca se prerenderiza
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
   if (!data.user) return { kind: "anonymous" };
