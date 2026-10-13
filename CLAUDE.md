@@ -8,3 +8,4 @@ Ver SPEC.md para el alcance. Decisiones de arquitectura irán en ARCHITECTURE.md
 - Nunca hardcodear zonas/barrios ni secretos; usar tablas y variables de entorno.
 - Tests para cada feature; commits pequeños, uno por feature.
 - Lo mínimo para la v1: no añadir funcionalidades fuera del SPEC.
+@AGENTS.md
