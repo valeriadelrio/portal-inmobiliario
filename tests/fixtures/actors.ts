@@ -1,9 +1,11 @@
 import type { Actor } from "@/contracts";
 
+type Membership = Extract<Actor, { kind: "user" }>["membership"];
+
 export const AGENCY_A = "00000000-0000-0000-0000-00000000000a";
 export const AGENCY_B = "00000000-0000-0000-0000-00000000000b";
 
-const user = (userId: string, membership: any = null, platformAdmin = false): Actor =>
+const user = (userId: string, membership: Membership = null, platformAdmin = false): Actor =>
   ({ kind: "user", userId, platformAdmin, membership });
 
 export const actors = {
