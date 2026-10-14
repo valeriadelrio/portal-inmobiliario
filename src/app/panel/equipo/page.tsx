@@ -18,6 +18,13 @@ async function Equipo() {
     );
   }
   const isAdmin = actor.kind === "user" && actor.membership?.role === "agency_admin";
+  if (!isAdmin) {
+    return (
+      <main className="mx-auto max-w-3xl px-6 py-8">
+        <p className="alert alert-error">La gestión del equipo es solo para administradores de la inmobiliaria.</p>
+      </main>
+    );
+  }
   const invitations = isAdmin ? await listInvitations(actor) : null;
   const me = actor.kind === "user" ? actor.membership?.memberId : undefined;
 

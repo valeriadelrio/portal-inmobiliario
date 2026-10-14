@@ -13,7 +13,7 @@ export async function DashboardShell({ children }: { children: React.ReactNode }
     if (actor.membership) {
       mine.items.push({ href: "/panel/propiedades", label: "Propiedades", icon: "grid" });
       mine.items.push({ href: "/panel/consultas", label: "Consultas", icon: "inbox", badge: await countNewInquiries(actor) });
-      mine.items.push({ href: "/panel/equipo", label: "Equipo", icon: "users" });
+      if (actor.membership.role === "agency_admin") mine.items.push({ href: "/panel/equipo", label: "Equipo", icon: "users" });
     }
     groups.push(mine);
     if (actor.platformAdmin) {
