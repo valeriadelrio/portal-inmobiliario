@@ -1,8 +1,21 @@
 @import "tailwindcss";
 
+/* Paleta única (tema claro). Todo color de texto/fondo sale de estos tokens para que el contraste
+   no dependa del modo oscuro del sistema. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --foreground: #0f172a;
+  --muted: #475569;
+  --border: #cbd5e1;
+  --primary: #1d4ed8;
+  --primary-hover: #1e40af;
+  --on-primary: #ffffff;
+  --danger: #b91c1c;
+  --danger-bg: #fef2f2;
+  --success: #166534;
+  --success-bg: #f0fdf4;
 }
 
 @theme inline {
@@ -12,15 +25,42 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+@layer components {
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem; }
+  .muted { color: var(--muted); }
+  .link { color: var(--primary); text-decoration: underline; text-underline-offset: 2px; }
+  .link:hover { color: var(--primary-hover); }
+
+  .input {
+    width: 100%; background: var(--surface); color: var(--foreground);
+    border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.5rem 0.75rem; font-size: 0.9rem;
+  }
+  .input::placeholder { color: #64748b; }
+  .input:focus-visible, .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.8rem; font-weight: 500; color: var(--muted); }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; cursor: pointer;
+    border-radius: 0.5rem; padding: 0.5rem 1rem; font-size: 0.9rem; font-weight: 500;
+    background: var(--surface); color: var(--foreground); border: 1px solid var(--border);
+    transition: background-color 0.15s, border-color 0.15s;
+  }
+  .btn:hover:not(:disabled) { background: #e2e8f0; color: var(--foreground); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+  .btn-primary:hover:not(:disabled) { background: var(--primary-hover); color: var(--on-primary); border-color: var(--primary-hover); }
+  .btn-danger { color: var(--danger); border-color: #fca5a5; }
+  .btn-danger:hover:not(:disabled) { background: var(--danger-bg); color: var(--danger); }
+
+  .alert { border-radius: 0.5rem; padding: 0.5rem 0.75rem; font-size: 0.875rem; }
+  .alert-ok { background: var(--success-bg); color: var(--success); border: 1px solid #bbf7d0; }
+  .alert-error { background: var(--danger-bg); color: var(--danger); border: 1px solid #fecaca; }
+  .badge { display: inline-block; border-radius: 999px; padding: 0.1rem 0.6rem; font-size: 0.75rem; background: #e2e8f0; color: #334155; }
+  .badge-off { background: #fef3c7; color: #92400e; }
 }

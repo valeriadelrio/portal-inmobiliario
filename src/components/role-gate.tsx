@@ -12,7 +12,7 @@ async function Gate({ require, children }: { require: "user" | "platform_admin";
 /** Contenido dinámico (depende de la sesión): va dentro de Suspense por cacheComponents. */
 export function RoleGate({ require, children }: { require: "user" | "platform_admin"; children: React.ReactNode }) {
   return (
-    <Suspense fallback={<p className="p-6 text-zinc-400">Cargando…</p>}>
+    <Suspense fallback={<p className="muted p-6">Cargando…</p>}>
       <Gate require={require}>{children}</Gate>
     </Suspense>
   );

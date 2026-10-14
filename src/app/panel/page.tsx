@@ -12,17 +12,17 @@ async function RoleLabel() {
         : actor.membership
           ? actor.membership.role === "agency_admin" ? "administrador de agencia" : "agente"
           : "visitante";
-  return <p className="mt-2 text-zinc-600">Tu rol: {role}</p>;
+  return <p className="muted mt-2">Tu rol: <span className="badge">{role}</span></p>;
 }
 
 export default function PanelPage() {
   return (
-    <main className="mx-auto max-w-2xl p-6">
+    <main className="mx-auto max-w-3xl px-6 py-8">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Panel</h1>
         <LogoutButton />
       </div>
-      <Suspense fallback={<p className="mt-2 text-zinc-400">Cargando…</p>}>
+      <Suspense fallback={<p className="muted mt-2">Cargando…</p>}>
         <RoleLabel />
       </Suspense>
     </main>
