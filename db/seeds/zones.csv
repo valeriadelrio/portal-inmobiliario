@@ -1,0 +1,8 @@
+slug,name_es,name_en,parent_slug,sort_order,is_active
+centro,Centro (a confirmar),Downtown,,10,true
+villa-italia,Villa Italia (a confirmar),,,20,true
+la-movediza,La Movediza (a confirmar),,,30,true
+las-acacias,Las Acacias (a confirmar),,,40,true
+universitario,Barrio Universitario (a confirmar),,,50,true
+cerro-leones,Cerro Leones (a confirmar),,,60,true
+rural,Zona rural (a confirmar),Rural area,,90,true
