@@ -1,14 +1,8 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import type { Actor } from "@/contracts";
+import { roleLabel } from "@/lib/role-label";
 import { getActor } from "@/server/auth/get-actor";
-
-function roleLabel(actor: Actor): string {
-  if (actor.kind === "anonymous") return "anónimo";
-  if (actor.platformAdmin) return "administrador de la plataforma";
-  if (actor.membership) return actor.membership.role === "agency_admin" ? "administrador de agencia" : "agente";
-  return "visitante";
-}
 
 type Shortcut = { href: string; title: string; text: string };
 
