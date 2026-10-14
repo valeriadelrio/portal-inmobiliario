@@ -92,3 +92,14 @@ describe("fotos", () => {
     expect(await s.getObject("ag/p2/f3/400.webp")).not.toBeNull();
   });
 });
+
+import { safeNext } from "@/lib/safe-redirect";
+describe("safeNext", () => {
+  it("acepta rutas internas y rechaza redirecciones externas", () => {
+    expect(safeNext("/panel/agencia")).toBe("/panel/agencia");
+    expect(safeNext("/invitacion/abc?x=1")).toBe("/invitacion/abc?x=1");
+    for (const bad of ["//evil.com", "/\\evil.com", "https://evil.com", "javascript:alert(1)", "", null, undefined, "/a\nb"])
+      expect(safeNext(bad as string | null)).toBe("/panel");
+    expect(safeNext("x", "/inicio")).toBe("/inicio");
+  });
+});

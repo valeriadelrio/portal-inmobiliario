@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { safeNext } from "@/lib/safe-redirect";
 import { createClient } from "@/lib/supabase/browser";
 
 export default function LoginPage() {
@@ -27,7 +28,7 @@ export default function LoginPage() {
       if (error) setMessage({ text: error.message, ok: false });
       else {
         const next = new URLSearchParams(location.search).get("next");
-        location.assign(next?.startsWith("/") ? next : "/panel");
+        location.assign(safeNext(next));
       }
     }
     setBusy(false);

@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { safeNext } from "@/lib/safe-redirect";
 import { NextResponse, type NextRequest } from "next/server";
 
 const PROTECTED = ["/panel", "/admin", "/cuenta", "/registro-agencia"];
@@ -33,10 +34,7 @@ export async function proxy(request: NextRequest) {
   }
   if (data.user && path === "/login") {
     const next = request.nextUrl.searchParams.get("next");
-    const url = request.nextUrl.clone();
-    url.pathname = next?.startsWith("/") && !next.startsWith("//") ? next : "/panel";
-    url.search = "";
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(new URL(safeNext(next), request.url));
   }
   return response;
 }
