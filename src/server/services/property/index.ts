@@ -6,6 +6,7 @@ import {
 import { propertySlug } from "@/lib/slug";
 import { can } from "@/server/auth/policies";
 import { withActor } from "@/server/db/with-actor";
+import { getStorage } from "@/server/storage";
 import { agency, property, propertyBuilding, propertyLot, propertyPhoto, zone } from "@/server/db/schema";
 
 // Pieza 2B. agencyId SIEMPRE sale de la membresía del Actor, nunca del cliente.
@@ -208,7 +209,7 @@ export async function deleteProperty(actor: Actor, id: string): Promise<ServiceR
   const m = actor.membership;
   if (!m) return forbidden();
   try {
-    return await withActor(actor, async (tx) => {
+    const result = await withActor(actor, async (tx) => {
       const [cur] = await tx.select({ status: property.status }).from(property)
         .where(and(eq(property.id, id), eq(property.agencyId, m.agencyId)));
       if (!cur) return fail("not_found", "La propiedad no existe");
@@ -218,6 +219,11 @@ export async function deleteProperty(actor: Actor, id: string): Promise<ServiceR
       const rows = await tx.delete(property).where(eq(property.id, id)).returning({ id: property.id });
       return rows.length ? ok(undefined) : fail("forbidden", "No podés eliminar esta propiedad");
     });
+    if (result.ok) {
+      // las filas de fotos se borran en cascada; también se limpian los archivos (si falla, quedan huérfanos pero no molestan)
+      await (await getStorage()).deletePrefix(`properties/${m.agencyId}/${id}`).catch(() => undefined);
+    }
+    return result;
   } catch (e) {
     return mapDbError(e);
   }

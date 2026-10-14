@@ -2,8 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { getActor } from "@/server/auth/get-actor";
+import { listPhotos } from "@/server/services/photo";
 import { getProperty } from "@/server/services/property";
 import { listActiveZones } from "@/server/services/zone";
+import { PhotoManager } from "../photo-manager";
 import { PropertyForm } from "../property-form";
 import { StatusPanel } from "../status-panel";
 
@@ -15,6 +17,7 @@ async function Detail({ params }: { params: Promise<{ id: string }> }) {
   if (!r.ok) notFound();
   const zones = await listActiveZones(actor);
   const p = r.data;
+  const photos = await listPhotos(actor, id);
   return (
     <>
       <div>
@@ -28,7 +31,8 @@ async function Detail({ params }: { params: Promise<{ id: string }> }) {
       </section>
       <section className="card space-y-3">
         <h2 className="font-medium">Fotos</h2>
-        <p className="muted text-sm">La carga de fotos se habilita en la próxima etapa. Para publicar se necesitan al menos 3, con una portada.</p>
+        <p className="muted text-sm">Para publicar se necesitan al menos 3 fotos y una portada. Podés reordenarlas con las flechas.</p>
+        <PhotoManager propertyId={p.id} photos={photos.ok ? photos.data : []} />
       </section>
       <section className="card space-y-3">
         <h2 className="font-medium">Datos de la propiedad</h2>

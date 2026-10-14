@@ -9,17 +9,30 @@ export interface Storage {
 
 let instance: Storage | undefined;
 
+/**
+ * memory (tests) | local (desarrollo, disco) | r2 (producción, pendiente).
+ * Sin STORAGE_DRIVER: desarrollo usa local, tests usan memory y producción exige configurarlo.
+ */
 export async function getStorage(): Promise<Storage> {
   if (instance) return instance;
-  const driver = process.env.STORAGE_DRIVER ?? "memory";
+  const env = process.env.NODE_ENV;
+  const driver = process.env.STORAGE_DRIVER || (env === "development" ? "local" : env === "test" ? "memory" : "");
   if (driver === "memory") {
     const { MemoryStorage } = await import("./memory");
     instance = new MemoryStorage();
+  } else if (driver === "local") {
+    if (env === "production") throw new Error("STORAGE_DRIVER=local no se puede usar en producción");
+    const { LocalStorage } = await import("./local");
+    instance = new LocalStorage();
   } else {
-    throw new Error(`STORAGE_DRIVER "${driver}" no está implementado todavía (pieza 2C)`);
+    throw new Error(`STORAGE_DRIVER "${driver}" no está implementado todavía (R2 llega cuando haya cuenta de Cloudflare)`);
   }
   return instance;
 }
+
+/** ¿Estamos sirviendo y recibiendo fotos desde el disco local? (rutas /media y /api/dev-upload) */
+export const isLocalStorageEnabled = () =>
+  process.env.NODE_ENV !== "production" && (process.env.STORAGE_DRIVER || (process.env.NODE_ENV === "development" ? "local" : "")) === "local";
 
 export function resetStorageForTests() {
   instance = undefined;
