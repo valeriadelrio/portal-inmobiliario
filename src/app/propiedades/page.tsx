@@ -6,6 +6,7 @@ import { PublicCard } from "@/components/public/public-card";
 import { SearchFiltersForm } from "@/components/public/search-filters";
 import { searchQuery } from "@/lib/search-url";
 import { cachedActiveZones, cachedSearch } from "@/server/cache/public";
+import { SearchSkeleton } from "@/components/skeletons";
 
 export const metadata: Metadata = {
   title: "Propiedades y lotes en Tandil",
@@ -52,7 +53,7 @@ export default function PropiedadesPublicPage({ searchParams }: { searchParams: 
   return (
     <main className="mx-auto max-w-6xl space-y-4 px-6 py-8">
       <h1 className="text-2xl font-semibold">Propiedades y lotes en Tandil</h1>
-      <Suspense fallback={<p className="muted">Cargando…</p>}><Results searchParams={searchParams} /></Suspense>
+      <Suspense fallback={<SearchSkeleton />}><Results searchParams={searchParams} /></Suspense>
     </main>
   );
 }

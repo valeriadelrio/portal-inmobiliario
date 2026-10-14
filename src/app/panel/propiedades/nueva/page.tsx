@@ -4,6 +4,7 @@ import { getActor } from "@/server/auth/get-actor";
 import { listMembers } from "@/server/services/agency";
 import { listActiveZones } from "@/server/services/zone";
 import { PropertyForm } from "../property-form";
+import { FormSkeleton } from "@/components/skeletons";
 
 async function NewProperty() {
   const actor = await getActor();
@@ -27,7 +28,7 @@ export default function NuevaPropiedadPage() {
         <h1 className="mt-2 text-2xl font-semibold">Nueva propiedad</h1>
         <p className="muted mt-1 text-sm">Se crea como borrador. Después podrás cargar las fotos y publicarla.</p>
       </div>
-      <Suspense fallback={<p className="muted">Cargando…</p>}><NewProperty /></Suspense>
+      <Suspense fallback={<FormSkeleton fields={8} heading={false} />}><NewProperty /></Suspense>
     </main>
   );
 }

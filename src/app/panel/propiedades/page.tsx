@@ -5,6 +5,7 @@ import { OPERATION_LABEL, statusLabel } from "@/lib/labels";
 import { getActor } from "@/server/auth/get-actor";
 import { listMyProperties } from "@/server/services/property";
 import { PropertyCard } from "./property-card";
+import { CardGridSkeleton } from "@/components/skeletons";
 
 type SP = Promise<{ estado?: string; operacion?: string; pagina?: string }>;
 
@@ -73,7 +74,7 @@ export default function PropiedadesPage({ searchParams }: { searchParams: SP }) 
         <h1 className="text-2xl font-semibold">Propiedades</h1>
         <Link href="/panel/propiedades/nueva" className="btn btn-primary">Nueva propiedad</Link>
       </div>
-      <Suspense fallback={<p className="muted">Cargando…</p>}><Properties searchParams={searchParams} /></Suspense>
+      <Suspense fallback={<CardGridSkeleton />}><Properties searchParams={searchParams} /></Suspense>
     </main>
   );
 }

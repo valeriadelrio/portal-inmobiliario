@@ -4,6 +4,7 @@ import type { Actor } from "@/contracts";
 import { roleLabel } from "@/lib/role-label";
 import { getActor } from "@/server/auth/get-actor";
 import { getMyAgency } from "@/server/services/agency";
+import { DashboardSkeleton } from "@/components/skeletons";
 
 type Shortcut = { href: string; title: string; text: string };
 
@@ -51,7 +52,7 @@ export default function PanelPage() {
   return (
     <main className="mx-auto max-w-3xl px-6 py-8">
       <h1 className="text-2xl font-semibold">Panel</h1>
-      <Suspense fallback={<p className="muted mt-2">Cargando…</p>}>
+      <Suspense fallback={<DashboardSkeleton />}>
         <Dashboard />
       </Suspense>
     </main>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getActor } from "@/server/auth/get-actor";
 import { listAgenciesForAdmin } from "@/server/services/agency";
 import { StatusForm } from "./status-form";
+import { ListSkeleton } from "@/components/skeletons";
 
 const LABEL: Record<string, string> = { pending: "Pendiente", approved: "Aprobada", suspended: "Suspendida", rejected: "Rechazada" };
 const FILTERS = [["", "Todas"], ["pending", "Pendientes"], ["approved", "Aprobadas"], ["suspended", "Suspendidas"], ["rejected", "Rechazadas"]];
@@ -47,7 +48,7 @@ async function Agencias({ searchParams }: { searchParams: Promise<{ estado?: str
 
 export default function AgenciasAdminPage({ searchParams }: { searchParams: Promise<{ estado?: string }> }) {
   return (
-    <Suspense fallback={<p className="muted mx-auto max-w-3xl px-6 py-8">Cargando…</p>}>
+    <Suspense fallback={<div className="mx-auto max-w-5xl px-6 py-8"><ListSkeleton /></div>}>
       <Agencias searchParams={searchParams} />
     </Suspense>
   );

@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { getActor } from "@/server/auth/get-actor";
 import { previewInvitation } from "@/server/services/agency";
 import { AcceptForm } from "./accept-form";
+import { FormSkeleton } from "@/components/skeletons";
 
 const ROLE = { agent: "agente", agency_admin: "administrador" } as Record<string, string>;
 
@@ -36,7 +37,7 @@ async function Invitation({ params }: { params: Promise<{ token: string }> }) {
 export default function InvitacionPage({ params }: { params: Promise<{ token: string }> }) {
   return (
     <main className="mx-auto max-w-lg px-6 py-12">
-      <Suspense fallback={<p className="muted">Cargando…</p>}><Invitation params={params} /></Suspense>
+      <Suspense fallback={<FormSkeleton fields={1} heading={false} />}><Invitation params={params} /></Suspense>
     </main>
   );
 }

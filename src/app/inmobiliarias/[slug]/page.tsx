@@ -7,6 +7,7 @@ import { PublicCard } from "@/components/public/public-card";
 import { searchQuery } from "@/lib/search-url";
 import { whatsappUrl } from "@/lib/whatsapp";
 import { cachedPublicAgency, cachedSearch } from "@/server/cache/public";
+import { AgencySkeleton } from "@/components/skeletons";
 
 type Params = Promise<{ slug: string }>;
 type SP = Promise<{ page?: string }>;
@@ -86,7 +87,7 @@ async function Agency({ params, searchParams }: { params: Params; searchParams: 
 export default function InmobiliariaPage({ params, searchParams }: { params: Params; searchParams: SP }) {
   return (
     <main className="mx-auto max-w-6xl px-6 py-8">
-      <Suspense fallback={<p className="muted">Cargando…</p>}><Agency params={params} searchParams={searchParams} /></Suspense>
+      <Suspense fallback={<AgencySkeleton />}><Agency params={params} searchParams={searchParams} /></Suspense>
     </main>
   );
 }

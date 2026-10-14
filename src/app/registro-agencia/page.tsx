@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { getActor } from "@/server/auth/get-actor";
 import { getMyAgency } from "@/server/services/agency";
 import { RegisterForm } from "./register-form";
+import { FormSkeleton } from "@/components/skeletons";
 
 async function Content() {
   const mine = await getMyAgency(await getActor());
@@ -25,7 +26,7 @@ export default function RegistroAgenciaPage() {
           La solicitud queda pendiente hasta que la administración del portal la apruebe. Mientras tanto vas a poder ver su estado.
         </p>
       </div>
-      <Suspense fallback={<p className="muted">Cargando…</p>}><Content /></Suspense>
+      <Suspense fallback={<FormSkeleton fields={5} heading={false} />}><Content /></Suspense>
     </main>
   );
 }

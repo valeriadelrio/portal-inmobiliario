@@ -8,6 +8,7 @@ import { listActiveZones } from "@/server/services/zone";
 import { PhotoManager } from "../photo-manager";
 import { PropertyForm } from "../property-form";
 import { StatusPanel } from "../status-panel";
+import { PropertyDetailSkeleton } from "@/components/skeletons";
 
 async function Detail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -45,7 +46,7 @@ async function Detail({ params }: { params: Promise<{ id: string }> }) {
 export default function PropiedadPage({ params }: { params: Promise<{ id: string }> }) {
   return (
     <main className="mx-auto max-w-4xl space-y-4 px-6 py-8">
-      <Suspense fallback={<p className="muted">Cargando…</p>}><Detail params={params} /></Suspense>
+      <Suspense fallback={<PropertyDetailSkeleton />}><Detail params={params} /></Suspense>
     </main>
   );
 }

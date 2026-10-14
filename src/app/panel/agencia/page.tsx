@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getActor } from "@/server/auth/get-actor";
 import { getMyAgency, getMyAgencyDetail } from "@/server/services/agency";
 import { AgencyForm, ProfileForm } from "./forms";
+import { FormSkeleton } from "@/components/skeletons";
 
 const STATUS: Record<string, { label: string; text: string; tone: string }> = {
   pending: { label: "Pendiente de aprobación", tone: "alert-error", text: "La administración del portal está revisando tu solicitud. Todavía no podés publicar." },
@@ -71,7 +72,7 @@ async function MiAgencia() {
 
 export default function MiAgenciaPage() {
   return (
-    <Suspense fallback={<p className="muted mx-auto max-w-3xl px-6 py-8">Cargando…</p>}>
+    <Suspense fallback={<div className="mx-auto max-w-3xl px-6 py-8"><FormSkeleton fields={6} /></div>}>
       <MiAgencia />
     </Suspense>
   );

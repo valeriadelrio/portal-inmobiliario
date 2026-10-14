@@ -1,3 +1,5 @@
+import { DashboardSkeleton } from "@/components/skeletons";
+
 export default function Loading() {
-  return <p className="muted mx-auto max-w-3xl px-6 py-8">Cargando…</p>;
+  return <div className="mx-auto max-w-3xl px-6 py-8"><DashboardSkeleton /></div>;
 }

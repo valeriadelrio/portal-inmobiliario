@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { getActor } from "@/server/auth/get-actor";
 import { listInvitations, listMembers } from "@/server/services/agency";
 import { InviteForm, RemoveMember, RevokeButton, RoleSelect } from "./forms";
+import { ListSkeleton } from "@/components/skeletons";
 
 const ROLE = { agent: "Agente", agency_admin: "Administrador" } as Record<string, string>;
 const INV_STATUS = { pending: "Pendiente", accepted: "Aceptada", revoked: "Revocada" } as Record<string, string>;
@@ -77,7 +78,7 @@ async function Equipo() {
 
 export default function EquipoPage() {
   return (
-    <Suspense fallback={<p className="muted mx-auto max-w-3xl px-6 py-8">Cargando…</p>}>
+    <Suspense fallback={<div className="mx-auto max-w-4xl px-6 py-8"><ListSkeleton /></div>}>
       <Equipo />
     </Suspense>
   );

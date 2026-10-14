@@ -4,6 +4,7 @@ import { searchFilters } from "@/contracts";
 import { PublicCard } from "@/components/public/public-card";
 import { OPERATION_LABEL } from "@/lib/labels";
 import { cachedActiveZones, cachedSearch } from "@/server/cache/public";
+import { Bone, CardGridSkeleton } from "@/components/skeletons";
 
 async function Latest() {
   const r = await cachedSearch(searchFilters.parse({}));
@@ -55,11 +56,11 @@ export default function Home() {
       <section className="space-y-4">
         <h1 className="text-3xl font-semibold sm:text-4xl">Encontrá tu próxima casa o lote en Tandil</h1>
         <p className="muted text-lg">Propiedades de varias inmobiliarias en un solo lugar, en dólares y en pesos.</p>
-        <Suspense fallback={<div className="card muted">Cargando buscador…</div>}><QuickSearch /></Suspense>
+        <Suspense fallback={<Bone className="h-28 w-full" />}><QuickSearch /></Suspense>
       </section>
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">Publicaciones recientes</h2>
-        <Suspense fallback={<p className="muted">Cargando…</p>}><Latest /></Suspense>
+        <Suspense fallback={<CardGridSkeleton count={3} />}><Latest /></Suspense>
       </section>
     </main>
   );

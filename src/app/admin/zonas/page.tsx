@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getActor } from "@/server/auth/get-actor";
 import { listAllZones } from "@/server/services/zone";
 import { DeleteZone, ImportForm, ZoneForm } from "./zone-forms";
+import { ListSkeleton } from "@/components/skeletons";
 
 async function Zonas() {
   const result = await listAllZones(await getActor());
@@ -58,7 +59,7 @@ async function Zonas() {
 
 export default function ZonasPage() {
   return (
-    <Suspense fallback={<p className="muted mx-auto max-w-3xl px-6 py-8">Cargando…</p>}>
+    <Suspense fallback={<div className="mx-auto max-w-5xl px-6 py-8"><ListSkeleton rows={5} /></div>}>
       <Zonas />
     </Suspense>
   );

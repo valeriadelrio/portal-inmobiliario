@@ -10,6 +10,7 @@ import { propertyFacts } from "@/lib/property-facts";
 import { siteUrl } from "@/lib/site";
 import { whatsappUrl } from "@/lib/whatsapp";
 import { cachedPublicProperty } from "@/server/cache/public";
+import { FichaSkeleton } from "@/components/skeletons";
 
 type Params = Promise<{ slug: string }>;
 
@@ -125,7 +126,7 @@ async function Ficha({ params }: { params: Params }) {
 export default function FichaPage({ params }: { params: Params }) {
   return (
     <main className="mx-auto max-w-6xl px-6 py-6">
-      <Suspense fallback={<p className="muted">Cargando…</p>}><Ficha params={params} /></Suspense>
+      <Suspense fallback={<FichaSkeleton />}><Ficha params={params} /></Suspense>
     </main>
   );
 }

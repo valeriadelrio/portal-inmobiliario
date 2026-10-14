@@ -8,6 +8,7 @@ import { BLOCKER_LABEL, formatPrice, OPERATION_LABEL, TYPE_LABEL } from "@/lib/l
 import { photoSrcSet, photoUrl } from "@/lib/photo-url";
 import { propertyFacts } from "@/lib/property-facts";
 import { quickViewAction, type QuickView as Data } from "./quick-view-action";
+import { Bone, Loading } from "@/components/skeletons";
 
 /** Botón + ventana modal (<dialog> nativo: foco, Esc y lectores de pantalla ya resueltos) con la ficha resumida. */
 export function QuickView({ propertyId, className = "", preloaded = null }: { propertyId: string; className?: string; preloaded?: Data | null }) {
@@ -62,7 +63,7 @@ export function QuickView({ propertyId, className = "", preloaded = null }: { pr
         </div>
 
         <div className="max-h-[78vh] overflow-y-auto p-5">
-          {loading && !data && <p className="muted py-10 text-center">Cargando…</p>}
+          {loading && !data && <QuickViewSkeleton />}
           {error && <p role="alert" className="alert alert-error">{error}</p>}
           {p && (
             <div className="grid gap-6 md:grid-cols-2">
@@ -128,5 +129,16 @@ export function QuickView({ propertyId, className = "", preloaded = null }: { pr
         </div>
       </dialog>
     </>
+  );
+}
+
+function QuickViewSkeleton() {
+  return (
+    <Loading>
+      <div className="grid gap-6 md:grid-cols-2" aria-hidden>
+        <div className="space-y-2"><Bone className="aspect-[4/3] w-full rounded-lg" /><div className="flex gap-2"><Bone className="h-14 w-20" /><Bone className="h-14 w-20" /><Bone className="h-14 w-20" /></div></div>
+        <div className="space-y-3"><Bone className="h-5 w-1/2" /><Bone className="h-7 w-4/5" /><Bone className="h-8 w-1/3" /><Bone className="h-4 w-full" /><Bone className="h-4 w-full" /><Bone className="h-4 w-2/3" /></div>
+      </div>
+    </Loading>
   );
 }
