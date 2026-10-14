@@ -16,7 +16,10 @@ export async function SiteNav() {
   const name = profile?.fullName?.trim() || email.split("@")[0] || "Mi cuenta";
   return (
     <nav aria-label="Principal" className="flex flex-wrap items-center gap-1">
-      <NavLink href="/panel">Panel</NavLink>
+      <NavLink href="/panel" exact>Panel</NavLink>
+      <NavLink href="/panel/agencia">Mi agencia</NavLink>
+      {actor.membership && <NavLink href="/panel/equipo">Equipo</NavLink>}
+      {actor.platformAdmin && <NavLink href="/admin/agencias">Agencias</NavLink>}
       {actor.platformAdmin && <NavLink href="/admin/zonas">Zonas</NavLink>}
       <span className="mx-2 hidden h-6 w-px bg-slate-300 sm:block" />
       <UserMenu initials={initials(profile?.fullName ?? null, email || "?")} name={name} email={email} role={roleLabel(actor)} />

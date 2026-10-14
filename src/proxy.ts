@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PROTECTED = ["/panel", "/admin", "/cuenta"];
+const PROTECTED = ["/panel", "/admin", "/cuenta", "/registro-agencia"];
 
 /** Refresca la sesión de Supabase y manda a /login si falta. La autorización fina NO va acá (ver policies.ts). */
 export async function proxy(request: NextRequest) {

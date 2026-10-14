@@ -3,13 +3,26 @@ import { Suspense } from "react";
 import type { Actor } from "@/contracts";
 import { roleLabel } from "@/lib/role-label";
 import { getActor } from "@/server/auth/get-actor";
+import { getMyAgency } from "@/server/services/agency";
 
 type Shortcut = { href: string; title: string; text: string };
 
-function shortcuts(actor: Actor): Shortcut[] {
+async function shortcuts(actor: Actor): Promise<Shortcut[]> {
+  if (actor.kind !== "user") return [];
   const list: Shortcut[] = [];
-  if (actor.kind === "user" && actor.platformAdmin) {
-    list.push({ href: "/admin", title: "Administración", text: "Secciones de la plataforma." });
+  const mine = await getMyAgency(actor);
+  if (mine.ok && mine.data) {
+    const st = mine.data.status;
+    list.push({
+      href: "/panel/agencia", title: `Mi agencia: ${mine.data.name}`,
+      text: st === "approved" ? "Datos de la agencia y tu perfil público." : st === "pending" ? "Pendiente de aprobación." : `Estado: ${st}.`,
+    });
+    if (actor.membership) list.push({ href: "/panel/equipo", title: "Equipo", text: "Integrantes e invitaciones." });
+  } else {
+    list.push({ href: "/registro-agencia", title: "Registrar mi inmobiliaria", text: "Enviá la solicitud para publicar propiedades." });
+  }
+  if (actor.platformAdmin) {
+    list.push({ href: "/admin/agencias", title: "Agencias", text: "Aprobar, rechazar o suspender inmobiliarias." });
     list.push({ href: "/admin/zonas", title: "Zonas y barrios", text: "Alta, edición e importación por CSV." });
   }
   return list;
@@ -17,7 +30,7 @@ function shortcuts(actor: Actor): Shortcut[] {
 
 async function Dashboard() {
   const actor = await getActor();
-  const items = shortcuts(actor);
+  const items = await shortcuts(actor);
   return (
     <>
       <p className="muted mt-2">Tu rol: <span className="badge">{roleLabel(actor)}</span></p>
@@ -29,11 +42,6 @@ async function Dashboard() {
           </Link>
         ))}
       </div>
-      {items.length === 0 && (
-        <p className="card muted mt-6 text-sm">
-          Todavía no tenés accesos acá. Cuando registres una agencia o te inviten a una, vas a verla en este panel.
-        </p>
-      )}
     </>
   );
 }
