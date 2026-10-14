@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { getActor } from "@/server/auth/get-actor";
 import { getMyAgency, getMyAgencyDetail } from "@/server/services/agency";
@@ -10,7 +11,7 @@ const STATUS: Record<string, { label: string; text: string; tone: string }> = {
   suspended: { label: "Suspendida", tone: "alert-error", text: "Tu agencia está suspendida: sus propiedades no se muestran." },
 };
 
-export default async function MiAgenciaPage() {
+async function MiAgencia() {
   const actor = await getActor();
   const mine = await getMyAgency(actor);
   if (!mine.ok) return <p className="alert alert-error m-6">No se pudo cargar tu agencia.</p>;
@@ -65,5 +66,13 @@ export default async function MiAgenciaPage() {
         </section>
       )}
     </main>
+  );
+}
+
+export default function MiAgenciaPage() {
+  return (
+    <Suspense fallback={<p className="muted mx-auto max-w-3xl px-6 py-8">Cargando…</p>}>
+      <MiAgencia />
+    </Suspense>
   );
 }

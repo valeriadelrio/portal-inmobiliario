@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { getActor } from "@/server/auth/get-actor";
 import { listAgenciesForAdmin } from "@/server/services/agency";
@@ -6,7 +7,7 @@ import { StatusForm } from "./status-form";
 const LABEL: Record<string, string> = { pending: "Pendiente", approved: "Aprobada", suspended: "Suspendida", rejected: "Rechazada" };
 const FILTERS = [["", "Todas"], ["pending", "Pendientes"], ["approved", "Aprobadas"], ["suspended", "Suspendidas"], ["rejected", "Rechazadas"]];
 
-export default async function AgenciasAdminPage({ searchParams }: { searchParams: Promise<{ estado?: string }> }) {
+async function Agencias({ searchParams }: { searchParams: Promise<{ estado?: string }> }) {
   const { estado } = await searchParams;
   const status = estado && estado in LABEL ? estado : undefined;
   const r = await listAgenciesForAdmin(await getActor(), status);
@@ -41,5 +42,13 @@ export default async function AgenciasAdminPage({ searchParams }: { searchParams
         </section>
       ))}
     </main>
+  );
+}
+
+export default function AgenciasAdminPage({ searchParams }: { searchParams: Promise<{ estado?: string }> }) {
+  return (
+    <Suspense fallback={<p className="muted mx-auto max-w-3xl px-6 py-8">Cargando…</p>}>
+      <Agencias searchParams={searchParams} />
+    </Suspense>
   );
 }

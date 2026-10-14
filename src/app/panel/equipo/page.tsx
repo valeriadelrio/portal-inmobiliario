@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getActor } from "@/server/auth/get-actor";
 import { listInvitations, listMembers } from "@/server/services/agency";
 import { InviteForm, RemoveMember, RevokeButton, RoleSelect } from "./forms";
@@ -5,7 +6,7 @@ import { InviteForm, RemoveMember, RevokeButton, RoleSelect } from "./forms";
 const ROLE = { agent: "Agente", agency_admin: "Administrador" } as Record<string, string>;
 const INV_STATUS = { pending: "Pendiente", accepted: "Aceptada", revoked: "Revocada" } as Record<string, string>;
 
-export default async function EquipoPage() {
+async function Equipo() {
   const actor = await getActor();
   const members = await listMembers(actor);
   if (!members.ok) {
@@ -71,5 +72,13 @@ export default async function EquipoPage() {
         </section>
       )}
     </main>
+  );
+}
+
+export default function EquipoPage() {
+  return (
+    <Suspense fallback={<p className="muted mx-auto max-w-3xl px-6 py-8">Cargando…</p>}>
+      <Equipo />
+    </Suspense>
   );
 }
