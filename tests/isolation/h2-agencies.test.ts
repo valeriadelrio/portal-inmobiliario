@@ -100,6 +100,27 @@ describe("aprobación de agencias (app_set_agency_status)", () => {
   });
 });
 
+describe("argumentos nulos o inválidos no se saltan las validaciones", () => {
+  it("app_register_agency con slug o nombre nulos", async () => {
+    expect(await fnFail(asUser(U.visitor), (tx) => tx.execute(sql`select app_register_agency('Ok Agencia', null, '1', 'a@a.com', 'Ana')`))).toBe("invalid_slug");
+    expect(await fnFail(asUser(U.visitor), (tx) => tx.execute(sql`select app_register_agency(null, 'ok-slug', '1', 'a@a.com', 'Ana')`))).toBe("validation");
+    expect(await fnFail(asUser(U.visitor), (tx) => tx.execute(sql`select app_register_agency('Ok', 'ok-slug', '1', 'a@a.com', null)`))).toBe("validation");
+  });
+  it("app_set_agency_status con estado nulo o desconocido", async () => {
+    expect(await fnFail(asUser(U.root), (tx) => tx.execute(sql`select app_set_agency_status(${AG.PENDING}, null)`))).toBe("invalid_transition");
+    expect(await fnFail(asUser(U.root), (tx) => tx.execute(sql`select app_set_agency_status(${AG.PENDING}, 'cualquiera')`))).toBe("invalid_transition");
+  });
+  it("app_set_member_role con rol nulo o desconocido", async () => {
+    expect(await fnFail(asUser(U.admA), (tx) => tx.execute(sql`select app_set_member_role(${M.a1}, null)`))).toBe("validation");
+    expect(await fnFail(asUser(U.admA), (tx) => tx.execute(sql`select app_set_member_role(${M.a1}, 'dueño')`))).toBe("validation");
+  });
+  it("funciones con ids inexistentes o nulos devuelven not_found / forbidden, nunca éxito", async () => {
+    expect(await fnFail(asUser(U.root), (tx) => tx.execute(sql`select app_set_agency_status(null, 'approved')`))).toBe("not_found");
+    expect(await fnFail(asUser(U.admA), (tx) => tx.execute(sql`select app_remove_member(null)`))).toBe("not_found");
+    expect(await fnFail(ANON, (tx) => tx.execute(sql`select app_accept_invitation(null, 'Ana')`))).toBe("forbidden");
+  });
+});
+
 describe("app_my_agency", () => {
   it("una agencia pendiente es visible para su admin", async () => {
     const [{ id }] = await as(asUser(U.visitor), register("nueva"));

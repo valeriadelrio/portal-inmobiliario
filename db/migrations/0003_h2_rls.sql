@@ -34,7 +34,7 @@ BEGIN
      OR length(trim(coalesce(p_display_name, ''))) < 2 THEN
     RAISE EXCEPTION 'validation' USING ERRCODE = 'P0001';
   END IF;
-  IF p_slug !~ '^[a-z0-9]+(-[a-z0-9]+)*$' OR length(p_slug) > 60
+  IF p_slug IS NULL OR p_slug !~ '^[a-z0-9]+(-[a-z0-9]+)*$' OR length(p_slug) > 60
      OR p_slug IN ('admin','panel','login','api','es','en','registro','registro-agencia','invitacion',
                    'inmobiliarias','propiedades','cuenta','buscar','static','_next') THEN
     RAISE EXCEPTION 'invalid_slug' USING ERRCODE = 'P0001';
@@ -66,9 +66,9 @@ BEGIN
   IF NOT app_is_platform_admin() THEN RAISE EXCEPTION 'forbidden' USING ERRCODE = 'P0001'; END IF;
   SELECT status INTO v_old FROM agency WHERE id = p_agency FOR UPDATE;
   IF v_old IS NULL THEN RAISE EXCEPTION 'not_found' USING ERRCODE = 'P0001'; END IF;
-  IF NOT ((v_old = 'pending'   AND p_status IN ('approved', 'rejected'))
+  IF NOT coalesce((v_old = 'pending'   AND p_status IN ('approved', 'rejected'))
        OR (v_old = 'approved'  AND p_status = 'suspended')
-       OR (v_old = 'suspended' AND p_status = 'approved')) THEN
+       OR (v_old = 'suspended' AND p_status = 'approved'), false) THEN
     RAISE EXCEPTION 'invalid_transition' USING ERRCODE = 'P0001';
   END IF;
 
@@ -174,7 +174,7 @@ CREATE OR REPLACE FUNCTION app_set_member_role(p_member uuid, p_role text)
 RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
 DECLARE v_m agency_member%ROWTYPE;
 BEGIN
-  IF p_role NOT IN ('agent', 'agency_admin') THEN RAISE EXCEPTION 'validation' USING ERRCODE = 'P0001'; END IF;
+  IF p_role IS NULL OR p_role NOT IN ('agent', 'agency_admin') THEN RAISE EXCEPTION 'validation' USING ERRCODE = 'P0001'; END IF;
   SELECT * INTO v_m FROM agency_member WHERE id = p_member FOR UPDATE;
   IF NOT FOUND OR v_m.status <> 'active' THEN RAISE EXCEPTION 'not_found' USING ERRCODE = 'P0001'; END IF;
   -- coalesce: un no-miembro da NULL en la comparación y NOT NULL no dispararía el IF.
