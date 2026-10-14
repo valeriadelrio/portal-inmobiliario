@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
+  type AnyPgColumn,
   boolean, check, doublePrecision, index, integer, jsonb, numeric, pgTable, primaryKey,
   text, timestamp, uniqueIndex, uuid,
 } from "drizzle-orm/pg-core";
@@ -17,6 +18,7 @@ export const agency = pgTable(
     name: text("name").notNull(),
     slug: text("slug").notNull(),
     status: text("status").notNull().default("pending"),
+    statusReason: text("status_reason"),
     logoUrl: text("logo_url"),
     description: text("description"),
     phone: text("phone"),
@@ -31,6 +33,7 @@ export const agency = pgTable(
   },
   (t) => [
     uniqueIndex("agency_slug_uq").on(t.slug),
+    check("agency_slug_ck", sql`slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'`),
     check("agency_status_ck", inList("status", ["pending", "approved", "suspended", "rejected"])),
   ],
 );
@@ -64,6 +67,7 @@ export const agencyMember = pgTable(
     userId: uuid("user_id").notNull().references(() => userProfile.id),
     role: text("role").notNull().default("agent"),
     status: text("status").notNull().default("invited"),
+    displayName: text("display_name"),
     bio: text("bio"),
     photoUrl: text("photo_url"),
     publicPhone: text("public_phone"),
@@ -81,6 +85,31 @@ export const agencyMember = pgTable(
   ],
 );
 
+export const agencyInvitation = pgTable(
+  "agency_invitation",
+  {
+    id: id(),
+    agencyId: uuid("agency_id").notNull().references(() => agency.id),
+    email: text("email").notNull(),
+    role: text("role").notNull().default("agent"),
+    /** sha256 del token; el token crudo nunca se guarda. */
+    tokenHash: text("token_hash").notNull(),
+    status: text("status").notNull().default("pending"),
+    invitedBy: uuid("invited_by").notNull().references(() => userProfile.id),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    acceptedBy: uuid("accepted_by").references(() => userProfile.id),
+    acceptedAt: timestamp("accepted_at", { withTimezone: true }),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    uniqueIndex("agency_invitation_token_uq").on(t.tokenHash),
+    uniqueIndex("agency_invitation_pending_uq").on(t.agencyId, t.email).where(sql`status = 'pending'`),
+    check("agency_invitation_email_ck", sql`email = lower(email)`),
+    check("agency_invitation_role_ck", inList("role", ["agent", "agency_admin"])),
+    check("agency_invitation_status_ck", inList("status", ["pending", "accepted", "revoked"])),
+  ],
+);
+
 export const zone = pgTable(
   "zone",
   {
@@ -88,11 +117,15 @@ export const zone = pgTable(
     slug: text("slug").notNull(),
     nameEs: text("name_es").notNull(),
     nameEn: text("name_en"),
-    parentId: uuid("parent_id"),
+    parentId: uuid("parent_id").references((): AnyPgColumn => zone.id),
     sortOrder: integer("sort_order").notNull().default(0),
     isActive: boolean("is_active").notNull().default(true),
   },
-  (t) => [uniqueIndex("zone_slug_uq").on(t.slug)],
+  (t) => [
+    uniqueIndex("zone_slug_uq").on(t.slug),
+    check("zone_slug_ck", sql`slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'`),
+    check("zone_parent_ck", sql`parent_id is null or parent_id <> id`),
+  ],
 );
 
 export const property = pgTable(
@@ -136,6 +169,8 @@ export const property = pgTable(
     check("property_currency_ck", inList("currency", ["USD", "ARS"])),
     check("property_language_ck", inList("language", ["es", "en"])),
     check("property_price_ck", sql`price > 0`),
+    check("property_slug_ck", sql`slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'`),
+    check("property_covered_ck", sql`covered_area_m2 is null or covered_area_m2 <= total_area_m2`),
   ],
 );
 
@@ -175,9 +210,14 @@ export const propertyPhoto = pgTable(
     position: integer("position").notNull().default(0),
     isCover: boolean("is_cover").notNull().default(false),
     altText: text("alt_text"),
+    status: text("status").notNull().default("ready"),
     createdAt: createdAt(),
   },
-  (t) => [index("property_photo_order_idx").on(t.propertyId, t.position)],
+  (t) => [
+    index("property_photo_order_idx").on(t.propertyId, t.position),
+    uniqueIndex("property_photo_one_cover_uq").on(t.propertyId).where(sql`is_cover`),
+    check("property_photo_status_ck", inList("status", ["pending", "ready"])),
+  ],
 );
 
 export const inquiry = pgTable(

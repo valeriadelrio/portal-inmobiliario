@@ -15,6 +15,20 @@
       "when": 1791921188614,
       "tag": "0001_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791980003740,
+      "tag": "0002_h2_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791980009175,
+      "tag": "0003_h2_rls",
+      "breakpoints": true
     }
   ]
 }
