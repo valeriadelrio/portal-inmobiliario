@@ -11,6 +11,10 @@ export type Action =
   | { type: "property:read"; property: PropertyRef }
   | { type: "inquiry:read" | "inquiry:update"; inquiry: InquiryRef }
   | { type: "member:manage"; member: MemberRef }
+  | { type: "member:update-self"; member: MemberRef & { userId: string } }
+  | { type: "agency:update" | "invitation:manage"; agencyId: string }
+  | { type: "photo:manage"; property: PropertyRef }
+  | { type: "zone:read-inactive" }
   | { type: "agency:approve" | "zone:manage" | "moderate" };
 
 /** Estados visibles para el público (reservada y vendida/alquilada se muestran con cartel). */
@@ -46,6 +50,16 @@ export function can(actor: Actor, action: Action): boolean {
         (m.role === "agency_admin" || m.memberId === action.inquiry.agentId);
     case "member:manage":
       return !!m && m.role === "agency_admin" && m.agencyId === action.member.agencyId;
+    case "member:update-self":
+      return !!m && m.agencyId === action.member.agencyId && actor.userId === action.member.userId;
+    case "agency:update":
+    case "invitation:manage":
+      return !!m && m.role === "agency_admin" && m.agencyId === action.agencyId;
+    case "photo:manage":
+      return !!m && m.agencyId === action.property.agencyId &&
+        (m.role === "agency_admin" || m.memberId === action.property.agentId);
+    case "zone:read-inactive":
+      return false; // solo platform admin
     case "agency:approve":
     case "zone:manage":
     case "moderate":

@@ -3,3 +3,7 @@ export * from "./property";
 export * from "./search";
 export * from "./inquiry";
 export * from "./actor";
+export * from "./result";
+export * from "./agency";
+export * from "./zone";
+export * from "./photo";

@@ -10,7 +10,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "promote": "node scripts/promote-user.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

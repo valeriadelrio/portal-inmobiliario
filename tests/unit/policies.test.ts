@@ -64,3 +64,33 @@ describe("lectura pública", () => {
     }
   });
 });
+
+describe("políticas nuevas de H2", () => {
+  it("agency:update e invitation:manage: solo el admin de esa agencia", () => {
+    for (const type of ["agency:update", "invitation:manage"] as const) {
+      expect(can(actors.adminA, { type, agencyId: AGENCY_A })).toBe(true);
+      expect(can(actors.adminA, { type, agencyId: AGENCY_B })).toBe(false);
+      expect(can(actors.agentA1, { type, agencyId: AGENCY_A })).toBe(false);
+      expect(can(actors.visitor, { type, agencyId: AGENCY_A })).toBe(false);
+      expect(can(actors.anonymous, { type, agencyId: AGENCY_A })).toBe(false);
+      expect(can(actors.platformAdmin, { type, agencyId: AGENCY_A })).toBe(true);
+    }
+  });
+  it("member:update-self: solo el propio usuario dentro de su agencia", () => {
+    const a = { type: "member:update-self" as const, member: { agencyId: AGENCY_A, userId: "u-a1" } };
+    expect(can(actors.agentA1, a)).toBe(true);
+    expect(can(actors.agentA2, a)).toBe(false);
+    expect(can(actors.agentB1, a)).toBe(false);
+  });
+  it("photo:manage sigue la misma regla que editar la propiedad", () => {
+    const a = { type: "photo:manage" as const, property: propA1() };
+    expect(can(actors.agentA1, a)).toBe(true);
+    expect(can(actors.agentA2, a)).toBe(false);
+    expect(can(actors.adminA, a)).toBe(true);
+    expect(can(actors.adminB, a)).toBe(false);
+  });
+  it("zone:read-inactive: solo platform admin", () => {
+    expect(can(actors.platformAdmin, { type: "zone:read-inactive" })).toBe(true);
+    expect(can(actors.adminA, { type: "zone:read-inactive" })).toBe(false);
+  });
+});
