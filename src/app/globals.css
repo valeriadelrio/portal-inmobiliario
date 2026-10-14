@@ -42,7 +42,8 @@ body {
     border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.5rem 0.75rem; font-size: 0.9rem;
   }
   .input::placeholder { color: #64748b; }
-  .input:focus-visible, .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .input:focus-visible { outline: none; border-color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); }
+  .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
   .label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.8rem; font-weight: 500; color: var(--muted); }
 
   .btn {
@@ -78,30 +79,3 @@ body {
 
 @keyframes skeleton-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 @media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
-
-/* Fuera de @layer: Tailwind descartaba el selector de elemento dentro de la capa de componentes. */
-/* Flecha propia en los desplegables: la nativa queda pegada al borde derecho. */
-select.input {
-  appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 2.5rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23475569' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 7.5l5 5 5-5'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 0.85rem center; background-size: 1rem;
-}
-select.input:disabled { cursor: not-allowed; }
-
-/* Lista desplegable blanca con opción resaltada (navegadores con selects personalizables); el resto usa la nativa clara. */
-select.input { color-scheme: light; }
-select.input option { background: #fff; color: #0f172a; }
-@supports (appearance: base-select) {
-  select.input, select.input::picker(select) { appearance: base-select; }
-  select.input { background-image: none; padding-right: 0.75rem; }
-  select.input::picker-icon { color: #475569; transition: rotate 0.15s; margin-left: auto; }
-  select.input:open::picker-icon { rotate: 180deg; }
-  select.input::picker(select) {
-    background: #fff; color: #0f172a; border: 1px solid #cbd5e1; border-radius: 0.5rem;
-    box-shadow: 0 8px 24px rgb(15 23 42 / 0.15); padding: 0.25rem; margin-block: 0.25rem;
-  }
-  select.input option { padding: 0.5rem 0.75rem; border-radius: 0.375rem; }
-  select.input option:hover, select.input option:focus-visible { background: #e2e8f0; }
-  select.input option:checked { background: #dbeafe; color: #1e3a8a; font-weight: 600; }
-  select.input option::checkmark { display: none; }
-}

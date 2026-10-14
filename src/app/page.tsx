@@ -1,3 +1,4 @@
+import { Select } from "@/components/select";
 import Link from "next/link";
 import { Suspense } from "react";
 import { searchFilters } from "@/contracts";
@@ -27,23 +28,23 @@ async function QuickSearch() {
   return (
     <form method="get" action="/propiedades" className="card grid gap-3 sm:grid-cols-4">
       <label className="label">Operación
-        <select name="op" className="input">
+        <Select name="op" className="input">
           <option value="">Venta y alquiler</option>
           {Object.entries(OPERATION_LABEL).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
-        </select>
+        </Select>
       </label>
       <label className="label">Zona o barrio
-        <select name="zone" className="input">
+        <Select name="zone" className="input">
           <option value="">Toda la ciudad</option>
           {list.map((z) => <option key={z.id} value={z.slug}>{z.nameEs}</option>)}
-        </select>
+        </Select>
       </label>
       <label className="label">Tipo
-        <select name="type" className="input">
+        <Select name="type" className="input">
           <option value="">Todos</option>
           <option value="house">Casa</option><option value="apartment">Departamento</option><option value="lot">Lote</option>
           <option value="ph">PH</option><option value="commercial">Local comercial</option><option value="office">Oficina</option><option value="garage">Cochera</option>
-        </select>
+        </Select>
       </label>
       <div className="flex items-end"><button className="btn btn-primary w-full">Buscar</button></div>
     </form>

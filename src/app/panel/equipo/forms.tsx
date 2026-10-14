@@ -1,5 +1,6 @@
 "use client";
 
+import { Select } from "@/components/select";
 import { useActionState, useState } from "react";
 import { FormMessage } from "@/components/form-message";
 import { inviteAction, removeAction, revokeAction, roleAction } from "./actions";
@@ -15,7 +16,7 @@ export function InviteForm() {
           <input name="email" type="email" required className="input w-72 max-w-full" />
         </label>
         <label className="label">Rol
-          <select name="role" className="input"><option value="agent">Agente</option><option value="agency_admin">Administrador</option></select>
+          <Select name="role" className="input"><option value="agent">Agente</option><option value="agency_admin">Administrador</option></Select>
         </label>
         <button disabled={pending} className="btn btn-primary">Crear invitación</button>
       </form>
@@ -48,9 +49,9 @@ export function RoleSelect({ memberId, role }: { memberId: string; role: string 
   return (
     <form action={action} className="flex flex-wrap items-center gap-2">
       <input type="hidden" name="memberId" value={memberId} />
-      <select name="role" defaultValue={role} className="input w-auto" aria-label="Rol">
+      <Select name="role" defaultValue={role} className="input w-auto" aria-label="Rol">
         <option value="agent">Agente</option><option value="agency_admin">Administrador</option>
-      </select>
+      </Select>
       <button disabled={pending} className="btn">Cambiar</button>
       <FormMessage state={state} />
     </form>
@@ -64,10 +65,10 @@ export function RemoveMember({ memberId, others }: { memberId: string; others: {
   return (
     <form action={action} className="flex flex-wrap items-center gap-2">
       <input type="hidden" name="memberId" value={memberId} />
-      <select name="reassignTo" className="input w-auto" aria-label="Reasignar propiedades a">
+      <Select name="reassignTo" className="input w-auto" aria-label="Reasignar propiedades a">
         <option value="">Reasignar a… (solo si tiene propiedades)</option>
         {others.map((o) => <option key={o.id} value={o.id}>{o.name}</option>)}
-      </select>
+      </Select>
       <button disabled={pending} className="btn btn-danger">Confirmar baja</button>
       <button type="button" className="btn" onClick={() => setConfirming(false)}>Cancelar</button>
       <FormMessage state={state} />

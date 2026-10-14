@@ -1,5 +1,6 @@
 "use client";
 
+import { Select } from "@/components/select";
 import { useActionState } from "react";
 import type { ZoneDto } from "@/contracts";
 import { importCsv, removeZone, saveZone, type FormState } from "./actions";
@@ -24,10 +25,10 @@ export function ZoneForm({ zone, parents }: { zone?: ZoneDto; parents: ZoneDto[]
         <input name="nameEn" defaultValue={zone?.nameEn ?? ""} className="input" />
       </label>
       <label className="label">Zona padre
-        <select name="parentId" defaultValue={zone?.parentId ?? ""} className="input">
+        <Select name="parentId" defaultValue={zone?.parentId ?? ""} className="input">
           <option value="">— ninguna —</option>
           {parents.filter((p) => p.id !== zone?.id).map((p) => <option key={p.id} value={p.id}>{p.nameEs}</option>)}
-        </select>
+        </Select>
       </label>
       <label className="label">Orden
         <input name="sortOrder" type="number" defaultValue={zone?.sortOrder ?? 0} className="input" />

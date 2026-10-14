@@ -1,5 +1,6 @@
 "use client";
 
+import { Select } from "@/components/select";
 import { useActionState, useState } from "react";
 import { FormMessage } from "@/components/form-message";
 import { CURRENCY, LOT_SERVICES, PROPERTY_TYPE, type PropertyInput, type ZoneDto } from "@/contracts";
@@ -28,17 +29,17 @@ export function PropertyForm({ zones, agents, initial }: Props) {
       {editing && <input type="hidden" name="type" value={initial.type} />}
 
       <label className="label">Operación
-        <select name="operation" defaultValue={initial?.operation ?? "sale"} className="input">
+        <Select name="operation" defaultValue={initial?.operation ?? "sale"} className="input">
           {Object.entries(OPERATION_LABEL).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
-        </select>
+        </Select>
       </label>
       <label className="label">Tipo de propiedad
         {editing ? (
           <input value={TYPE_LABEL[initial.type]} disabled className="input" aria-describedby="type-help" />
         ) : (
-          <select name="type" value={type} onChange={(e) => setType(e.target.value)} className="input">
+          <Select name="type" value={type} onChange={setType} className="input">
             {PROPERTY_TYPE.map((t) => <option key={t} value={t}>{TYPE_LABEL[t]}</option>)}
-          </select>
+          </Select>
         )}
         {editing && <span id="type-help" className="muted text-xs font-normal">El tipo no se puede cambiar una vez creada la ficha.</span>}
       </label>
@@ -51,10 +52,10 @@ export function PropertyForm({ zones, agents, initial }: Props) {
       </label>
 
       <label className="label">Zona o barrio
-        <select name="zoneId" defaultValue={initial?.zoneId ?? ""} required className="input">
+        <Select name="zoneId" defaultValue={initial?.zoneId ?? ""} required className="input">
           <option value="" disabled>Elegí una zona…</option>
           {zones.map((z) => <option key={z.id} value={z.id}>{z.nameEs}</option>)}
-        </select>
+        </Select>
       </label>
       <label className="label">Dirección (opcional)
         <input name="addressText" defaultValue={initial?.addressText} maxLength={200} className="input" />
@@ -67,17 +68,17 @@ export function PropertyForm({ zones, agents, initial }: Props) {
         <input name="price" defaultValue={v(initial?.price)} required inputMode="decimal" className="input" placeholder="120000" />
       </label>
       <label className="label">Moneda
-        <select name="currency" defaultValue={initial?.currency ?? "USD"} className="input">
+        <Select name="currency" defaultValue={initial?.currency ?? "USD"} className="input">
           {CURRENCY.map((c) => <option key={c} value={c}>{c === "USD" ? "Dólares (USD)" : "Pesos (ARS)"}</option>)}
-        </select>
+        </Select>
       </label>
       <label className="label">Expensas mensuales (opcional)
         <input name="expenses" defaultValue={v(initial?.expenses)} inputMode="decimal" className="input" />
       </label>
       <label className="label">Idioma de la publicación
-        <select name="language" defaultValue={initial?.language ?? "es"} className="input">
+        <Select name="language" defaultValue={initial?.language ?? "es"} className="input">
           <option value="es">Español</option><option value="en">Inglés</option>
-        </select>
+        </Select>
       </label>
 
       <label className="label">Superficie total (m²)
@@ -132,10 +133,10 @@ export function PropertyForm({ zones, agents, initial }: Props) {
 
       {!editing && agents && agents.length > 1 && (
         <label className="label sm:col-span-2">Agente responsable
-          <select name="agentId" defaultValue="" className="input">
+          <Select name="agentId" defaultValue="" className="input">
             <option value="">Yo</option>
             {agents.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
-          </select>
+          </Select>
         </label>
       )}
 
