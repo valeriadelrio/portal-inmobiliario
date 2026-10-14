@@ -30,8 +30,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <header className="border-b border-slate-300 bg-white">
-          <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-3">
-            <Link href="/" className="font-semibold text-slate-900">Portal inmobiliario Tandil</Link>
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
+            <Link href="/" className="font-semibold text-slate-900"><span className="sm:hidden">Portal Tandil</span><span className="hidden sm:inline">Portal inmobiliario Tandil</span></Link>
             <div className="flex flex-wrap items-center gap-2">
               <Link href="/propiedades" className="rounded-md px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-200 hover:text-slate-900">Propiedades</Link>
               <Suspense fallback={<span className="muted text-sm">…</span>}>

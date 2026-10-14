@@ -15,15 +15,9 @@ export async function SiteNav() {
   const email = profile?.email ?? "";
   const name = profile?.fullName?.trim() || email.split("@")[0] || "Mi cuenta";
   return (
-    <nav aria-label="Principal" className="flex flex-wrap items-center gap-1">
-      <NavLink href="/panel" exact>Panel</NavLink>
-      <NavLink href="/panel/agencia">Mi inmobiliaria</NavLink>
-      {actor.membership && <NavLink href="/panel/propiedades">Propiedades</NavLink>}
-      {actor.membership && <NavLink href="/panel/equipo">Equipo</NavLink>}
-      {actor.platformAdmin && <NavLink href="/admin/agencias">Todas las inmobiliarias</NavLink>}
-      {actor.platformAdmin && <NavLink href="/admin/zonas">Zonas</NavLink>}
-      <span className="mx-2 hidden h-6 w-px bg-slate-300 sm:block" />
+    <div className="flex flex-wrap items-center gap-2">
+      <NavLink href="/panel">Mi panel</NavLink>
       <UserMenu initials={initials(profile?.fullName ?? null, email || "?")} name={name} email={email} role={roleLabel(actor)} />
-    </nav>
+    </div>
   );
 }
