@@ -17,6 +17,7 @@ async function shortcuts(actor: Actor): Promise<Shortcut[]> {
       href: "/panel/agencia", title: `Mi inmobiliaria: ${mine.data.name}`,
       text: st === "approved" ? "Datos de la inmobiliaria y tu perfil público." : st === "pending" ? "Pendiente de aprobación." : `Estado: ${st}.`,
     });
+    if (actor.membership) list.push({ href: "/panel/propiedades", title: "Propiedades", text: "Cargá, editá y publicá tus propiedades y lotes." });
     if (actor.membership) list.push({ href: "/panel/equipo", title: "Equipo", text: "Integrantes e invitaciones." });
   } else {
     list.push({ href: "/registro-agencia", title: "Registrar mi inmobiliaria", text: "Enviá la solicitud para publicar propiedades." });

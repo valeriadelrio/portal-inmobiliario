@@ -15,9 +15,13 @@ const TEXTS: Record<string, string> = {
   last_admin: "La inmobiliaria necesita al menos un administrador activo.",
   reassign_required: "Esa persona tiene propiedades o consultas: elegí a quién reasignarlas.",
   validation: "Revisá los datos del formulario.",
+  publish_blocked: "Todavía no se puede publicar: faltan requisitos (fotos, portada, zona activa).",
+  immutable_field: "El tipo de propiedad no se puede cambiar. Creá una ficha nueva.",
+  zone_inactive: "La zona elegida está inactiva. Elegí otra.",
+  in_use: "No se puede eliminar porque tiene consultas asociadas. Pausala en su lugar.",
 };
 
 export function errorText(code: string, message?: string): string {
-  if (code === "conflict" && message && message.startsWith("Ya hay")) return message;
+  if (code === "conflict" && message && /^(Ya hay|Solo se pueden)/.test(message)) return message;
   return TEXTS[code] ?? "Ocurrió un error inesperado.";
 }

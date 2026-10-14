@@ -18,6 +18,7 @@ export async function SiteNav() {
     <nav aria-label="Principal" className="flex flex-wrap items-center gap-1">
       <NavLink href="/panel" exact>Panel</NavLink>
       <NavLink href="/panel/agencia">Mi inmobiliaria</NavLink>
+      {actor.membership && <NavLink href="/panel/propiedades">Propiedades</NavLink>}
       {actor.membership && <NavLink href="/panel/equipo">Equipo</NavLink>}
       {actor.platformAdmin && <NavLink href="/admin/agencias">Todas las inmobiliarias</NavLink>}
       {actor.platformAdmin && <NavLink href="/admin/zonas">Zonas</NavLink>}
