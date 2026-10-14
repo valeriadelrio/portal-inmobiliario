@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { LogoutButton } from "@/components/logout-button";
 import { getActor } from "@/server/auth/get-actor";
+import { getProfileSummary } from "@/server/auth/get-profile";
 import { previewInvitation } from "@/server/services/agency";
 import { AcceptForm } from "./accept-form";
 import { FormSkeleton } from "@/components/skeletons";
@@ -19,6 +21,8 @@ async function Invitation({ params }: { params: Promise<{ token: string }> }) {
       </div>
     );
   }
+  const mine = actor.kind === "user" ? (await getProfileSummary(actor.userId))?.email?.toLowerCase() : undefined;
+  const wrongAccount = !!mine && mine !== pv.data.email.toLowerCase();
   return (
     <div className="card space-y-4">
       <h1 className="text-xl font-semibold">Te invitaron a {pv.data.agencyName}</h1>
@@ -26,6 +30,13 @@ async function Invitation({ params }: { params: Promise<{ token: string }> }) {
       {actor.kind === "anonymous" ? (
         <div className="flex flex-wrap gap-3">
           <Link href={`/login?next=/invitacion/${token}`} className="btn btn-primary">Ingresar o crear cuenta</Link>
+        </div>
+      ) : wrongAccount ? (
+        <div className="space-y-3">
+          <p role="alert" className="alert alert-error">
+            Ingresaste con <strong>{mine}</strong>, pero la invitación es para <strong>{pv.data.email}</strong>. Cerrá sesión y entrá (o creá la cuenta) con ese email; después volvé a abrir este mismo enlace.
+          </p>
+          <LogoutButton />
         </div>
       ) : (
         <AcceptForm token={token} />
