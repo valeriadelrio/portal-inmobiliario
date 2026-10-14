@@ -3,7 +3,7 @@
 import { Select } from "@/components/select";
 import { useActionState, useState } from "react";
 import { FormMessage } from "@/components/form-message";
-import { inviteAction, removeAction, revokeAction, roleAction } from "./actions";
+import { inviteAction, removeAction, resendAction, revokeAction, roleAction } from "./actions";
 
 export function InviteForm() {
   const [state, action, pending] = useActionState(inviteAction, null);
@@ -41,6 +41,26 @@ export function RevokeButton({ id }: { id: string }) {
       <button disabled={pending} className="btn btn-danger">Revocar</button>
       <FormMessage state={state} />
     </form>
+  );
+}
+
+export function ResendButton({ id }: { id: string }) {
+  const [state, action, pending] = useActionState(resendAction, null);
+  const [copied, setCopied] = useState(false);
+  const full = state?.link ? `${location.origin}${state.link}` : "";
+  return (
+    <div className="flex flex-col items-end gap-2">
+      <form action={action} className="inline-flex items-center gap-2">
+        <input type="hidden" name="id" value={id} />
+        <button disabled={pending} className="btn">{pending ? "Reenviando…" : "Reenviar"}</button>
+      </form>
+      <FormMessage state={state} />
+      {full && (
+        <button type="button" className="btn text-sm" onClick={async () => { await navigator.clipboard.writeText(full); setCopied(true); }}>
+          {copied ? "¡Copiado!" : "Copiar enlace nuevo"}
+        </button>
+      )}
+    </div>
   );
 }
 

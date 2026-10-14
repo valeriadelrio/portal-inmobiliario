@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { getActor } from "@/server/auth/get-actor";
 import { listInvitations, listMembers } from "@/server/services/agency";
-import { InviteForm, RemoveMember, RevokeButton, RoleSelect } from "./forms";
+import { InviteForm, RemoveMember, ResendButton, RevokeButton, RoleSelect } from "./forms";
 import { ListSkeleton } from "@/components/skeletons";
 
 const ROLE = { agent: "Agente", agency_admin: "Administrador" } as Record<string, string>;
@@ -66,7 +66,12 @@ async function Equipo() {
                     {i.status === "pending" && !expired && ` · vence ${new Date(i.expiresAt).toLocaleDateString("es-AR")}`}
                   </p>
                 </div>
-                {i.status === "pending" && <RevokeButton id={i.id} />}
+                {i.status !== "accepted" && (
+                  <div className="flex flex-wrap items-start gap-2">
+                    <ResendButton id={i.id} />
+                    {i.status === "pending" && !expired && <RevokeButton id={i.id} />}
+                  </div>
+                )}
               </div>
             );
           })}
