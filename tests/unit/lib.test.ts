@@ -103,3 +103,19 @@ describe("safeNext", () => {
     expect(safeNext("x", "/inicio")).toBe("/inicio");
   });
 });
+
+import { whatsappUrl } from "@/lib/whatsapp";
+import { searchQuery } from "@/lib/search-url";
+describe("whatsappUrl", () => {
+  it("arma el enlace wa.me solo con números válidos y codifica el mensaje", () => {
+    expect(whatsappUrl("+54 9 2494 123456", "Hola & chau")).toBe("https://wa.me/5492494123456?text=Hola%20%26%20chau");
+    for (const bad of [null, undefined, "", "123", "abc", "1234567890123456"]) expect(whatsappUrl(bad, "x")).toBeNull();
+  });
+});
+describe("searchQuery", () => {
+  it("solo incluye filtros con valor y cambia la página", () => {
+    expect(searchQuery({})).toBe("");
+    expect(searchQuery({ op: "sale", type: ["house", "lot"], minPrice: 0, sort: "price_asc", page: 1 })).toBe("?op=sale&type=house%2Clot&minPrice=0&sort=price_asc");
+    expect(searchQuery({ op: "rent" }, { page: 3 })).toBe("?op=rent&page=3");
+  });
+});

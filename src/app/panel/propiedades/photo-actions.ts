@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { invalidatePublic } from "@/server/cache/invalidate";
 import { errorText } from "@/lib/form-state";
 import { getActor } from "@/server/auth/get-actor";
 import { confirmPhotoUpload, deletePhoto, reorderPhotos, requestPhotoUpload, setCover } from "@/server/services/photo";
@@ -10,6 +11,7 @@ const fail = (code: string, message: string): { ok: false; message: string } => 
 const refresh = (propertyId?: string) => {
   if (propertyId) revalidatePath(`/panel/propiedades/${propertyId}`);
   revalidatePath("/panel/propiedades");
+  invalidatePublic();
 };
 
 export async function requestUploadAction(propertyId: string, mime: string, size: number): Promise<Result<{ photoId: string; url: string; headers: Record<string, string> }>> {

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { invalidatePublic } from "@/server/cache/invalidate";
 import { errorText, type ActionState } from "@/lib/form-state";
 import { getActor } from "@/server/auth/get-actor";
 import { setAgencyStatus } from "@/server/services/agency";
@@ -15,5 +16,6 @@ export async function statusAction(_prev: ActionState, f: FormData): Promise<Act
   );
   if (!r.ok) return { ok: false, message: errorText(r.error.code, r.error.message) };
   revalidatePath("/admin/agencias");
+  invalidatePublic();
   return { ok: true, message: "Estado actualizado." };
 }

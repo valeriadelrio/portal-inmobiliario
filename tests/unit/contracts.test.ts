@@ -24,10 +24,10 @@ describe("propertyInput", () => {
 });
 
 describe("searchFilters", () => {
-  it("parsea query string con listas y moneda por defecto USD", () => {
+  it("parsea query string con listas; la moneda es opcional", () => {
     const f = searchFilters.parse({ op: "rent", type: "house,lot", minPrice: "100" });
     expect(f.type).toEqual(["house", "lot"]);
-    expect(f.currency).toBe("USD");
+    expect(f.currency).toBeUndefined();
     expect(f.minPrice).toBe(100);
   });
 });

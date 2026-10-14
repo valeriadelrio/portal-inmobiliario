@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { invalidatePublic } from "@/server/cache/invalidate";
 import { parse } from "csv-parse/sync";
 import { zoneCsvRow, zoneInput } from "@/contracts";
 import { getActor } from "@/server/auth/get-actor";
@@ -30,6 +31,7 @@ export async function saveZone(_prev: FormState, f: FormData): Promise<FormState
   const r = id ? await updateZone(actor, id, parsed.data) : await createZone(actor, parsed.data);
   if (!r.ok) return { ok: false, message: errorText(r.error.code, r.error.message) };
   revalidatePath("/admin/zonas");
+  invalidatePublic();
   return { ok: true, message: id ? "Zona actualizada" : "Zona creada" };
 }
 
@@ -37,6 +39,7 @@ export async function removeZone(_prev: FormState, f: FormData): Promise<FormSta
   const r = await deleteZone(await getActor(), text(f, "id"));
   if (!r.ok) return { ok: false, message: errorText(r.error.code, r.error.message) };
   revalidatePath("/admin/zonas");
+  invalidatePublic();
   return { ok: true, message: "Zona eliminada" };
 }
 
@@ -59,6 +62,7 @@ export async function importCsv(_prev: FormState, f: FormData): Promise<FormStat
   const r = await importZonesFromCsv(actor, rows);
   if (!r.ok) return { ok: false, message: errorText(r.error.code, r.error.message) };
   revalidatePath("/admin/zonas");
+  invalidatePublic();
   return { ok: true, message: `Importación lista: ${r.data.created} nuevas, ${r.data.updated} actualizadas` };
 }
 

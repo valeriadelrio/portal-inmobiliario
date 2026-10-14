@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { invalidatePublic } from "@/server/cache/invalidate";
 import { memberProfileInput, updateAgencyInput } from "@/contracts";
 import { errorText, type ActionState } from "@/lib/form-state";
 import { getActor } from "@/server/auth/get-actor";
@@ -18,6 +19,7 @@ export async function saveAgency(_prev: ActionState, f: FormData): Promise<Actio
   const r = await updateAgency(actor, parsed.data);
   if (!r.ok) return { ok: false, message: errorText(r.error.code, r.error.message) };
   revalidatePath("/panel/agencia");
+  invalidatePublic();
   return { ok: true, message: "Datos de la inmobiliaria guardados." };
 }
 
@@ -32,5 +34,6 @@ export async function saveMyProfile(_prev: ActionState, f: FormData): Promise<Ac
   const r = await updateMemberProfile(actor, parsed.data);
   if (!r.ok) return { ok: false, message: errorText(r.error.code, r.error.message) };
   revalidatePath("/panel/agencia");
+  invalidatePublic();
   return { ok: true, message: "Tu perfil público quedó guardado." };
 }

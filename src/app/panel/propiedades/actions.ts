@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { invalidatePublic } from "@/server/cache/invalidate";
 import { redirect } from "next/navigation";
 import { PROPERTY_STATUS, propertyInput, type PropertyStatus } from "@/contracts";
 import { errorText, type ActionState } from "@/lib/form-state";
@@ -20,11 +21,13 @@ export async function saveProperty(_prev: ActionState, f: FormData): Promise<Act
     const r = await updateProperty(actor, id, parsed.data);
     if (!r.ok) return { ok: false, message: errorText(r.error.code, r.error.message) };
     revalidatePath(`/panel/propiedades/${id}`);
+    invalidatePublic();
     return { ok: true, message: "Cambios guardados." };
   }
   const r = await createProperty(actor, parsed.data, s(f, "agentId") || undefined);
   if (!r.ok) return { ok: false, message: errorText(r.error.code, r.error.message) };
   revalidatePath("/panel/propiedades");
+  invalidatePublic();
   redirect(`/panel/propiedades/${r.data.id}`);
 }
 
@@ -35,7 +38,9 @@ export async function statusAction(_prev: ActionState, f: FormData): Promise<Act
   const r = await changeStatus(await getActor(), id, status as PropertyStatus);
   if (!r.ok) return { ok: false, message: errorText(r.error.code, r.error.message) };
   revalidatePath(`/panel/propiedades/${id}`);
+  invalidatePublic();
   revalidatePath("/panel/propiedades");
+  invalidatePublic();
   return { ok: true, message: "Estado actualizado." };
 }
 
@@ -43,5 +48,6 @@ export async function deleteAction(_prev: ActionState, f: FormData): Promise<Act
   const r = await deleteProperty(await getActor(), s(f, "id"));
   if (!r.ok) return { ok: false, message: errorText(r.error.code, r.error.message) };
   revalidatePath("/panel/propiedades");
+  invalidatePublic();
   redirect("/panel/propiedades");
 }
