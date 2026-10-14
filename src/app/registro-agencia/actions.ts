@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { registerAgencyInput } from "@/contracts";
 import { errorText, type ActionState } from "@/lib/form-state";
@@ -18,5 +19,6 @@ export async function registerAgencyAction(_prev: ActionState, f: FormData): Pro
   if (!parsed.success) return { ok: false, message: "Revisá los datos: nombre, dirección (minúsculas y guiones) y tu nombre son obligatorios." };
   const r = await registerAgency(actor, parsed.data);
   if (!r.ok) return { ok: false, message: errorText(r.error.code, r.error.message) };
+  revalidatePath("/", "layout"); // el rol cambió: refresca el avatar del encabezado y el menú
   redirect("/panel/agencia");
 }
