@@ -94,5 +94,6 @@ export const toNumber = (v: string | number | null | undefined): number | null =
 
 export type PropertyListItemDto = {
   id: string; slug: string; title: string; operation: string; type: string; status: string;
-  price: number; currency: string; zoneId: string; agentId: string; coverKey: string | null; updatedAt: string;
+  price: number; currency: string; zoneId: string; zoneName: string; agentId: string; coverKey: string | null; updatedAt: string;
+  totalAreaM2: number; bedrooms: number | null; bathrooms: number | null; photoCount: number;
 };

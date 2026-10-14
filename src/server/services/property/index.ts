@@ -175,12 +175,19 @@ export async function listMyProperties(
         id: property.id, slug: property.slug, title: property.title, operation: property.operation, type: property.type,
         status: property.status, price: property.price, currency: property.currency, zoneId: property.zoneId,
         agentId: property.agentId, updatedAt: property.updatedAt, coverKey: propertyPhoto.storageKey,
+        zoneName: zone.nameEs, totalAreaM2: property.totalAreaM2, bedrooms: propertyBuilding.bedrooms, bathrooms: propertyBuilding.bathrooms,
+        photoCount: sql<number>`(select count(*) from property_photo ph where ph.property_id = ${property.id} and ph.status = 'ready')`,
       }).from(property)
+        .innerJoin(zone, eq(zone.id, property.zoneId))
+        .leftJoin(propertyBuilding, eq(propertyBuilding.propertyId, property.id))
         .leftJoin(propertyPhoto, and(eq(propertyPhoto.propertyId, property.id), eq(propertyPhoto.isCover, true), eq(propertyPhoto.status, "ready")))
         .where(and(...where)).orderBy(desc(property.updatedAt)).limit(PAGE_SIZE).offset((page - 1) * PAGE_SIZE);
       return ok({
         total: Number(total), pageSize: PAGE_SIZE,
-        items: rows.map((r) => ({ ...r, price: Number(r.price), coverKey: r.coverKey ?? null, updatedAt: r.updatedAt.toISOString() })),
+        items: rows.map((r) => ({
+          ...r, price: Number(r.price), totalAreaM2: Number(r.totalAreaM2), photoCount: Number(r.photoCount),
+          coverKey: r.coverKey ?? null, updatedAt: r.updatedAt.toISOString(),
+        })),
       });
     });
   } catch (e) {

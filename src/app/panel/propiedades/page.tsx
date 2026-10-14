@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { PROPERTY_STATUS, type PropertyStatus } from "@/contracts";
-import { formatPrice, OPERATION_LABEL, statusLabel, TYPE_LABEL } from "@/lib/labels";
+import { statusLabel } from "@/lib/labels";
 import { getActor } from "@/server/auth/get-actor";
 import { listMyProperties } from "@/server/services/property";
+import { PropertyCard } from "./property-card";
 
 type SP = Promise<{ estado?: string; operacion?: string; pagina?: string }>;
 
@@ -48,20 +49,11 @@ async function Properties({ searchParams }: { searchParams: SP }) {
       {items.length === 0 && (
         <p className="card muted mt-3 text-sm">No hay propiedades con estos filtros. Creá la primera con “Nueva propiedad”.</p>
       )}
-      <div className="mt-3 space-y-3">
+      <ul className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((p) => (
-          <Link key={p.id} href={`/panel/propiedades/${p.id}`} className="card flex flex-wrap items-center justify-between gap-3 hover:border-blue-700">
-            <div>
-              <p className="font-medium">{p.title}</p>
-              <p className="muted text-sm">{TYPE_LABEL[p.type] ?? p.type} · {OPERATION_LABEL[p.operation] ?? p.operation}</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="font-medium">{formatPrice(p.price, p.currency)}</span>
-              <span className="badge">{statusLabel(p.status, p.operation)}</span>
-            </div>
-          </Link>
+          <li key={p.id}><PropertyCard p={p} /></li>
         ))}
-      </div>
+      </ul>
 
       {pages > 1 && (
         <div className="mt-4 flex items-center gap-3">
@@ -76,7 +68,7 @@ async function Properties({ searchParams }: { searchParams: SP }) {
 
 export default function PropiedadesPage({ searchParams }: { searchParams: SP }) {
   return (
-    <main className="mx-auto max-w-4xl space-y-4 px-6 py-8">
+    <main className="mx-auto max-w-6xl space-y-4 px-6 py-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold">Propiedades</h1>
         <Link href="/panel/propiedades/nueva" className="btn btn-primary">Nueva propiedad</Link>

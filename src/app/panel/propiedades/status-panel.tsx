@@ -3,7 +3,8 @@
 import { useActionState, useState } from "react";
 import { FormMessage } from "@/components/form-message";
 import { canTransition, type PropertyStatus, type PublishBlocker } from "@/contracts";
-import { BLOCKER_LABEL, statusLabel } from "@/lib/labels";
+import { StatusBadge } from "@/components/status-badge";
+import { BLOCKER_LABEL } from "@/lib/labels";
 import { deleteAction, statusAction } from "./actions";
 
 const MOVES: { to: PropertyStatus; label: (op: string) => string; cls: string }[] = [
@@ -23,7 +24,7 @@ export function StatusPanel({ id, status, operation, blockers }: { id: string; s
 
   return (
     <div className="space-y-4">
-      <p>Estado actual: <span className="badge">{statusLabel(status, operation)}</span></p>
+      <p>Estado actual: <StatusBadge status={status} operation={operation} /></p>
 
       {publishing && blockers.length > 0 && (
         <div className="alert alert-error">

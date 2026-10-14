@@ -140,7 +140,9 @@ describe("listado", () => {
     expect(rent.ok && rent.data.items).toHaveLength(1);
     await givePhotos(P.a1, AG.A);
     const withCover = await listMyProperties(a1, { status: "active" });
-    expect(withCover.ok && withCover.data.items[0].coverKey).toBe("k0");
+    expect(withCover.ok && withCover.data.items[0]).toMatchObject({ coverKey: "k0", photoCount: 3, zoneName: "Centro", totalAreaM2: 300, bedrooms: null });
+    const casa = await listMyProperties(a1, { operation: "rent" });
+    expect(casa.ok && casa.data.items[0]).toMatchObject({ bedrooms: 3, bathrooms: 2, photoCount: 0, coverKey: null });
     for (let i = 0; i < 22; i++) await createProperty(a1, { ...lot, title: `Lote número ${i}` });
     const p1 = await listMyProperties(a1, { page: 1 });
     const p2 = await listMyProperties(a1, { page: 2 });

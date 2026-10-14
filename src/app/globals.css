@@ -62,5 +62,10 @@ body {
   .alert-ok { background: var(--success-bg); color: var(--success); border: 1px solid #bbf7d0; }
   .alert-error { background: var(--danger-bg); color: var(--danger); border: 1px solid #fecaca; }
   .badge { display: inline-block; border-radius: 999px; padding: 0.1rem 0.6rem; font-size: 0.75rem; background: #e2e8f0; color: #334155; }
+  .badge-draft { background: #e2e8f0; color: #334155; }
+  .badge-active { background: #dcfce7; color: #166534; }
+  .badge-reserved { background: #fef3c7; color: #92400e; }
+  .badge-sold_rented { background: #dbeafe; color: #1e40af; }
+  .badge-paused { background: #ffedd5; color: #9a3412; }
   .badge-off { background: #fef3c7; color: #92400e; }
 }
