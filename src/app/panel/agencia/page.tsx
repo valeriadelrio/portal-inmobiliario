@@ -6,19 +6,19 @@ import { AgencyForm, ProfileForm } from "./forms";
 
 const STATUS: Record<string, { label: string; text: string; tone: string }> = {
   pending: { label: "Pendiente de aprobación", tone: "alert-error", text: "La administración del portal está revisando tu solicitud. Todavía no podés publicar." },
-  approved: { label: "Aprobada", tone: "alert-ok", text: "Tu agencia está activa." },
+  approved: { label: "Aprobada", tone: "alert-ok", text: "Tu inmobiliaria está activa." },
   rejected: { label: "Rechazada", tone: "alert-error", text: "Tu solicitud fue rechazada." },
-  suspended: { label: "Suspendida", tone: "alert-error", text: "Tu agencia está suspendida: sus propiedades no se muestran." },
+  suspended: { label: "Suspendida", tone: "alert-error", text: "Tu inmobiliaria está suspendida: sus propiedades no se muestran." },
 };
 
 async function MiAgencia() {
   const actor = await getActor();
   const mine = await getMyAgency(actor);
-  if (!mine.ok) return <p className="alert alert-error m-6">No se pudo cargar tu agencia.</p>;
+  if (!mine.ok) return <p className="alert alert-error m-6">No se pudo cargar tu inmobiliaria.</p>;
   if (!mine.data) {
     return (
       <main className="mx-auto max-w-3xl space-y-4 px-6 py-8">
-        <h1 className="text-2xl font-semibold">Mi agencia</h1>
+        <h1 className="text-2xl font-semibold">Mi inmobiliaria</h1>
         <div className="card">
           <p>Todavía no pertenecés a ninguna inmobiliaria.</p>
           <p className="muted mt-1 text-sm">Podés registrar la tuya o abrir el enlace de invitación que te envíe tu administrador.</p>
@@ -32,7 +32,7 @@ async function MiAgencia() {
   const isAdmin = a.role === "agency_admin";
 
   const detail = await getMyAgencyDetail(actor);
-  if (!detail.ok || !detail.data) return <p className="alert alert-error m-6">No se pudo cargar tu agencia.</p>;
+  if (!detail.ok || !detail.data) return <p className="alert alert-error m-6">No se pudo cargar tu inmobiliaria.</p>;
   const { agency: ag, member: me } = detail.data;
 
   return (
@@ -47,7 +47,7 @@ async function MiAgencia() {
 
       {a.status === "approved" && isAdmin && (
         <section className="card space-y-3">
-          <h2 className="font-medium">Datos de la agencia</h2>
+          <h2 className="font-medium">Datos de la inmobiliaria</h2>
           <AgencyForm v={{
             name: ag.name, description: ag.description ?? "", phone: ag.phone ?? "", email: ag.email ?? "",
             website: ag.website ?? "", address: ag.address ?? "", logoUrl: ag.logoUrl ?? "",

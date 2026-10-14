@@ -11,13 +11,13 @@ async function Agencias({ searchParams }: { searchParams: Promise<{ estado?: str
   const { estado } = await searchParams;
   const status = estado && estado in LABEL ? estado : undefined;
   const r = await listAgenciesForAdmin(await getActor(), status);
-  if (!r.ok) return <p className="alert alert-error m-6">No se pudieron cargar las agencias.</p>;
+  if (!r.ok) return <p className="alert alert-error m-6">No se pudieron cargar las inmobiliarias.</p>;
 
   return (
     <main className="mx-auto max-w-5xl space-y-6 px-6 py-8">
       <div>
         <Link href="/admin" className="link text-sm">← Administración</Link>
-        <h1 className="mt-2 text-2xl font-semibold">Agencias</h1>
+        <h1 className="mt-2 text-2xl font-semibold">Todas las inmobiliarias</h1>
       </div>
       <div className="flex flex-wrap gap-2">
         {FILTERS.map(([value, label]) => (
@@ -25,7 +25,7 @@ async function Agencias({ searchParams }: { searchParams: Promise<{ estado?: str
             className={`btn ${(status ?? "") === value ? "btn-primary" : ""}`}>{label}</Link>
         ))}
       </div>
-      {r.data.length === 0 && <p className="muted text-sm">No hay agencias en este estado.</p>}
+      {r.data.length === 0 && <p className="muted text-sm">No hay inmobiliarias en este estado.</p>}
       {r.data.map((a) => (
         <section key={a.id} className="card space-y-3">
           <div className="flex flex-wrap items-center gap-2">

@@ -18,7 +18,7 @@ export async function saveAgency(_prev: ActionState, f: FormData): Promise<Actio
   const r = await updateAgency(actor, parsed.data);
   if (!r.ok) return { ok: false, message: errorText(r.error.code, r.error.message) };
   revalidatePath("/panel/agencia");
-  return { ok: true, message: "Datos de la agencia guardados." };
+  return { ok: true, message: "Datos de la inmobiliaria guardados." };
 }
 
 export async function saveMyProfile(_prev: ActionState, f: FormData): Promise<ActionState> {

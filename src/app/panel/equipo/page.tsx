@@ -12,7 +12,7 @@ async function Equipo() {
   if (!members.ok) {
     return (
       <main className="mx-auto max-w-3xl px-6 py-8">
-        <p className="alert alert-error">El equipo está disponible para integrantes de una agencia aprobada.</p>
+        <p className="alert alert-error">El equipo está disponible para integrantes de una inmobiliaria aprobada.</p>
       </main>
     );
   }

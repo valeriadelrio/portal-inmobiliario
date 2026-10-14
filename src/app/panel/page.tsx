@@ -14,15 +14,15 @@ async function shortcuts(actor: Actor): Promise<Shortcut[]> {
   if (mine.ok && mine.data) {
     const st = mine.data.status;
     list.push({
-      href: "/panel/agencia", title: `Mi agencia: ${mine.data.name}`,
-      text: st === "approved" ? "Datos de la agencia y tu perfil público." : st === "pending" ? "Pendiente de aprobación." : `Estado: ${st}.`,
+      href: "/panel/agencia", title: `Mi inmobiliaria: ${mine.data.name}`,
+      text: st === "approved" ? "Datos de la inmobiliaria y tu perfil público." : st === "pending" ? "Pendiente de aprobación." : `Estado: ${st}.`,
     });
     if (actor.membership) list.push({ href: "/panel/equipo", title: "Equipo", text: "Integrantes e invitaciones." });
   } else {
     list.push({ href: "/registro-agencia", title: "Registrar mi inmobiliaria", text: "Enviá la solicitud para publicar propiedades." });
   }
   if (actor.platformAdmin) {
-    list.push({ href: "/admin/agencias", title: "Agencias", text: "Aprobar, rechazar o suspender inmobiliarias." });
+    list.push({ href: "/admin/agencias", title: "Todas las inmobiliarias", text: "Aprobar, rechazar o suspender inmobiliarias." });
     list.push({ href: "/admin/zonas", title: "Zonas y barrios", text: "Alta, edición e importación por CSV." });
   }
   return list;

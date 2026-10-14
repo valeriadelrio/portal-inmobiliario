@@ -9,7 +9,7 @@ async function Content() {
   if (mine.ok && mine.data) {
     return (
       <p className="card">
-        Ya sos parte de <strong>{mine.data.name}</strong>. <Link href="/panel/agencia" className="link">Ir a mi agencia</Link>
+        Ya sos parte de <strong>{mine.data.name}</strong>. <Link href="/panel/agencia" className="link">Ir a mi inmobiliaria</Link>
       </p>
     );
   }

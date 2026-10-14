@@ -23,7 +23,7 @@ export function AgencyForm({ v }: { v: AgencyValues }) {
         <input name="logoUrl" type="url" defaultValue={v.logoUrl} placeholder="https://" className="input" />
       </label>
       <div className="flex flex-wrap items-center gap-3 sm:col-span-2">
-        <button disabled={pending} className="btn btn-primary">Guardar agencia</button>
+        <button disabled={pending} className="btn btn-primary">Guardar inmobiliaria</button>
         <FormMessage state={state} />
       </div>
     </form>
