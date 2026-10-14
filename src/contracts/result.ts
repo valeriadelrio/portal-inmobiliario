@@ -4,7 +4,7 @@ export const ERROR_CODES = [
   // reglas de negocio señaladas por la base (RAISE EXCEPTION '<codigo>')
   "already_member", "slug_taken", "invalid_slug", "rate_limited", "invalid_transition", "publish_blocked",
   "immutable_field", "zone_inactive", "zone_depth", "wrong_type", "max_photos", "invitation_invalid",
-  "last_admin", "reassign_required",
+  "last_admin", "reassign_required", "consent_required",
   // otros
   "storage", "not_implemented", "unexpected",
 ] as const;

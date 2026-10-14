@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Icon, type IconName } from "./icons";
 
-export type NavItem = { href: string; label: string; icon: IconName; exact?: boolean };
+export type NavItem = { href: string; label: string; icon: IconName; exact?: boolean; badge?: number };
 export type NavGroup = { title: string; items: NavItem[] };
 
 /**
@@ -32,6 +32,7 @@ export function AppShell({ groups, role, children }: { groups: NavGroup[]; role:
                   >
                     <Icon name={it.icon} className={`h-5 w-5 shrink-0 ${active ? "text-blue-700" : "text-slate-500"}`} />
                     {it.label}
+                    {!!it.badge && <span className="ml-auto rounded-full bg-blue-700 px-2 py-0.5 text-xs font-semibold text-white" aria-label={`${it.badge} nuevas`}>{it.badge}</span>}
                   </Link>
                 </li>
               );

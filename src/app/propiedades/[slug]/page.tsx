@@ -10,7 +10,8 @@ import { propertyFacts } from "@/lib/property-facts";
 import { siteUrl } from "@/lib/site";
 import { whatsappUrl } from "@/lib/whatsapp";
 import { cachedPublicProperty } from "@/server/cache/public";
-import { FichaSkeleton } from "@/components/skeletons";
+import { FichaSkeleton, Bone } from "@/components/skeletons";
+import { FavoriteSlot, InquirySlot } from "@/components/public/ficha-actions";
 
 type Params = Promise<{ slug: string }>;
 
@@ -112,6 +113,11 @@ async function Ficha({ params }: { params: Params }) {
             {p.agent?.publicEmail && <p className="text-sm break-all">Email: {p.agent.publicEmail}</p>}
             {!wa && !p.agent?.publicPhone && !p.agent?.publicEmail && <p className="muted text-sm">Los datos de contacto se publicarán pronto.</p>}
           </section>
+          <section className="card space-y-3">
+            <h2 className="font-medium">Enviar una consulta</h2>
+            <Suspense fallback={<Bone className="h-64 w-full" />}><InquirySlot propertyId={p.id} title={p.title} open={p.status === "active" || p.status === "reserved"} /></Suspense>
+          </section>
+          <Suspense fallback={<Bone className="h-10 w-full" />}><FavoriteSlot propertyId={p.id} slug={p.slug} /></Suspense>
           <section className="card space-y-1">
             <p className="font-medium">{p.agency.name}</p>
             {p.agency.phone && <p className="muted text-sm">{p.agency.phone}</p>}

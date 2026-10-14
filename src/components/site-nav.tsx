@@ -16,6 +16,7 @@ export async function SiteNav() {
   const name = profile?.fullName?.trim() || email.split("@")[0] || "Mi cuenta";
   return (
     <div className="flex flex-wrap items-center gap-2">
+      <NavLink href="/cuenta/favoritos">Favoritos</NavLink>
       <NavLink href="/panel">Mi panel</NavLink>
       <UserMenu initials={initials(profile?.fullName ?? null, email || "?")} name={name} email={email} role={roleLabel(actor)} />
     </div>

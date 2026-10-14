@@ -3,6 +3,7 @@ import {
   PUBLIC_PAGE_SIZE, fail, mapDbError, ok, toNumber,
   type PublicCardDto, type PublicPropertyDto, type SearchFilters, type ServiceResult,
 } from "@/contracts";
+import { cardColumns, toCard } from "./card";
 import { withActor } from "@/server/db/with-actor";
 import { agency, agencyMember, property, propertyBuilding, propertyLot, propertyPhoto, zone } from "@/server/db/schema";
 
@@ -52,13 +53,7 @@ export async function searchProperties(
         .innerJoin(agency, eq(agency.id, property.agencyId))
         .leftJoin(propertyBuilding, eq(propertyBuilding.propertyId, property.id));
       const [{ total }] = await (where.length ? base.where(and(...where)) : base);
-      const rows = await tx.select({
-        id: property.id, slug: property.slug, title: property.title, operation: property.operation, type: property.type,
-        status: property.status, price: property.price, currency: property.currency, zoneName: zone.nameEs,
-        totalAreaM2: property.totalAreaM2, bedrooms: propertyBuilding.bedrooms, bathrooms: propertyBuilding.bathrooms,
-        coverKey: propertyPhoto.storageKey, agencyName: agency.name, agencySlug: agency.slug,
-        photoCount: sql<number>`(select count(*) from property_photo ph where ph.property_id = ${property.id} and ph.status = 'ready')`,
-      }).from(property)
+      const rows = await tx.select(cardColumns).from(property)
         .innerJoin(zone, eq(zone.id, property.zoneId))
         .innerJoin(agency, eq(agency.id, property.agencyId))
         .leftJoin(propertyBuilding, eq(propertyBuilding.propertyId, property.id))
@@ -67,9 +62,7 @@ export async function searchProperties(
         .orderBy(...order).limit(PUBLIC_PAGE_SIZE).offset((page - 1) * PUBLIC_PAGE_SIZE);
       return ok({
         total: Number(total), page, pageSize: PUBLIC_PAGE_SIZE,
-        items: rows.map((r) => ({
-          ...r, price: Number(r.price), totalAreaM2: Number(r.totalAreaM2), photoCount: Number(r.photoCount), coverKey: r.coverKey ?? null,
-        })),
+        items: rows.map(toCard),
       });
     });
   } catch (e) {

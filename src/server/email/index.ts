@@ -1,13 +1,33 @@
-export type Email = { to: string; subject: string; html: string };
+export type Email = { to: string; subject: string; html: string; replyTo?: string };
 
 /**
- * Sin RESEND_API_KEY escribe en consola (desarrollo). Con la clave usará Resend: se conecta cuando
- * hagan falta emails reales (consultas, H4). Devuelve si realmente se envió.
+ * Sin RESEND_API_KEY escribe en consola (desarrollo) y devuelve `sent: false`.
+ * Con la clave envía por la API de Resend (EMAIL_FROM = remitente verificado, p. ej. "Portal Tandil <avisos@tudominio.com>").
+ * Nunca lanza: un email caído no debe perder la consulta, que queda guardada en la bandeja.
  */
 export async function sendEmail(mail: Email): Promise<{ sent: boolean }> {
-  if (!process.env.RESEND_API_KEY) {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) {
     console.info(`[email:dev] a ${mail.to} — ${mail.subject}`);
     return { sent: false };
   }
-  throw new Error("Envío real con Resend: pendiente de implementar (H4)");
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from: process.env.EMAIL_FROM ?? "Portal Tandil <onboarding@resend.dev>",
+        to: [mail.to], subject: mail.subject, html: mail.html, reply_to: mail.replyTo,
+      }),
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!res.ok) console.error(`[email] Resend respondió ${res.status}`);
+    return { sent: res.ok };
+  } catch (e) {
+    console.error("[email] fallo de envío", e instanceof Error ? e.name : "error");
+    return { sent: false };
+  }
 }
+
+export const escapeHtml = (s: string) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
