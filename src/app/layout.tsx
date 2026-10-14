@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import { Suspense } from "react";
+import { SiteNav } from "@/components/site-nav";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -26,10 +28,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <header className="border-b border-slate-300 bg-white">
-          <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
+          <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-3">
             <Link href="/" className="font-semibold text-slate-900">Portal inmobiliario Tandil</Link>
-            <Link href="/panel" className="link text-sm">Mi panel</Link>
-          </nav>
+            <Suspense fallback={<span className="muted text-sm">…</span>}>
+              <SiteNav />
+            </Suspense>
+          </div>
         </header>
         <div className="flex-1">{children}</div>
       </body>

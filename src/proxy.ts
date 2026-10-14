@@ -31,6 +31,13 @@ export async function proxy(request: NextRequest) {
     url.searchParams.set("next", path);
     return NextResponse.redirect(url);
   }
+  if (data.user && path === "/login") {
+    const next = request.nextUrl.searchParams.get("next");
+    const url = request.nextUrl.clone();
+    url.pathname = next?.startsWith("/") && !next.startsWith("//") ? next : "/panel";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
   return response;
 }
 
