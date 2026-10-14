@@ -28,6 +28,7 @@ Alcance en SPEC.md; decisiones de arquitectura en ARCHITECTURE.md (incluye "Conv
 ## Base de datos y migraciones
 - Drizzle: esquema en `src/server/db/schema.ts`, migraciones en `db/migrations`. Una migración a la vez.
 - Aplicar a Supabase (`drizzle-kit migrate`) solo desde `main`, con autorización explícita de la usuaria, y verificar en la base real.
+- `.local-media/` guarda las fotos REALES subidas en desarrollo: nunca borrarla ni usarla para pruebas temporales (usar una carpeta aparte con `LOCAL_MEDIA_DIR`).
 - Tests contra la DB local `portal_test` (Docker, puerto 5433); nunca contra Supabase.
 - Promover usuarios: `npm run promote -- <email> --platform-admin [--yes]` (sin `--yes` solo simula).
 

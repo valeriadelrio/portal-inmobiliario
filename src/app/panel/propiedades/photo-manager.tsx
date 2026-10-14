@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
+import { PhotoImg } from "@/components/photo-img";
 import { ALLOWED_MIME, MAX_BYTES, MAX_PHOTOS, type PhotoDto } from "@/contracts";
 import { photoUrl } from "@/lib/photo-url";
 import { confirmUploadAction, deletePhotoAction, reorderAction, requestUploadAction, setCoverAction } from "./photo-actions";
@@ -89,8 +90,7 @@ export function PhotoManager({ propertyId, photos }: { propertyId: string; photo
             <li key={p.id} className="card space-y-2 p-2">
               <div className="relative aspect-[4/3] overflow-hidden rounded bg-slate-200">
                 {p.status === "ready" ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={photoUrl(p.storageKey, 400)} alt={p.altText ?? `Foto ${i + 1}`} className="h-full w-full object-cover" />
+                  <PhotoImg src={photoUrl(p.storageKey, 400)} alt={p.altText ?? `Foto ${i + 1}`} className="h-full w-full object-cover" />
                 ) : (
                   <span className="muted flex h-full items-center justify-center text-xs">Procesando…</span>
                 )}

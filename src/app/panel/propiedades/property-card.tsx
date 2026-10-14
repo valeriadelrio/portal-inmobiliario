@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { PropertyListItemDto } from "@/contracts";
+import { PhotoImg } from "@/components/photo-img";
 import { StatusBadge } from "@/components/status-badge";
 import { formatPrice, OPERATION_LABEL, TYPE_LABEL } from "@/lib/labels";
 import { photoUrl } from "@/lib/photo-url";
@@ -15,8 +16,7 @@ export function PropertyCard({ p }: { p: PropertyListItemDto }) {
       <Link href={href} className="block" aria-label={`Abrir ${p.title}`}>
         <div className="relative aspect-[4/3] bg-slate-200">
           {p.coverKey ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={photoUrl(p.coverKey, 800)} alt={`Portada de ${p.title}`} loading="lazy" className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            <PhotoImg src={photoUrl(p.coverKey, 800)} alt={`Portada de ${p.title}`} loading="lazy" className="h-full w-full object-cover transition-transform group-hover:scale-105" />
           ) : (
             <div className="muted flex h-full flex-col items-center justify-center gap-1 text-sm">
               <span aria-hidden className="text-3xl">🏠</span>Sin fotos todavía

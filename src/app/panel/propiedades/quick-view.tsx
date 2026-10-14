@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, useTransition } from "react";
+import { PhotoImg } from "@/components/photo-img";
 import { StatusBadge } from "@/components/status-badge";
 import { BLOCKER_LABEL, formatPrice, OPERATION_LABEL, TYPE_LABEL } from "@/lib/labels";
 import { photoSrcSet, photoUrl } from "@/lib/photo-url";
@@ -68,9 +69,8 @@ export function QuickView({ propertyId, className = "", preloaded = null }: { pr
               <div className="space-y-2">
                 <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-slate-200">
                   {current ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={photoUrl(current.storageKey, 800)} srcSet={photoSrcSet(current.storageKey)} sizes="(min-width: 768px) 28rem, 90vw"
+                    <PhotoImg
+                      key={current.id} src={photoUrl(current.storageKey, 800)} srcSet={photoSrcSet(current.storageKey)} sizes="(min-width: 768px) 28rem, 90vw"
                       alt={current.altText ?? `Foto ${index + 1} de ${photos.length}`} className="h-full w-full object-cover"
                     />
                   ) : (
@@ -90,8 +90,7 @@ export function QuickView({ propertyId, className = "", preloaded = null }: { pr
                       <li key={ph.id} className="shrink-0">
                         <button type="button" onClick={() => setIndex(i)} aria-label={`Ver foto ${i + 1}`} aria-current={i === index}
                           className={`block h-14 w-20 overflow-hidden rounded border-2 ${i === index ? "border-blue-700" : "border-transparent"}`}>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={photoUrl(ph.storageKey, 400)} alt="" className="h-full w-full object-cover" />
+                          <PhotoImg src={photoUrl(ph.storageKey, 400)} alt={`Miniatura ${i + 1}`} className="h-full w-full object-cover" />
                         </button>
                       </li>
                     ))}
