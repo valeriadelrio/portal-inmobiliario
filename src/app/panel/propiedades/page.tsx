@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { PROPERTY_STATUS, type PropertyStatus } from "@/contracts";
-import { statusLabel } from "@/lib/labels";
+import { OPERATION_LABEL, statusLabel } from "@/lib/labels";
 import { getActor } from "@/server/auth/get-actor";
 import { listMyProperties } from "@/server/services/property";
 import { PropertyCard } from "./property-card";
