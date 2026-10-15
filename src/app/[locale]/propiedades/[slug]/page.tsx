@@ -120,7 +120,7 @@ async function Ficha({ params }: { params: Params }) {
             ) : (
               <p className="muted text-sm">{p.agencyName}</p>
             )}
-            {wa && <a href={wa} target="_blank" rel="noopener noreferrer" className="btn btn-primary w-full">{t.whatsapp}</a>}
+            {wa && <a href={wa} target="_blank" rel="noopener noreferrer" className="btn btn-accent w-full">{t.whatsapp}</a>}
             {p.agent?.publicPhone && <p className="text-sm">{t.phone}: <a className="link" href={`tel:${p.agent.publicPhone.replace(/[^\d+]/g, "")}`}>{p.agent.publicPhone}</a></p>}
             {p.agent?.publicEmail && <p className="text-sm break-all">{t.email}: {p.agent.publicEmail}</p>}
             {!wa && !p.agent?.publicPhone && !p.agent?.publicEmail && <p className="muted text-sm">{t.contactSoon}</p>}

@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { getDict, localePath, type Locale } from "@/i18n";
 import { LanguageSwitcher, LanguageSwitcherFallback } from "./language-switcher";
 import { NavFallback } from "./nav-view";
+import { PaletteSwitch } from "./palette-switch";
 import { SiteNav } from "./site-nav";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -12,8 +13,16 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 /** <html>, <body> y encabezado común. Lo usan los dos layouts raíz: el público con idioma y el del panel (siempre en español). */
 export function RootShell({ locale, switcher, children }: { locale: Locale; switcher: boolean; children: React.ReactNode }) {
   const t = getDict(locale).site;
+  const dev = process.env.NODE_ENV !== "production"; // interruptor de paletas: solo en desarrollo
   return (
-    <html lang={locale} className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang={locale} className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
+      {dev && (
+        // eslint-disable-next-line @next/next/no-head-element
+        <head>
+          {/* TEMPORAL: aplica la paleta guardada antes de pintar, para que no parpadee */}
+          <script dangerouslySetInnerHTML={{ __html: 'try{document.documentElement.dataset.palette=localStorage.getItem("terrae-palette")==="p3"?"p3":"p1"}catch(e){}' }} />
+        </head>
+      )}
       <body className="min-h-full flex flex-col">
         <header className="border-b border-slate-300 bg-white">
           <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
@@ -30,6 +39,7 @@ export function RootShell({ locale, switcher, children }: { locale: Locale; swit
           </div>
         </header>
         <div className="flex-1">{children}</div>
+        {dev && <PaletteSwitch />}
         <footer className="border-t border-slate-300 bg-white">
           <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-sm text-slate-600 sm:px-6">
             <span>{t.nameLong}</span>
