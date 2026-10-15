@@ -108,9 +108,5 @@ body {
   .badge-off { background: #fef3c7; color: #92400e; }
 }
 
-/* TEMPORAL: botón activo del interruptor de paletas */
-html:not([data-palette="p3"]) .pal-btn[data-pal="p1"],
-html[data-palette="p3"] .pal-btn[data-pal="p3"] { background: var(--primary); color: #fff; }
-
 @keyframes skeleton-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 @media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
