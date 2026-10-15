@@ -3,7 +3,8 @@
 import { useActionState } from "react";
 import { FormMessage } from "@/components/form-message";
 import { inquiryAction } from "@/app/[locale]/propiedades/[slug]/actions";
-import { getDict, type Locale } from "@/i18n";
+import Link from "next/link";
+import { getDict, localePath, type Locale } from "@/i18n";
 
 /** Formulario de contacto de la ficha. Con sesión, nombre y email vienen precargados. */
 export function InquiryForm({ propertyId, title, locale, defaults }: { propertyId: string; title: string; locale: Locale; defaults?: { name: string; email: string } }) {
@@ -32,7 +33,7 @@ export function InquiryForm({ propertyId, title, locale, defaults }: { propertyI
       </label>
       <label className="flex items-start gap-2 text-xs font-normal text-slate-700">
         <input type="checkbox" name="consent" required className="mt-0.5" />
-        <span>{t.consent}</span>
+        <span>{t.consent} <Link href={localePath(locale, "/privacidad")} target="_blank" className="link">{getDict(locale).privacy.title}</Link>.</span>
       </label>
       <FormMessage state={state} />
       <button disabled={pending} className="btn btn-primary w-full">{pending ? t.sending : t.send}</button>

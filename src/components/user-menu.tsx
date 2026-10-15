@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { LogoutButton } from "./logout-button";
 
@@ -43,6 +44,7 @@ export function UserMenu({ initials, name, email, role }: Props) {
             <p className="muted break-all text-sm">{email}</p>
             <p className="badge mt-2">{role}</p>
           </div>
+          <Link href="/cuenta/datos" role="menuitem" onClick={() => setOpen(false)} className="link block text-sm">Mis datos y privacidad</Link>
           <LogoutButton />
         </div>
       )}

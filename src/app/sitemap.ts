@@ -15,6 +15,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...entry("/", { changeFrequency: "daily", priority: 1 }),
     ...entry("/propiedades", { changeFrequency: "hourly", priority: 0.9 }),
+    ...entry("/privacidad", { changeFrequency: "weekly", priority: 0.2 }),
     ...(r.ok ? r.data.flatMap((p) => entry(`/propiedades/${p.slug}`, { lastModified: p.updatedAt, changeFrequency: "weekly", priority: 0.7 })) : []),
   ];
 }

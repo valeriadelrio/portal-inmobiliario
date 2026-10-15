@@ -123,6 +123,53 @@ export const es = {
     notAvailable: "Esta publicación ya no está disponible.",
     generic: "Ocurrió un error inesperado.",
   },
+  privacy: {
+    title: "Política de privacidad",
+    metaDescription: "Qué datos personales guarda el portal, para qué, por cuánto tiempo y cómo ejercer tus derechos (Ley 25.326).",
+    updated: "Última actualización: octubre de 2026.",
+    contactLabel: "Contacto para consultas sobre tus datos:",
+    footerLink: "Privacidad",
+    myData: "Mis datos",
+    sections: [
+      { title: "Qué datos guardamos", body: [
+        "Cuenta: tu email y, si los completás, tu nombre y teléfono.",
+        "Consultas: el nombre, email, teléfono (opcional) y mensaje que escribís en el formulario de una propiedad, junto con la fecha y tu consentimiento.",
+        "Denuncias: el motivo y el detalle que indiques y, solo si querés, un email de contacto.",
+        "Favoritos: las propiedades que guardás con tu cuenta.",
+        "Seguridad: una huella técnica de tu dirección IP (un código irreversible, no la IP) para frenar el uso abusivo de los formularios. Usamos solamente cookies técnicas de sesión; no hay publicidad ni seguimiento.",
+      ] },
+      { title: "Para qué los usamos", body: [
+        "Para que la inmobiliaria responsable de una propiedad reciba tu consulta y pueda contactarte, para moderar publicaciones denunciadas y para evitar abusos. No vendemos ni cedemos tus datos con fines comerciales.",
+      ] },
+      { title: "Con quién se comparten", body: [
+        "Tu consulta llega a la inmobiliaria y al agente responsables de esa propiedad, que desde ese momento tratan tus datos para responderte. También intervienen proveedores técnicos que alojan el sitio y envían emails, solo para prestar el servicio.",
+      ] },
+      { title: "Cuánto tiempo los conservamos", body: [
+        "Consultas: 24 meses; después se anonimizan (nombre, email, teléfono y mensaje).",
+        "Huella técnica de IP: 30 días.",
+        "Email de quien denuncia: hasta un año después de resuelta la denuncia.",
+        "Cuenta y favoritos: hasta que elimines tu cuenta.",
+      ] },
+      { title: "Tus derechos", body: [
+        "Podés acceder a tus datos, rectificarlos, actualizarlos y pedir que se supriman (Ley 25.326, arts. 14 a 16). Con una cuenta, podés descargar tus datos y eliminar tu cuenta en “Mis datos”.",
+        "La Agencia de Acceso a la Información Pública, en su carácter de Órgano de Control de la Ley 25.326, tiene la atribución de atender las denuncias y reclamos de quienes resulten afectados en sus derechos por el incumplimiento de las normas de protección de datos personales.",
+      ] },
+    ],
+  },
+  account: {
+    title: "Mis datos",
+    intro: "Acá podés descargar una copia de los datos que guardamos sobre vos o eliminar tu cuenta.",
+    download: "Descargar mis datos (JSON)",
+    deleteTitle: "Eliminar mi cuenta",
+    deleteText: "Se borran tus favoritos y tus datos de contacto, y se anonimizan las consultas que enviaste. No se puede deshacer.",
+    memberBlocked: "Sos parte del equipo de una inmobiliaria. Pedile a su administrador que te quite del equipo y después podrás eliminar tu cuenta.",
+    confirmLabel: "Para confirmar, escribí tu email",
+    confirmButton: "Eliminar definitivamente",
+    working: "Eliminando…",
+    wrongEmail: "El email no coincide.",
+    failed: "No se pudo eliminar la cuenta. Probá de nuevo en un rato.",
+    privacy: "Política de privacidad",
+  },
   agency: {
     notFoundTitle: "Inmobiliaria no encontrada",
     title: (name: string) => `${name} — propiedades en Tandil`,

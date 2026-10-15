@@ -30,6 +30,12 @@ export function RootShell({ locale, switcher, children }: { locale: Locale; swit
           </div>
         </header>
         <div className="flex-1">{children}</div>
+        <footer className="border-t border-slate-300 bg-white">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-sm text-slate-600 sm:px-6">
+            <span>{t.nameLong}</span>
+            <Link href={localePath(locale, "/privacidad")} className="link">{getDict(locale).privacy.footerLink}</Link>
+          </div>
+        </footer>
       </body>
     </html>
   );
