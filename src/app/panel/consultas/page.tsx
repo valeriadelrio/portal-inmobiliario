@@ -53,7 +53,7 @@ async function Consultas({ searchParams }: { searchParams: Promise<{ estado?: st
                   <p className="font-medium">{q.name} <span className={`badge ${STATUS_CLASS[q.status]}`}>{STATUS_LABEL[q.status]}</span></p>
                   <p className="muted text-sm">
                     {fmt.format(new Date(q.createdAt))} · por <Link className="link" href={`/propiedades/${q.propertySlug}`}>{q.propertyTitle}</Link>
-                    {isAdmin && q.agentName ? ` · agente: ${q.agentName}` : ""}
+                    {isAdmin && q.agentName ? ` · responsable de la propiedad: ${q.agentName}` : ""}
                   </p>
                 </div>
               </div>
