@@ -7,8 +7,11 @@ import {
 } from "@/contracts";
 import { generateInvitationToken, hashToken } from "@/lib/invitation-token";
 import { can } from "@/server/auth/policies";
+import { db } from "@/server/db/client";
 import { withActor } from "@/server/db/with-actor";
-import { agency, agencyInvitation, agencyMember } from "@/server/db/schema";
+import { agency, agencyInvitation, agencyMember, userProfile } from "@/server/db/schema";
+import { sendEmail } from "@/server/email";
+import { buildAgencyStatusEmail } from "@/server/email/agency-status";
 
 // Pieza 2A. Cada función recibe el Actor primero y devuelve ServiceResult.
 // Las reglas finales las aplican la base (RLS y funciones app_*); acá se valida la entrada y se traducen errores.
@@ -110,12 +113,29 @@ export async function listAgenciesForAdmin(actor: Actor, status?: string): Promi
   }
 }
 
+/** Avisa por email a los administradores de la inmobiliaria. Mejor esfuerzo: nunca hace fallar el cambio de estado. */
+async function notifyAgencyStatus(agencyId: string, status: "approved" | "rejected" | "suspended", reason: string | null, wasSuspended: boolean) {
+  try {
+    const [a] = await db.select({ name: agency.name }).from(agency).where(eq(agency.id, agencyId));
+    if (!a) return;
+    const admins = await db.select({ email: userProfile.email }).from(agencyMember)
+      .innerJoin(userProfile, eq(userProfile.id, agencyMember.userId))
+      .where(and(eq(agencyMember.agencyId, agencyId), eq(agencyMember.role, "agency_admin")));
+    await Promise.all([...new Set(admins.map((m) => m.email))].map((to) =>
+      sendEmail(buildAgencyStatusEmail({ to, agencyName: a.name, status, reason, wasSuspended }))));
+  } catch {
+    /* el aviso es secundario */
+  }
+}
+
 export async function setAgencyStatus(
   actor: Actor, agencyId: string, status: "approved" | "rejected" | "suspended", reason?: string,
 ): Promise<ServiceResult<void>> {
   if (!can(actor, { type: "agency:approve" })) return forbidden();
   try {
+    const [before] = await db.select({ status: agency.status }).from(agency).where(eq(agency.id, agencyId));
     await withActor(actor, (tx) => tx.execute(sql`select app_set_agency_status(${agencyId}, ${status}, ${clean(reason?.trim())})`));
+    await notifyAgencyStatus(agencyId, status, reason?.trim() || null, before?.status === "suspended");
     return ok(undefined);
   } catch (e) {
     return mapDbError(e);

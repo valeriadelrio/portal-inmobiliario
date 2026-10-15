@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { buildAgencyStatusEmail } from "@/server/email/agency-status";
 import { buildInvitationEmail } from "@/server/email/invitation";
 
 describe("email de invitación", () => {
@@ -15,5 +16,19 @@ describe("email de invitación", () => {
     expect(m.html).not.toContain("<script>");
     expect(m.html).toContain("&lt;script&gt;");
     expect(m.html).toContain("administrador");
+  });
+});
+
+describe("aviso de cambio de estado de la inmobiliaria", () => {
+  it("aprobada, reactivada, suspendida y rechazada dicen lo correcto e incluyen el motivo escapado", () => {
+    const base = { to: "a@x.com", agencyName: "Casa <b>Uno</b>" };
+    const ok = buildAgencyStatusEmail({ ...base, status: "approved" });
+    expect(ok.subject).toContain("aprobada");
+    expect(ok.html).not.toContain("<b>Uno</b>");
+    expect(buildAgencyStatusEmail({ ...base, status: "approved", wasSuspended: true }).subject).toContain("reactivada");
+    const sus = buildAgencyStatusEmail({ ...base, status: "suspended", reason: "Datos <script>falsos</script>" });
+    expect(sus.html).toContain("Motivo");
+    expect(sus.html).not.toContain("<script>");
+    expect(buildAgencyStatusEmail({ ...base, status: "rejected" }).html).not.toContain("Motivo");
   });
 });
