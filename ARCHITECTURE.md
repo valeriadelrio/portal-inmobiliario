@@ -63,3 +63,7 @@ Cambios a `contracts/` o al schema van en un PR secuencial previo; el resto en w
 2. **Variables de entorno en Vercel**: `CRON_SECRET` (cualquier texto largo; sin él el mantenimiento diario no corre), `IP_HASH_SALT`, `RESEND_API_KEY` y `EMAIL_FROM` (con dominio verificado en Resend), `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_CONTACT_EMAIL`, y las de R2 + `NEXT_PUBLIC_MEDIA_BASE_URL` cuando exista la cuenta de Cloudflare.
 3. **Aplicar las migraciones 0004–0006 a Supabase** desde `main`, con autorización (`npm run db:migrate`), y verificar en la base real (tablas `property_report`, columnas `moderation_*`, funciones `app_moderate_property`, `app_resolve_report`, `app_list_audit`).
 4. Revisar con una persona del ámbito legal el texto de `/privacidad`.
+
+## Documentación
+- `docs/diagramas.md`: diagramas Mermaid (modelo de datos, capas, roles, estados, secuencias, servicios, pantallas).
+- `docs/criterios-de-aceptacion.md`: criterios de aceptación por función, con su estado y el test que los verifica. Al cambiar una regla, actualizar el criterio y su test en el mismo commit.
