@@ -21,10 +21,10 @@ export function RootShell({ locale, switcher, children }: { locale: Locale; swit
             </Link>
             <div className="flex flex-wrap items-center gap-2">
               <Link href={localePath(locale, "/propiedades")} className="rounded-md px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-200 hover:text-slate-900">{t.properties}</Link>
-              {switcher && <Suspense fallback={<LanguageSwitcherFallback locale={locale} />}><LanguageSwitcher locale={locale} /></Suspense>}
               <Suspense fallback={<span aria-hidden className="skeleton inline-block h-9 w-24 rounded-lg" />}>
                 <SiteNav locale={locale} />
               </Suspense>
+              {switcher && <Suspense fallback={<LanguageSwitcherFallback locale={locale} />}><LanguageSwitcher locale={locale} /></Suspense>}
             </div>
           </div>
         </header>
