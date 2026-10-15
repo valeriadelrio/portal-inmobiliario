@@ -5,7 +5,7 @@ import { agency, property, propertyBuilding, propertyPhoto, zone } from "@/serve
 /** Columnas de una tarjeta pública. Requiere joins a zone, agency, property_building y property_photo (portada). */
 export const cardColumns = {
   id: property.id, slug: property.slug, title: property.title, operation: property.operation, type: property.type,
-  status: property.status, price: property.price, currency: property.currency, zoneName: zone.nameEs,
+  status: property.status, price: property.price, currency: property.currency, zoneName: zone.nameEs, zoneNameEn: zone.nameEn,
   totalAreaM2: property.totalAreaM2, bedrooms: propertyBuilding.bedrooms, bathrooms: propertyBuilding.bathrooms,
   coverKey: propertyPhoto.storageKey, agencyName: agency.name, agencySlug: agency.slug,
   photoCount: sql<number>`(select count(*) from property_photo ph where ph.property_id = ${property.id} and ph.status = 'ready')`,

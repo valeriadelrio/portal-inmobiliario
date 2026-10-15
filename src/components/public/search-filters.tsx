@@ -1,71 +1,77 @@
-import { Select } from "@/components/select";
 import Link from "next/link";
+import { Select } from "@/components/select";
 import type { SearchFilters, ZoneDto } from "@/contracts";
 import { PROPERTY_TYPE } from "@/contracts";
-import { OPERATION_LABEL, TYPE_LABEL } from "@/lib/labels";
+import { getDict, localePath, zoneLabel, type Locale } from "@/i18n";
 
 /** Filtros del buscador: un <form method="get">, sin JavaScript. La URL resultante se puede compartir. */
-export function SearchFiltersForm({ f, zones }: { f: SearchFilters; zones: ZoneDto[] }) {
+export function SearchFiltersForm({ f, zones, locale }: { f: SearchFilters; zones: ZoneDto[]; locale: Locale }) {
+  const d = getDict(locale);
+  const t = d.search;
   const parents = zones.filter((z) => !z.parentId);
   const childrenOf = (id: string) => zones.filter((z) => z.parentId === id);
   const zone = f.zone?.[0] ?? "";
   const type = f.type?.[0] ?? "";
+  const action = localePath(locale, "/propiedades");
   return (
-    <form method="get" action="/propiedades" className="card grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      <label className="label">Operación
+    <form method="get" action={action} className="card grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <label className="label">{t.operation}
         <Select name="op" defaultValue={f.op ?? ""} className="input">
-          <option value="">Venta y alquiler</option>
-          {Object.entries(OPERATION_LABEL).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+          <option value="">{t.bothOperations}</option>
+          {Object.entries(d.operations).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
         </Select>
       </label>
-      <label className="label">Tipo
+      <label className="label">{t.type}
         <Select name="type" defaultValue={type} className="input">
-          <option value="">Todos</option>
-          {PROPERTY_TYPE.map((t) => <option key={t} value={t}>{TYPE_LABEL[t]}</option>)}
+          <option value="">{t.allTypes}</option>
+          {PROPERTY_TYPE.map((x) => <option key={x} value={x}>{d.types[x]}</option>)}
         </Select>
       </label>
-      <label className="label">Zona o barrio
+      <label className="label">{t.zone}
         <Select name="zone" defaultValue={zone} className="input">
-          <option value="">Toda la ciudad</option>
-          {parents.map((p) => (
-            <optgroup key={p.id} label={p.nameEs}>
-              <option value={p.slug}>{p.nameEs} (toda la zona)</option>
-              {childrenOf(p.id).map((c) => <option key={c.id} value={c.slug}>{c.nameEs}</option>)}
-            </optgroup>
-          ))}
+          <option value="">{t.wholeCity}</option>
+          {parents.map((p) => {
+            const name = zoneLabel(locale, p.nameEs, p.nameEn);
+            return (
+              <optgroup key={p.id} label={name}>
+                <option value={p.slug}>{t.wholeZone(name)}</option>
+                {childrenOf(p.id).map((c) => <option key={c.id} value={c.slug}>{zoneLabel(locale, c.nameEs, c.nameEn)}</option>)}
+              </optgroup>
+            );
+          })}
         </Select>
       </label>
-      <label className="label">Ordenar por
+      <label className="label">{t.sort}
         <Select name="sort" defaultValue={f.sort} className="input">
-          <option value="recent">Más recientes</option>
-          <option value="price_asc">Precio: menor a mayor</option>
-          <option value="price_desc">Precio: mayor a menor</option>
+          <option value="recent">{t.recent}</option>
+          <option value="price_asc">{t.priceAsc}</option>
+          <option value="price_desc">{t.priceDesc}</option>
         </Select>
       </label>
-      <label className="label">Precio mínimo
+      <label className="label">{t.minPrice}
         <input name="minPrice" type="number" min={0} inputMode="numeric" defaultValue={f.minPrice} className="input" />
       </label>
-      <label className="label">Precio máximo
+      <label className="label">{t.maxPrice}
         <input name="maxPrice" type="number" min={0} inputMode="numeric" defaultValue={f.maxPrice} className="input" />
       </label>
-      <label className="label">Moneda del precio
+      <label className="label">{t.currency}
         <Select name="currency" defaultValue={f.currency ?? ""} className="input">
-          <option value="">Dólares (USD)</option>
-          <option value="ARS">Pesos (ARS)</option>
+          <option value="">{t.usd}</option>
+          <option value="ARS">{t.ars}</option>
         </Select>
       </label>
-      <label className="label">Ambientes (mínimo)
+      <label className="label">{t.minRooms}
         <input name="minRooms" type="number" min={0} inputMode="numeric" defaultValue={f.minRooms} className="input" />
       </label>
-      <label className="label">Superficie mínima (m²)
+      <label className="label">{t.minArea}
         <input name="minArea" type="number" min={0} inputMode="numeric" defaultValue={f.minArea} className="input" />
       </label>
-      <label className="label">Superficie máxima (m²)
+      <label className="label">{t.maxArea}
         <input name="maxArea" type="number" min={0} inputMode="numeric" defaultValue={f.maxArea} className="input" />
       </label>
       <div className="flex items-end gap-2 sm:col-span-2">
-        <button className="btn btn-primary">Buscar</button>
-        <Link href="/propiedades" className="btn">Limpiar</Link>
+        <button className="btn btn-primary">{t.submit}</button>
+        <Link href={action} className="btn">{t.clear}</Link>
       </div>
     </form>
   );

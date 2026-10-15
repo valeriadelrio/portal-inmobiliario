@@ -22,6 +22,7 @@ Alcance en SPEC.md; decisiones de arquitectura en ARCHITECTURE.md (incluye "Conv
 - Reglas de negocio finales las aplica la base (triggers); `src/contracts` las refleja para la UI. El test `h2-contracts-vs-db` detecta desalineaciones.
 
 ## Next.js
+- Textos del sitio público (es/en) en `src/i18n/{es,en}.ts`; toda página o componente público nuevo debe usarlos. Rutas: español sin prefijo, inglés bajo `/en` (ver ARCHITECTURE.md, i18n).
 - Leer `node_modules/next/dist/docs/` antes de escribir código Next (ver AGENTS.md).
 - `cacheComponents` activo: lo que depende de sesión va dentro de `<Suspense>`; datos de runtime con `await connection()`. No hay `middleware`: se usa `src/proxy.ts`.
 

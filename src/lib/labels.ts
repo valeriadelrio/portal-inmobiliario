@@ -1,4 +1,5 @@
 import type { PublishBlocker } from "@/contracts";
+import { getDict, numberLocale, type Locale } from "@/i18n";
 
 export const TYPE_LABEL: Record<string, string> = {
   house: "Casa", apartment: "Departamento", ph: "PH", lot: "Lote", commercial: "Local comercial", office: "Oficina", garage: "Cochera",
@@ -14,7 +15,13 @@ export const BLOCKER_LABEL: Record<PublishBlocker, string> = {
   agency_not_approved: "Tu inmobiliaria todavía no está aprobada",
 };
 
-export function statusLabel(status: string, operation: string): string {
+export function statusLabel(status: string, operation: string, locale: Locale = "es"): string {
+  if (locale !== "es") {
+    const d = getDict(locale).status;
+    if (status === "active") return d.active;
+    if (status === "reserved") return d.reserved;
+    if (status === "sold_rented") return operation === "rent" ? d.soldRent : d.soldSale;
+  }
   switch (status) {
     case "draft": return "Borrador";
     case "active": return "Activa";
@@ -26,7 +33,7 @@ export function statusLabel(status: string, operation: string): string {
 }
 
 /** Sin conversión entre monedas: cada precio se muestra en la moneda en que se cargó. */
-export function formatPrice(price: number, currency: string): string {
-  const n = new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 }).format(price);
+export function formatPrice(price: number, currency: string, locale: Locale = "es"): string {
+  const n = new Intl.NumberFormat(numberLocale(locale), { maximumFractionDigits: 0 }).format(price);
   return currency === "USD" ? `US$ ${n}` : `$ ${n}`;
 }

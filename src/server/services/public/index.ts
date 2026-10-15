@@ -91,7 +91,7 @@ export async function getPublicProperty(slug: string): Promise<ServiceResult<Pub
 
       return ok({
         id: r.id, slug: r.slug, title: r.title, operation: r.operation, type: r.type, status: r.status,
-        price: Number(r.price), currency: r.currency, zoneName: z.nameEs, zoneParentName: parent?.nameEs ?? null,
+        price: Number(r.price), currency: r.currency, zoneName: z.nameEs, zoneNameEn: z.nameEn, zoneParentName: parent?.nameEs ?? null, zoneParentNameEn: parent?.nameEn ?? null,
         totalAreaM2: Number(r.totalAreaM2), coveredAreaM2: toNumber(r.coveredAreaM2), expenses: toNumber(r.expenses),
         bedrooms: bld?.bedrooms ?? null, bathrooms: bld?.bathrooms ?? null, coverKey: cover?.storageKey ?? null, photoCount: photos.length,
         agencyName: ag.name, agencySlug: ag.slug, description: r.description, language: r.language,

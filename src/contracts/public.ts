@@ -1,7 +1,7 @@
 /** Lo que ve el público (sin sesión). Nunca incluye emails de cuentas, coordenadas ni direcciones ocultas. */
 export type PublicCardDto = {
   id: string; slug: string; title: string; operation: string; type: string; status: string;
-  price: number; currency: string; zoneName: string; totalAreaM2: number;
+  price: number; currency: string; zoneName: string; zoneNameEn: string | null; totalAreaM2: number;
   bedrooms: number | null; bathrooms: number | null; coverKey: string | null; photoCount: number;
   agencyName: string; agencySlug: string;
 };
@@ -13,7 +13,7 @@ export type PublicAgentDto = {
 
 export type PublicPropertyDto = PublicCardDto & {
   description: string; language: string; publishedAt: string | null; updatedAt: string;
-  zoneParentName: string | null;
+  zoneParentName: string | null; zoneParentNameEn: string | null;
   /** Solo si el agente marcó "mostrar dirección exacta". */
   address: string | null; expenses: number | null; coveredAreaM2: number | null;
   detail:

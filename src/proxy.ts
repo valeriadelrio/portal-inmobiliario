@@ -1,8 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
+import { stripLocale } from "@/i18n";
 import { safeNext } from "@/lib/safe-redirect";
 import { NextResponse, type NextRequest } from "next/server";
 
 const PROTECTED = ["/panel", "/admin", "/cuenta", "/registro-agencia"];
+// páginas públicas con idioma: el español va sin prefijo (se reescribe a /es/…) y el inglés bajo /en
+const LOCALIZED = ["/propiedades", "/inmobiliarias", "/cuenta"];
+const isLocalized = (p: string) => p === "/" || LOCALIZED.some((l) => p === l || p.startsWith(`${l}/`));
 
 /** Refresca la sesión de Supabase y manda a /login si falta. La autorización fina NO va acá (ver policies.ts). */
 export async function proxy(request: NextRequest) {
@@ -25,8 +29,9 @@ export async function proxy(request: NextRequest) {
 
   const { data } = await supabase.auth.getUser();
   const path = request.nextUrl.pathname;
+  const bare = stripLocale(path); // sin el prefijo /en
 
-  if (!data.user && PROTECTED.some((p) => path === p || path.startsWith(`${p}/`))) {
+  if (!data.user && PROTECTED.some((p) => bare === p || bare.startsWith(`${p}/`))) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("next", path);
@@ -35,6 +40,20 @@ export async function proxy(request: NextRequest) {
   if (data.user && path === "/login") {
     const next = request.nextUrl.searchParams.get("next");
     return NextResponse.redirect(new URL(safeNext(next), request.url));
+  }
+
+  // /es/... no es una URL pública: el español vive sin prefijo
+  if (path === "/es" || path.startsWith("/es/")) {
+    const url = request.nextUrl.clone();
+    url.pathname = path.slice(3) || "/";
+    return NextResponse.redirect(url, 308);
+  }
+  if (!path.startsWith("/en") && isLocalized(path)) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/es${path === "/" ? "" : path}`;
+    const rewritten = NextResponse.rewrite(url, { request });
+    response.cookies.getAll().forEach((c) => rewritten.cookies.set(c));
+    return rewritten;
   }
   return response;
 }
