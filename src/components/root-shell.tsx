@@ -2,7 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import { Suspense } from "react";
 import { getDict, localePath, type Locale } from "@/i18n";
-import { LanguageSwitcher } from "./language-switcher";
+import { LanguageSwitcher, LanguageSwitcherFallback } from "./language-switcher";
 import { SiteNav } from "./site-nav";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -21,8 +21,8 @@ export function RootShell({ locale, switcher, children }: { locale: Locale; swit
             </Link>
             <div className="flex flex-wrap items-center gap-2">
               <Link href={localePath(locale, "/propiedades")} className="rounded-md px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-200 hover:text-slate-900">{t.properties}</Link>
-              {switcher && <Suspense fallback={null}><LanguageSwitcher locale={locale} /></Suspense>}
-              <Suspense fallback={<span className="muted text-sm">…</span>}>
+              {switcher && <Suspense fallback={<LanguageSwitcherFallback locale={locale} />}><LanguageSwitcher locale={locale} /></Suspense>}
+              <Suspense fallback={<span aria-hidden className="skeleton inline-block h-9 w-24 rounded-lg" />}>
                 <SiteNav locale={locale} />
               </Suspense>
             </div>
