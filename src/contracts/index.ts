@@ -8,3 +8,4 @@ export * from "./agency";
 export * from "./zone";
 export * from "./photo";
 export * from "./public";
+export * from "./moderation";

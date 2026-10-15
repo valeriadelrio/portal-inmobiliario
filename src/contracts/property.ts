@@ -96,4 +96,6 @@ export type PropertyListItemDto = {
   id: string; slug: string; title: string; operation: string; type: string; status: string;
   price: number; currency: string; zoneId: string; zoneName: string; agentId: string; coverKey: string | null; updatedAt: string;
   totalAreaM2: number; bedrooms: number | null; bathrooms: number | null; photoCount: number;
+  /** "hidden": la plataforma la sacó del sitio público (el motivo lo ve la inmobiliaria). */
+  moderationStatus: string; moderationReason: string | null;
 };

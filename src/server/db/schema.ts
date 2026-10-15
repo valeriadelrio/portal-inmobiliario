@@ -152,6 +152,11 @@ export const property = pgTable(
     coveredAreaM2: numeric("covered_area_m2", { precision: 12, scale: 2 }),
     slug: text("slug").notNull(),
     publishedAt: timestamp("published_at", { withTimezone: true }),
+    /** Moderación de la plataforma: 'hidden' la saca del sitio público sin tocar el estado que le puso la inmobiliaria. */
+    moderationStatus: text("moderation_status").notNull().default("ok"),
+    moderationReason: text("moderation_reason"),
+    moderatedAt: timestamp("moderated_at", { withTimezone: true }),
+    moderatedBy: uuid("moderated_by"),
     statusChangedAt: timestamp("status_changed_at", { withTimezone: true }).notNull().defaultNow(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
@@ -166,6 +171,7 @@ export const property = pgTable(
       inList("type", ["house", "apartment", "ph", "lot", "commercial", "office", "garage"]),
     ),
     check("property_status_ck", inList("status", ["draft", "active", "reserved", "sold_rented", "paused"])),
+    check("property_moderation_ck", inList("moderation_status", ["ok", "hidden"])),
     check("property_currency_ck", inList("currency", ["USD", "ARS"])),
     check("property_language_ck", inList("language", ["es", "en"])),
     check("property_price_ck", sql`price > 0`),
@@ -262,5 +268,35 @@ export const auditLog = pgTable("audit_log", {
   action: text("action").notNull(),
   entity: text("entity").notNull(),
   entityId: uuid("entity_id"),
+  /** Dato de contexto corto (motivo, estado anterior…). Nunca datos personales de visitantes. */
+  detail: text("detail"),
   at: timestamp("at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+/** Denuncias de visitantes sobre una publicación. Las resuelve la administración de la plataforma. */
+export const propertyReport = pgTable(
+  "property_report",
+  {
+    id: id(),
+    propertyId: uuid("property_id").notNull().references(() => property.id, { onDelete: "cascade" }),
+    reason: text("reason").notNull(),
+    message: text("message"),
+    reporterEmail: text("reporter_email"),
+    userId: uuid("user_id").references(() => userProfile.id, { onDelete: "set null" }),
+    ipHash: text("ip_hash"),
+    status: text("status").notNull().default("open"),
+    resolvedBy: uuid("resolved_by"),
+    resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+    resolutionNote: text("resolution_note"),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    index("property_report_status_idx").on(t.status, t.createdAt),
+    index("property_report_property_idx").on(t.propertyId),
+    // una persona (por huella de IP) no repite una denuncia abierta sobre la misma ficha
+    uniqueIndex("property_report_open_uq").on(t.propertyId, t.ipHash).where(sql`status = 'open'`),
+    check("property_report_reason_ck", inList("reason", ["fake", "duplicate", "wrong_info", "inappropriate", "sold", "other"])),
+    check("property_report_status_ck", inList("status", ["open", "dismissed", "actioned"])),
+    check("property_report_message_ck", sql`message is null or char_length(message) <= 1000`),
+  ],
+);

@@ -14,6 +14,7 @@ import { whatsappUrl } from "@/lib/whatsapp";
 import { cachedPublicProperty } from "@/server/cache/public";
 import { FichaSkeleton, Bone } from "@/components/skeletons";
 import { FavoriteSlot, InquirySlot } from "@/components/public/ficha-actions";
+import { ReportForm } from "@/components/public/report-form";
 
 type Params = Promise<{ locale: string; slug: string }>;
 
@@ -134,6 +135,7 @@ async function Ficha({ params }: { params: Params }) {
             {p.agency.phone && <p className="muted text-sm">{p.agency.phone}</p>}
             <Link href={localePath(locale, `/inmobiliarias/${p.agency.slug}`)} className="link text-sm">{t.seeAllOfAgency}</Link>
           </section>
+          <ReportForm propertyId={p.id} locale={locale} />
         </aside>
       </div>
     </>

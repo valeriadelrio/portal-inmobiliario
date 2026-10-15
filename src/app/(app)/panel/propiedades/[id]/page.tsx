@@ -26,6 +26,12 @@ async function Detail({ params }: { params: Promise<{ id: string }> }) {
         <h1 className="mt-2 text-2xl font-semibold">{p.title}</h1>
         <p className="muted text-sm">Identificador de la ficha: {p.slug}</p>
       </div>
+      {p.moderationStatus === "hidden" && (
+        <p role="alert" className="alert alert-error">
+          La administración del portal ocultó esta publicación{p.moderationReason ? `: ${p.moderationReason}` : "."} No se ve en el sitio público.
+          Si querés que la revisen de nuevo, corregí lo indicado y escribinos.
+        </p>
+      )}
       <section className="card space-y-3">
         <h2 className="font-medium">Estado</h2>
         <StatusPanel id={p.id} status={p.status} operation={p.operation} blockers={p.blockers} />

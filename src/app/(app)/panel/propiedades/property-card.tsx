@@ -23,6 +23,7 @@ export function PropertyCard({ p }: { p: PropertyListItemDto }) {
             </div>
           )}
           <StatusBadge status={p.status} operation={p.operation} className="absolute left-3 top-3 shadow" />
+          {p.moderationStatus === "hidden" && <span className="badge badge-off absolute right-3 bottom-3 shadow" title={p.moderationReason ?? undefined}>Oculta por la plataforma</span>}
           {p.photoCount > 0 && <span className="badge absolute bottom-3 left-3 bg-black/70 text-white">{p.photoCount} {p.photoCount === 1 ? "foto" : "fotos"}</span>}
         </div>
         <div className="space-y-1 p-4">

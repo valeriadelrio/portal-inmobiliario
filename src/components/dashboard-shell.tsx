@@ -1,6 +1,7 @@
 import { roleLabel } from "@/lib/role-label";
 import { getActor } from "@/server/auth/get-actor";
 import { countNewInquiries } from "@/server/services/inquiry";
+import { countOpenReports } from "@/server/services/moderation";
 import { AppShell, type NavGroup } from "./app-shell";
 
 /** Arma el menú lateral según el rol y lo envuelve alrededor del contenido. */
@@ -23,6 +24,9 @@ export async function DashboardShell({ children }: { children: React.ReactNode }
           { href: "/admin", label: "Resumen", icon: "shield", exact: true },
           { href: "/admin/agencias", label: "Todas las inmobiliarias", icon: "building" },
           { href: "/admin/zonas", label: "Zonas y barrios", icon: "pin" },
+          { href: "/admin/denuncias", label: "Denuncias", icon: "flag", badge: await countOpenReports(actor) },
+          { href: "/admin/propiedades", label: "Moderar propiedades", icon: "grid" },
+          { href: "/admin/registro", label: "Registro de acciones", icon: "list" },
         ],
       });
     }

@@ -1,13 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { inquiryInput } from "@/contracts";
+import { inquiryInput, reportInput } from "@/contracts";
 import { getDict, isLocale } from "@/i18n";
 import { errorText, type ActionState } from "@/lib/form-state";
 import { requestIpHash } from "@/lib/ip-hash";
 import { getActor } from "@/server/auth/get-actor";
 import { addFavorite, removeFavorite } from "@/server/services/favorite";
 import { createInquiry } from "@/server/services/inquiry";
+import { reportProperty } from "@/server/services/moderation";
 
 const s = (f: FormData, k: string) => String(f.get(k) ?? "");
 
@@ -41,4 +42,24 @@ export async function toggleFavoriteAction(propertyId: string, makeFavorite: boo
   const r = makeFavorite ? await addFavorite(actor, propertyId) : await removeFavorite(actor, propertyId);
   if (r.ok) { revalidatePath("/cuenta/favoritos"); revalidatePath("/en/cuenta/favoritos"); }
   return { ok: r.ok };
+}
+
+export async function reportAction(_prev: ActionState, f: FormData): Promise<ActionState> {
+  const loc = s(f, "locale");
+  const locale = isLocale(loc) ? loc : "es";
+  const t = getDict(locale).report;
+  if (s(f, "website")) return { ok: true, message: t.done }; // campo trampa: bot
+  const parsed = reportInput.safeParse({
+    propertyId: s(f, "propertyId"), reason: s(f, "reason"), message: s(f, "message") || undefined, email: s(f, "email") || undefined,
+  });
+  if (!parsed.success) {
+    return { ok: false, message: parsed.error.issues[0]?.path[0] === "email" ? t.badEmail : t.generic };
+  }
+  const r = await reportProperty(await getActor(), parsed.data, { ipHash: await requestIpHash() });
+  if (!r.ok) {
+    if (r.error.code === "not_found") return { ok: false, message: t.notAvailable };
+    if (r.error.code === "rate_limited") return { ok: false, message: t.rateLimited };
+    return { ok: false, message: t.generic };
+  }
+  return { ok: true, message: t.done };
 }

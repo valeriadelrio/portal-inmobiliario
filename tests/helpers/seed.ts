@@ -23,7 +23,7 @@ export const ids = (rows: Iterable<Record<string, unknown>>) => [...rows].map((r
 export const sorted = (...x: string[]) => [...x].sort();
 
 export async function seed() {
-  await admin.unsafe(`truncate audit_log, agency_invitation, favorite, inquiry, property_photo, property_lot, property_building,
+  await admin.unsafe(`truncate audit_log, property_report, agency_invitation, favorite, inquiry, property_photo, property_lot, property_building,
     property, agency_member, zone, user_profile, agency restart identity cascade`);
 
   const agencies = [

@@ -16,6 +16,7 @@ export const PAGE_SIZE = 20;
 export type PropertyListFilters = { status?: PropertyStatus; operation?: "sale" | "rent"; type?: string; page?: number };
 export type PropertyDetail = PropertyInput & {
   id: string; status: PropertyStatus; slug: string; agentId: string; publishedAt: string | null; blockers: PublishBlocker[];
+  moderationStatus: string; moderationReason: string | null;
 };
 
 const unauthenticated = () => fail("unauthenticated", "Tenés que iniciar sesión");
@@ -135,6 +136,7 @@ function toDetail(
 ): PropertyDetail | null {
   const base = {
     id: r.id, status: r.status as PropertyStatus, slug: r.slug, agentId: r.agentId, publishedAt: r.publishedAt?.toISOString() ?? null, blockers,
+    moderationStatus: r.moderationStatus, moderationReason: r.moderationReason,
     operation: r.operation as "sale" | "rent", title: r.title, description: r.description, language: r.language as "es" | "en",
     zoneId: r.zoneId, addressText: r.addressText ?? undefined, showExactAddress: r.showExactAddress, price: Number(r.price),
     currency: r.currency as "USD" | "ARS", expenses: toNumber(r.expenses) ?? undefined, totalAreaM2: Number(r.totalAreaM2),
@@ -174,7 +176,8 @@ export async function listMyProperties(
       const rows = await tx.select({
         id: property.id, slug: property.slug, title: property.title, operation: property.operation, type: property.type,
         status: property.status, price: property.price, currency: property.currency, zoneId: property.zoneId,
-        agentId: property.agentId, updatedAt: property.updatedAt, coverKey: propertyPhoto.storageKey,
+        agentId: property.agentId, updatedAt: property.updatedAt, moderationStatus: property.moderationStatus,
+        moderationReason: property.moderationReason, coverKey: propertyPhoto.storageKey,
         zoneName: zone.nameEs, totalAreaM2: property.totalAreaM2, bedrooms: propertyBuilding.bedrooms, bathrooms: propertyBuilding.bathrooms,
         photoCount: sql<number>`(select count(*) from property_photo ph where ph.property_id = ${property.id} and ph.status = 'ready')`,
       }).from(property)

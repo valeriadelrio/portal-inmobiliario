@@ -29,6 +29,20 @@
       "when": 1791980009175,
       "tag": "0003_h2_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792073913805,
+      "tag": "0004_h6_moderation_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792073966209,
+      "tag": "0005_h6_moderation_rls",
+      "breakpoints": true
     }
   ]
 }
