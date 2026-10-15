@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getActor } from "@/server/auth/get-actor";
 import { getProfileSummary } from "@/server/auth/get-profile";
+import { isOwnAgencyProperty } from "@/server/services/inquiry";
 import { isFavorite } from "@/server/services/favorite";
 import { FavoriteButton } from "./favorite-button";
 import { InquiryForm } from "./inquiry-form";
@@ -17,6 +18,13 @@ export async function FavoriteSlot({ propertyId, slug }: { propertyId: string; s
 export async function InquirySlot({ propertyId, title, open }: { propertyId: string; title: string; open: boolean }) {
   if (!open) return <p className="muted text-sm">Esta propiedad ya no recibe consultas.</p>;
   const actor = await getActor();
+  if (await isOwnAgencyProperty(actor, propertyId)) {
+    return (
+      <p className="muted text-sm">
+        Esta propiedad es de tu inmobiliaria, por eso no se muestra el formulario de consulta. Los visitantes lo ven y sus consultas te llegan a <Link href="/panel/consultas" className="link">Consultas</Link>.
+      </p>
+    );
+  }
   const profile = actor.kind === "user" ? await getProfileSummary(actor.userId) : null;
   return <InquiryForm propertyId={propertyId} title={title} defaults={profile ? { name: profile.fullName?.trim() ?? "", email: profile.email ?? "" } : undefined} />;
 }

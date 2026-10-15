@@ -1,7 +1,7 @@
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import type { Actor } from "@/contracts";
 import { addFavorite, isFavorite, listFavorites, removeFavorite } from "@/server/services/favorite";
-import { countNewInquiries, createInquiry, listInquiries, setInquiryStatus } from "@/server/services/inquiry";
+import { countNewInquiries, createInquiry, isOwnAgencyProperty, listInquiries, setInquiryStatus } from "@/server/services/inquiry";
 import { AG, ANON, INQ, M, P, U, admin, asUser, seed } from "../helpers/seed";
 
 beforeEach(seed);
@@ -31,6 +31,16 @@ describe("crear consulta", () => {
     expect(row.email).toBe("carla@mail.com"); // normalizado
     expect(row.consent_at).toBeTruthy();
     expect(row.user_id).toBeNull();
+  });
+  it("integrantes de la misma inmobiliaria no pueden consultar sus propias propiedades, los de otra sí", async () => {
+    for (const a of [a1, a2, admA]) {
+      const r = await createInquiry(a, form() as never);
+      expect(!r.ok && r.error.code).toBe("forbidden");
+    }
+    expect((await createInquiry(b1, form() as never)).ok).toBe(true);
+    expect(await isOwnAgencyProperty(a2, P.a1)).toBe(true);
+    expect(await isOwnAgencyProperty(b1, P.a1)).toBe(false);
+    expect(await isOwnAgencyProperty(ANON, P.a1)).toBe(false);
   });
   it("con sesión queda asociada a la cuenta", async () => {
     const r = await createInquiry(asUser(U.visitor), form() as never);

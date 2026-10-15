@@ -40,6 +40,7 @@ export async function createInquiry(
       const [p] = await tx.select({ agencyId: property.agencyId, agentId: property.agentId, title: property.title, slug: property.slug, status: property.status })
         .from(property).where(eq(property.id, v.propertyId));
       if (!p || !["active", "reserved"].includes(p.status)) return null;
+      if (actor.kind === "user" && actor.membership?.agencyId === p.agencyId) return "own" as const;
       await tx.insert(inquiry).values({
         id, propertyId: v.propertyId, agencyId: p.agencyId, agentId: p.agentId,
         userId: actor.kind === "user" ? actor.userId : null,
@@ -49,6 +50,7 @@ export async function createInquiry(
       return p;
     });
     if (!prop) return fail("not_found", "La propiedad no está disponible");
+    if (prop === "own") return fail("forbidden", "No podés consultar una propiedad de tu propia inmobiliaria");
 
     // El destinatario se busca con el rol dueño: el email de la cuenta del agente nunca es visible para el visitante.
     const [to] = await db.select({ account: userProfile.email, publicEmail: agencyMember.publicEmail })
@@ -70,6 +72,17 @@ export async function createInquiry(
     return ok({ id, emailed });
   } catch (e) {
     return mapDbError(e);
+  }
+}
+
+/** ¿La propiedad es de la inmobiliaria del usuario? (la ficha no le muestra el formulario de consulta). */
+export async function isOwnAgencyProperty(actor: Actor, propertyId: string): Promise<boolean> {
+  if (actor.kind !== "user" || !actor.membership) return false;
+  try {
+    const rows = await withActor(actor, (tx) => tx.select({ a: property.agencyId }).from(property).where(eq(property.id, propertyId)));
+    return rows[0]?.a === actor.membership.agencyId;
+  } catch {
+    return false;
   }
 }
 
