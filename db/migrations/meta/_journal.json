@@ -43,6 +43,13 @@
       "when": 1792073966209,
       "tag": "0005_h6_moderation_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792074568392,
+      "tag": "0006_h6_rate_limits",
+      "breakpoints": true
     }
   ]
 }
