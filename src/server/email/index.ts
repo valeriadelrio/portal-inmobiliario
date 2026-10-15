@@ -2,7 +2,7 @@ export type Email = { to: string; subject: string; html: string; replyTo?: strin
 
 /**
  * Sin RESEND_API_KEY escribe en consola (desarrollo) y devuelve `sent: false`.
- * Con la clave envía por la API de Resend (EMAIL_FROM = remitente verificado, p. ej. "Portal Tandil <avisos@tudominio.com>").
+ * Con la clave envía por la API de Resend (EMAIL_FROM = remitente verificado, p. ej. "TERRAE <avisos@tudominio.com>").
  * Nunca lanza: un email caído no debe perder la consulta, que queda guardada en la bandeja.
  */
 export async function sendEmail(mail: Email): Promise<{ sent: boolean }> {
@@ -16,7 +16,7 @@ export async function sendEmail(mail: Email): Promise<{ sent: boolean }> {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        from: process.env.EMAIL_FROM ?? "Portal Tandil <onboarding@resend.dev>",
+        from: process.env.EMAIL_FROM ?? "TERRAE <onboarding@resend.dev>",
         to: [mail.to], subject: mail.subject, html: mail.html, reply_to: mail.replyTo,
       }),
       signal: AbortSignal.timeout(10_000),

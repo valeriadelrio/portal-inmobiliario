@@ -9,7 +9,7 @@ const t = getDict("es").site;
 // Panel, administración, ingreso e invitaciones: solo en español, con el mismo encabezado.
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
-  title: { default: "Portal inmobiliario de Tandil", template: "%s | Portal inmobiliario Tandil" },
+  title: { default: "TERRAE — propiedades y lotes en Tandil", template: "%s | TERRAE" },
   description: t.description,
 };
 

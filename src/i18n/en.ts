@@ -2,8 +2,8 @@ import type { Dict } from "./es";
 
 export const en: Dict = {
   site: {
-    nameShort: "Tandil Portal",
-    nameLong: "Tandil real estate portal",
+    nameShort: "TERRAE",
+    nameLong: "TERRAE",
     description: "Properties and lots for sale and rent in Tandil, Argentina, from several real estate agencies.",
     properties: "Properties",
     login: "Log in",

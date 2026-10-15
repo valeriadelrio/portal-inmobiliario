@@ -4,8 +4,8 @@
  */
 export const es = {
   site: {
-    nameShort: "Portal Tandil",
-    nameLong: "Portal inmobiliario Tandil",
+    nameShort: "TERRAE",
+    nameLong: "TERRAE",
     description: "Propiedades y lotes en venta y alquiler en Tandil, de varias inmobiliarias.",
     properties: "Propiedades",
     login: "Ingresar",

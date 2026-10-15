@@ -1,4 +1,4 @@
-# SPEC — Portal inmobiliario de Tandil
+# SPEC — TERRAE (portal inmobiliario de Tandil)
 
 ## Objetivo
 Portal donde varias inmobiliarias (cada una con sus agentes) publican propiedades y lotes en venta y alquiler en Tandil (Buenos Aires, Argentina). Los visitantes buscan y contactan. Proyecto personal, sin monetización por ahora.

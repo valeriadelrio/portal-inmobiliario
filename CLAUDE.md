@@ -1,4 +1,4 @@
-# Portal inmobiliario de Tandil
+# TERRAE — portal inmobiliario de Tandil
 
 Alcance en SPEC.md; decisiones de arquitectura en ARCHITECTURE.md (incluye "Convenciones de servicios (H2)").
 
