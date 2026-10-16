@@ -67,3 +67,4 @@ Cambios a `contracts/` o al schema van en un PR secuencial previo; el resto en w
 ## Documentación
 - `docs/diagramas.md`: diagramas Mermaid (modelo de datos, capas, roles, estados, secuencias, servicios, pantallas).
 - `docs/criterios-de-aceptacion.md`: criterios de aceptación por función, con su estado y el test que los verifica. Al cambiar una regla, actualizar el criterio y su test en el mismo commit.
+- `docs/historias-de-usuario.md`: las mismas funciones como historias de usuario (Como / quiero / para) agrupadas por feature, con sus criterios debajo y los mismos IDs. Se regenera a partir de los criterios; la fuente de cada criterio sigue siendo `criterios-de-aceptacion.md`.
