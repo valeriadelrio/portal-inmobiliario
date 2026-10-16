@@ -43,6 +43,7 @@ export const en: Dict = {
     minPrice: "Minimum price", maxPrice: "Maximum price",
     currency: "Price currency", usd: "US dollars (USD)", ars: "Argentine pesos (ARS)",
     minRooms: "Rooms (minimum)", minArea: "Minimum area (m²)", maxArea: "Maximum area (m²)",
+    filters: "Filters", activeFilters: (n: number) => `${n} active`,
     submit: "Search", clear: "Clear",
     invalidFilters: "Some filters were not valid and were ignored.",
     loadError: "We couldn't load the properties. Please try again in a moment.",

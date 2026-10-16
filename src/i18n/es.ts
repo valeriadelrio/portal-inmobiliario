@@ -45,6 +45,7 @@ export const es = {
     minPrice: "Precio mínimo", maxPrice: "Precio máximo",
     currency: "Moneda del precio", usd: "Dólares (USD)", ars: "Pesos (ARS)",
     minRooms: "Ambientes (mínimo)", minArea: "Superficie mínima (m²)", maxArea: "Superficie máxima (m²)",
+    filters: "Filtros", activeFilters: (n: number) => `${n} ${n === 1 ? "activo" : "activos"}`,
     submit: "Buscar", clear: "Limpiar",
     invalidFilters: "Algunos filtros no eran válidos y se ignoraron.",
     loadError: "No se pudieron cargar las propiedades. Probá de nuevo en un momento.",
