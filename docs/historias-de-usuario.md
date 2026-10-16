@@ -8,23 +8,32 @@ Los criterios son los mismos de [criterios-de-aceptacion.md](criterios-de-acepta
 
 ---
 
-## Feature 1 — Cuentas y acceso
+## Feature 1 — Cuentas y acceso (solo inmobiliarias)
 
-_Registrarse, ingresar y administrar la sesión._
+_El público no necesita cuenta. El acceso es para quienes trabajan en una inmobiliaria._
 
-### US-01 · Registrarme e ingresar
+### US-01 · Usar el sitio sin registrarme
 
-**Como** persona sin cuenta **quiero** registrarme con email y contraseña e ingresar al sitio **para** guardar favoritos, consultar o publicar.
+**Como** persona que busca una propiedad **quiero** buscar, consultar, escribir por WhatsApp, denunciar y guardar favoritos sin crear una cuenta **para** no perder tiempo en trámites.
 
 | ID | Criterio de aceptación | Estado |
 |---|---|---|
-| A1 | **Dado** una persona sin cuenta, **cuando** se registra con email y contraseña, **entonces** puede iniciar sesión y queda como usuaria sin inmobiliaria. | 🟡 |
+| A9 | **Dado** una persona que busca propiedades, **cuando** busca, consulta, escribe por WhatsApp, denuncia o guarda favoritos, **entonces** no necesita cuenta. El único acceso del encabezado es "Acceso inmobiliarias". | 🟡 |
+| A10 | **Dado** la pantalla de acceso, **cuando** se abre sin venir de "Registrar mi inmobiliaria" ni de una invitación, **entonces** solo permite ingresar (con un enlace para registrar la inmobiliaria); crear cuenta solo se ofrece en esos dos casos. | 🟡 (no impide que alguien cree una cuenta llamando directo a Supabase: esa cuenta no puede hacer nada hasta tener inmobiliaria) |
+
+### US-02 · Crear mi cuenta de inmobiliaria e ingresar
+
+**Como** persona que trabaja en una inmobiliaria **quiero** crear mi cuenta al registrar mi inmobiliaria o al aceptar una invitación, e ingresar **para** gestionar propiedades y consultas.
+
+| ID | Criterio de aceptación | Estado |
+|---|---|---|
+| A1 | **Dado** una persona que va a registrar su inmobiliaria o aceptar una invitación, **cuando** crea su cuenta con email y contraseña, **entonces** puede iniciar sesión y queda como usuaria sin inmobiliaria hasta completar el alta o aceptar la invitación. | 🟡 |
 | A2 | **Dado** que Supabase exige confirmar el email, **cuando** la persona se registra, **entonces** se le avisa que revise su correo antes de ingresar. | 🟡 (depende de configurar el correo de Supabase, ver P3) |
 | A3 | **Dado** una persona con sesión iniciada, **cuando** abre `/login`, **entonces** va directo a su panel. | 🟡 |
 
-### US-02 · Acceso protegido a las áreas privadas
+### US-03 · Acceso protegido a las áreas privadas
 
-**Como** persona con cuenta **quiero** que el panel, la administración y mi cuenta pidan ingresar y me devuelvan a donde iba **para** que nadie vea esas áreas sin autorización.
+**Como** profesional con cuenta **quiero** que el panel, la administración y mi cuenta pidan ingresar y me devuelvan a donde iba **para** que nadie vea esas áreas sin autorización.
 
 | ID | Criterio de aceptación | Estado |
 |---|---|---|
@@ -32,7 +41,7 @@ _Registrarse, ingresar y administrar la sesión._
 | A5 | **Dado** que se intenta un redirect a otro sitio por el parámetro `next`, **cuando** se ingresa, **entonces** solo se aceptan rutas internas. | ✅ `tests/unit/lib.test.ts` |
 | A6 | **Dado** una cuenta deshabilitada, **cuando** intenta operar como integrante, **entonces** no tiene permisos de inmobiliaria. | ✅ `isolation/h2-agencies` |
 
-### US-03 · Menú de cuenta
+### US-04 · Menú de cuenta
 
 **Como** persona con sesión iniciada **quiero** ver mi nombre, email y rol, y poder cerrar sesión **para** saber con qué cuenta estoy y salir con seguridad.
 
@@ -47,7 +56,7 @@ _Registrarse, ingresar y administrar la sesión._
 
 _Alta, aprobación y datos de cada inmobiliaria._
 
-### US-04 · Registrar mi inmobiliaria
+### US-05 · Registrar mi inmobiliaria
 
 **Como** persona sin inmobiliaria **quiero** registrar mi inmobiliaria con nombre y dirección web **para** empezar a publicar propiedades una vez aprobada.
 
@@ -59,7 +68,7 @@ _Alta, aprobación y datos de cada inmobiliaria._
 | B4 | **Dado** una usuaria que ya integra una inmobiliaria, **cuando** intenta registrar otra, **entonces** se rechaza (una sola inmobiliaria activa por persona en v1). | ✅ `isolation/h2-agencies` |
 | B5 | **Dado** una usuaria que ya registró 3 inmobiliarias en 24 horas, **cuando** intenta una cuarta, **entonces** se rechaza por exceso de intentos. | ✅ `isolation/h2-agencies` |
 
-### US-05 · Aprobar, rechazar y suspender inmobiliarias
+### US-06 · Aprobar, rechazar y suspender inmobiliarias
 
 **Como** administradora de la plataforma **quiero** decidir qué inmobiliarias pueden publicar y suspenderlas si hace falta **para** mantener la calidad y la confianza del portal.
 
@@ -71,7 +80,7 @@ _Alta, aprobación y datos de cada inmobiliaria._
 | B9 | **Dado** una transición no permitida (por ejemplo, aprobar una rechazada), **cuando** se intenta, **entonces** se rechaza. | ✅ `isolation/h2-agencies` |
 | B10 | **Dado** una inmobiliaria *pendiente*, **cuando** su equipo intenta publicar fichas, **entonces** no puede (no está aprobada). | ✅ `isolation/h2-properties` |
 
-### US-06 · Editar los datos de mi inmobiliaria
+### US-07 · Editar los datos de mi inmobiliaria
 
 **Como** administradora de una inmobiliaria **quiero** editar nombre, logo, descripción y contacto **para** que el público vea información actual.
 
@@ -80,7 +89,7 @@ _Alta, aprobación y datos de cada inmobiliaria._
 | B11 | **Dado** la persona administradora, **cuando** edita nombre, logo, descripción, teléfono, email, web o dirección, **entonces** se guardan; **dado** un agente común, **entonces** no puede. | ✅ `services/agency` |
 | B12 | **Dado** que nadie puede cambiar su propio estado de aprobación ni su rol de plataforma, **cuando** lo intenta por cualquier camino, **entonces** la base lo bloquea. | ✅ `isolation/rls`, `isolation/h2-agencies` |
 
-### US-07 · Mi perfil público de agente
+### US-08 · Mi perfil público de agente
 
 **Como** agente **quiero** editar mi nombre, bio, foto, teléfono y WhatsApp **para** que los interesados me conozcan y me contacten.
 
@@ -94,7 +103,7 @@ _Alta, aprobación y datos de cada inmobiliaria._
 
 _Sumar y ordenar a las personas de cada inmobiliaria._
 
-### US-08 · Invitar a mi equipo
+### US-09 · Invitar a mi equipo
 
 **Como** administradora de una inmobiliaria **quiero** invitar por email a agentes u otros administradores **para** armar el equipo sin compartir contraseñas.
 
@@ -105,7 +114,7 @@ _Sumar y ordenar a las personas de cada inmobiliaria._
 | B24 | **Dado** una invitación pendiente, **cuando** se reenvía, **entonces** la anterior se revoca y se crea una nueva con enlace nuevo. | 🟡 |
 | B25 | **Dado** una administradora, **cuando** supera 30 invitaciones en 24 horas, **entonces** se rechaza por exceso de uso. | ✅ `isolation/h6-limits` |
 
-### US-09 · Aceptar una invitación
+### US-10 · Aceptar una invitación
 
 **Como** persona invitada **quiero** unirme a la inmobiliaria desde el enlace que recibí **para** empezar a trabajar con mi rol.
 
@@ -114,7 +123,7 @@ _Sumar y ordenar a las personas de cada inmobiliaria._
 | B22 | **Dado** el enlace, **cuando** la persona lo abre con la sesión del email invitado, **entonces** se une a la inmobiliaria con el rol indicado y la invitación queda *aceptada*. | ✅ `services/agency`, `isolation/h2-agencies` |
 | B23 | **Dado** el enlace, **cuando** lo abre con otro email, o está vencido (7 días), revocado o ya usado, **entonces** no se puede aceptar y el mensaje explica cuál es el motivo. | ✅ `isolation/h2-agencies` |
 
-### US-10 · Gestionar los roles del equipo
+### US-11 · Gestionar los roles del equipo
 
 **Como** administradora de una inmobiliaria **quiero** cambiar roles o quitar integrantes, reasignando su trabajo **para** que la inmobiliaria siga operando sin huecos.
 
@@ -130,7 +139,7 @@ _Sumar y ordenar a las personas de cada inmobiliaria._
 
 _Carga, listado, publicación y ciclo de vida de las fichas._
 
-### US-11 · Cargar una propiedad
+### US-12 · Cargar una propiedad
 
 **Como** agente **quiero** cargar una propiedad con los datos que corresponden a su tipo **para** tenerla lista para publicar.
 
@@ -143,7 +152,7 @@ _Carga, listado, publicación y ciclo de vida de las fichas._
 | C5 | **Dado** una propiedad existente, **cuando** se intenta cambiar su tipo o su dirección web, **entonces** se rechaza; para otro tipo hay que crear una ficha nueva. | ✅ `isolation/h2-properties` |
 | C6 | **Dado** el precio, **cuando** se elige USD o ARS, **entonces** se guarda con su moneda y nunca se convierte. | ✅ `services/property` |
 
-### US-12 · Ver y gestionar mis propiedades
+### US-13 · Ver y gestionar mis propiedades
 
 **Como** agente o administradora **quiero** ver, filtrar y abrir las propiedades que me corresponden **para** trabajar solo con lo mío y no ver lo de otras inmobiliarias.
 
@@ -154,7 +163,7 @@ _Carga, listado, publicación y ciclo de vida de las fichas._
 | C9 | **Dado** el listado, **cuando** se filtra por estado u operación y se pagina, **entonces** muestra 20 por página con portada, precio y estado en color. | ✅ `services/property` (filtros); resto 🟡 |
 | C25 | **Dado** un integrante, **cuando** supera 100 propiedades creadas en 24 horas, **entonces** se rechaza por exceso de uso. | ✅ `isolation/h6-limits` |
 
-### US-13 · Publicar una propiedad
+### US-14 · Publicar una propiedad
 
 **Como** agente **quiero** publicar una ficha cuando está completa **para** que el público la encuentre.
 
@@ -163,7 +172,7 @@ _Carga, listado, publicación y ciclo de vida de las fichas._
 | C20 | **Dado** un borrador, **cuando** se publica, **entonces** exige al menos 3 fotos listas, una portada, zona activa e inmobiliaria aprobada; si falta algo, indica qué. | ✅ `isolation/h2-properties`, `unit/property-form` |
 | C26 | **Dado** una zona inactiva, **cuando** se elige para una propiedad, **entonces** se rechaza. | ✅ `isolation/h2-zones-photos` |
 
-### US-14 · Cambiar el estado de una propiedad
+### US-15 · Cambiar el estado de una propiedad
 
 **Como** agente **quiero** reservar, marcar vendida o alquilada, pausar o reactivar una ficha **para** reflejar la situación real del inmueble.
 
@@ -180,7 +189,7 @@ _Carga, listado, publicación y ciclo de vida de las fichas._
 
 _Subida, procesamiento y orden de las imágenes._
 
-### US-15 · Subir fotos
+### US-16 · Subir fotos
 
 **Como** agente **quiero** subir fotos de la propiedad desde mi computadora o celular **para** mostrar bien el inmueble.
 
@@ -192,7 +201,7 @@ _Subida, procesamiento y orden de las imágenes._
 | D9 | **Dado** una agencia, **cuando** supera 200 fotos en una hora, **entonces** se rechaza por exceso de uso. | ✅ `isolation/h6-limits` |
 | D11 | **Dado** producción, **cuando** se sube una foto, **entonces** va directo a Cloudflare R2 con una URL firmada. | ⏳ depende de crear la cuenta de R2 (P1) |
 
-### US-16 · Elegir portada, ordenar y borrar fotos
+### US-17 · Elegir portada, ordenar y borrar fotos
 
 **Como** agente **quiero** definir la portada, el orden y quitar fotos **para** controlar cómo se ve la ficha.
 
@@ -203,7 +212,7 @@ _Subida, procesamiento y orden de las imágenes._
 | D6 | **Dado** una ficha publicada, **cuando** se borra una foto que dejaría menos de 3 listas o sin portada, **entonces** se rechaza. | ✅ `isolation/h2-zones-photos` |
 | D7 | **Dado** una persona de otra inmobiliaria o un visitante, **cuando** intenta subir, ordenar o borrar fotos ajenas, **entonces** no puede; el visitante solo ve las fotos *listas* de fichas visibles. | ✅ `isolation/h2-zones-photos` |
 
-### US-17 · Texto alternativo de las fotos
+### US-18 · Texto alternativo de las fotos
 
 **Como** agente **quiero** describir cada foto **para** mejorar la accesibilidad y el posicionamiento.
 
@@ -211,7 +220,7 @@ _Subida, procesamiento y orden de las imágenes._
 |---|---|---|
 | D10 | **Dado** el texto alternativo de una foto, **cuando** se edita desde la interfaz, **entonces** se guarda. | ⏳ el servicio existe (`updateAltText`) pero la pantalla todavía no |
 
-### US-18 · Limpieza de subidas abandonadas
+### US-19 · Limpieza de subidas abandonadas
 
 **Como** operadora de la plataforma **quiero** que las subidas que nunca se confirmaron se borren solas **para** no acumular archivos inútiles.
 
@@ -225,7 +234,7 @@ _Subida, procesamiento y orden de las imágenes._
 
 _Catálogo de zonas que usan los filtros y las fichas._
 
-### US-19 · Administrar zonas
+### US-20 · Administrar zonas
 
 **Como** administradora de la plataforma **quiero** crear, editar y desactivar zonas con nombre en español e inglés **para** que los filtros y las fichas usen barrios correctos.
 
@@ -236,7 +245,7 @@ _Catálogo de zonas que usan los filtros y las fichas._
 | E4 | **Dado** una zona con propiedades, **cuando** se intenta borrar, **entonces** se rechaza (se desactiva). | 🟡 la base lo impide por una relación entre tablas; falta un test propio |
 | E5 | **Dado** un visitante o un agente, **cuando** intenta modificar zonas, **entonces** no puede; las zonas activas son de lectura pública. | ✅ `isolation/h2-zones-photos` |
 
-### US-20 · Importar el listado de barrios
+### US-21 · Importar el listado de barrios
 
 **Como** administradora de la plataforma **quiero** importar barrios desde un archivo CSV **para** cargar el listado oficial de Tandil de una vez.
 
@@ -251,7 +260,7 @@ _Catálogo de zonas que usan los filtros y las fichas._
 
 _Cómo el público encuentra y mira las propiedades._
 
-### US-21 · Buscar propiedades
+### US-22 · Buscar propiedades
 
 **Como** visitante **quiero** filtrar y ordenar propiedades por operación, tipo, zona, ambientes, superficie y precio **para** encontrar lo que se ajusta a lo que busco.
 
@@ -263,7 +272,7 @@ _Cómo el público encuentra y mira las propiedades._
 | F4 | **Dado** el orden, **cuando** se elige más recientes, precio ascendente o descendente, **entonces** se ordena así. | ✅ `services/public` |
 | F5 | **Dado** una búsqueda, **cuando** se copia la dirección, **entonces** quien la abre ve el mismo resultado (los filtros viajan en la dirección). | 🟡 |
 
-### US-22 · Ver la ficha de una propiedad
+### US-23 · Ver la ficha de una propiedad
 
 **Como** visitante **quiero** ver galería, datos, zona, agente e inmobiliaria **para** decidir si me interesa.
 
@@ -273,7 +282,7 @@ _Cómo el público encuentra y mira las propiedades._
 | F7 | **Dado** una ficha sin "mostrar dirección exacta", **cuando** la ve el público, **entonces** no aparece la dirección. | ✅ `services/public` |
 | F8 | **Dado** una dirección de ficha que no existe, está en borrador o está oculta, **cuando** se abre, **entonces** se muestra "no encontrada" y no se indexa. | 🟡 (responde HTTP 200 por el modo de renderizado; limitación documentada) |
 
-### US-23 · Que el sitio se encuentre y se use en el celular
+### US-24 · Que el sitio se encuentre y se use en el celular
 
 **Como** visitante **quiero** llegar desde un buscador y navegar cómodo desde el teléfono **para** consultar propiedades desde cualquier lugar.
 
@@ -282,7 +291,7 @@ _Cómo el público encuentra y mira las propiedades._
 | F9 | **Dado** el sitio, **cuando** lo recorren los buscadores, **entonces** hay `sitemap.xml` con todas las fichas en ambos idiomas, `robots.txt` y etiquetas de idioma alternativo. | 🟡 |
 | F10 | **Dado** un teléfono celular, **cuando** se usa el sitio, **entonces** no hay desplazamiento horizontal y los formularios son usables. | 🟡 |
 
-### US-24 · Página de la inmobiliaria
+### US-25 · Página de la inmobiliaria
 
 **Como** visitante **quiero** ver el perfil de una inmobiliaria con sus agentes y propiedades **para** conocer a quien publica.
 
@@ -297,7 +306,7 @@ _Cómo el público encuentra y mira las propiedades._
 
 _Contacto entre interesados y agentes._
 
-### US-25 · Enviar una consulta
+### US-26 · Enviar una consulta
 
 **Como** visitante **quiero** enviar una consulta sobre una propiedad, con o sin cuenta **para** que el agente me responda.
 
@@ -309,7 +318,7 @@ _Contacto entre interesados y agentes._
 | H7 | **Dado** una persona de la misma inmobiliaria dueña de la ficha, **cuando** abre la ficha, **entonces** no ve el formulario; si lo forzara, el servidor lo rechaza. | ✅ `services/inquiry` |
 | H8 | **Dado** una ficha pausada, borrador, oculta o de inmobiliaria suspendida, **cuando** se intenta consultar, **entonces** se rechaza. | ✅ `services/inquiry`, `isolation/h6-abuse` |
 
-### US-26 · Protección contra abuso en las consultas
+### US-27 · Protección contra abuso en las consultas
 
 **Como** plataforma **quiero** frenar envíos masivos y robots **para** que los agentes no reciban basura.
 
@@ -318,7 +327,7 @@ _Contacto entre interesados y agentes._
 | H5 | **Dado** una IP, **cuando** envía más de 5 consultas en una hora, **entonces** se rechaza. | ✅ `services/inquiry` |
 | H6 | **Dado** un robot que completa el campo oculto, **cuando** envía el formulario, **entonces** parece que funcionó pero no se guarda nada. | 🟡 |
 
-### US-27 · Recibir y gestionar consultas
+### US-28 · Recibir y gestionar consultas
 
 **Como** agente o administradora **quiero** recibir un email y ordenar las consultas en una bandeja **para** responder a tiempo sin perder ninguna.
 
@@ -328,7 +337,7 @@ _Contacto entre interesados y agentes._
 | H9 | **Dado** un agente, **cuando** abre "Consultas", **entonces** ve solo las suyas; **dado** una administradora, **entonces** ve todas las de su inmobiliaria; nadie más ve ninguna. | ✅ `services/inquiry`, `isolation/rls` |
 | H10 | **Dado** la bandeja, **cuando** se marca una consulta como leída, respondida, archivada o nueva, **entonces** el estado se guarda, y el menú muestra la cantidad de nuevas. | ✅ `services/inquiry` |
 
-### US-28 · Contactar por WhatsApp
+### US-29 · Contactar por WhatsApp
 
 **Como** visitante **quiero** abrir un chat de WhatsApp con un mensaje ya escrito sobre la propiedad **para** hablar con el agente de forma directa.
 
@@ -338,20 +347,21 @@ _Contacto entre interesados y agentes._
 
 ---
 
-## Feature 9 — Favoritos
+## Feature 9 — Favoritos (sin cuenta)
 
-_Guardar propiedades para ver después._
+_Guardar propiedades en el navegador para verlas después._
 
-### US-29 · Guardar propiedades favoritas
+### US-30 · Guardar propiedades favoritas
 
-**Como** persona con cuenta **quiero** guardar y quitar fichas de mis favoritos **para** volver a verlas sin buscarlas de nuevo.
+**Como** visitante **quiero** guardar y quitar fichas de mis favoritos sin registrarme **para** volver a verlas sin buscarlas de nuevo.
 
 | ID | Criterio de aceptación | Estado |
 |---|---|---|
-| I1 | **Dado** una persona sin sesión, **cuando** mira una ficha, **entonces** el botón de favoritos la lleva a ingresar y vuelve a la misma ficha. | 🟡 |
-| I2 | **Dado** una persona con sesión, **cuando** guarda o quita una ficha, **entonces** el cambio se refleja en `/cuenta/favoritos`. | ✅ `services/inquiry` (favoritos) |
-| I3 | **Dado** una ficha guardada que luego se pausa u oculta, **cuando** se abre la lista, **entonces** ya no aparece. | ✅ `services/inquiry`, `services/moderation` |
-| I4 | **Dado** dos personas, **cuando** una guarda favoritos, **entonces** la otra no los ve. | ✅ `isolation/rls` |
+| I1 | **Dado** cualquier visitante, **cuando** toca "Guardar en favoritos" en una ficha, **entonces** se guarda en su navegador (sin cuenta) y el botón pasa a "Guardada en favoritos"; al tocarlo de nuevo se quita. | 🟡 |
+| I2 | **Dado** un visitante con favoritos guardados, **cuando** abre `/favoritos` (o `/en/favoritos`), **entonces** ve las tarjetas de esas fichas, la más reciente primero. | 🟡 (las tarjetas se prueban en `services/public`) |
+| I3 | **Dado** una ficha guardada que luego se pausa, vuelve a borrador, se oculta por moderación o es de una inmobiliaria suspendida, **cuando** se abre la lista, **entonces** ya no aparece. | ✅ `services/public`, `services/moderation` |
+| I4 | **Dado** la lista de favoritos, **cuando** se piden las tarjetas, **entonces** el servidor solo recibe direcciones de fichas válidas (máximo 100), ignora el resto y no guarda ni asocia nada a la persona. | ✅ `services/public` |
+| I5 | **Dado** dos personas, dispositivos o navegadores distintos, **cuando** una guarda favoritos, **entonces** la otra no los ve (viven en cada navegador). | 🟡 (por diseño) |
 
 ---
 
@@ -359,7 +369,7 @@ _Guardar propiedades para ver después._
 
 _Sitio público en español e inglés._
 
-### US-30 · Usar el sitio en español o inglés
+### US-31 · Usar el sitio en español o inglés
 
 **Como** visitante **quiero** ver el sitio público en mi idioma y cambiarlo sin perder la página **para** entender las fichas aunque no hable español.
 
@@ -370,7 +380,7 @@ _Sitio público en español e inglés._
 | J3 | **Dado** el selector de idioma (bandera, a la derecha), **cuando** se cambia, **entonces** se mantiene la misma página en el otro idioma. | 🟡 |
 | J5 | **Dado** una zona con nombre en inglés, **cuando** se ve el sitio en inglés, **entonces** se usa; si no tiene, se usa el español. | ✅ `unit/i18n` |
 
-### US-31 · Mantener las traducciones al día
+### US-32 · Mantener las traducciones al día
 
 **Como** equipo de desarrollo **quiero** que falte una traducción sea un error de compilación **para** no publicar textos sin traducir.
 
@@ -385,7 +395,7 @@ _Sitio público en español e inglés._
 
 _Control de calidad del contenido por parte de la plataforma._
 
-### US-32 · Denunciar una ficha
+### US-33 · Denunciar una ficha
 
 **Como** visitante **quiero** denunciar una ficha falsa, duplicada o incorrecta **para** que la plataforma la revise.
 
@@ -396,7 +406,7 @@ _Control de calidad del contenido por parte de la plataforma._
 | K3 | **Dado** una IP o cuenta, **cuando** hace más de 5 denuncias en una hora, **entonces** se rechaza (lo aplica la base). | ✅ `services/moderation` |
 | K4 | **Dado** una denuncia, **cuando** intenta escribirse ya resuelta, a nombre de otra cuenta o con una nota de resolución, **entonces** la base lo rechaza. | ✅ `isolation/h6-abuse` |
 
-### US-33 · Revisar denuncias
+### US-34 · Revisar denuncias
 
 **Como** administradora de la plataforma **quiero** ver las denuncias abiertas con su contexto y descartarlas si no corresponden **para** atender primero lo más urgente.
 
@@ -406,7 +416,7 @@ _Control de calidad del contenido por parte de la plataforma._
 | K6 | **Dado** la administración, **cuando** abre "Denuncias", **entonces** ve las abiertas primero, con la ficha, la inmobiliaria, el motivo, el detalle y cuántas denuncias abiertas tiene esa ficha; el menú muestra el total abierto. | ✅ `services/moderation` (datos); pantalla 🟡 |
 | K7 | **Dado** una denuncia abierta, **cuando** se descarta, **entonces** queda cerrada con su nota y la ficha no cambia. | ✅ `services/moderation` |
 
-### US-34 · Ocultar y restituir fichas
+### US-35 · Ocultar y restituir fichas
 
 **Como** administradora de la plataforma **quiero** ocultar una ficha con un motivo y restituirla si corresponde **para** sacar contenido dañino sin borrarlo.
 
@@ -416,7 +426,7 @@ _Control de calidad del contenido por parte de la plataforma._
 | K10 | **Dado** una ficha oculta, **cuando** la administración la restituye, **entonces** vuelve al sitio público y se borra el motivo. | ✅ `services/moderation` |
 | K12 | **Dado** la administración, **cuando** busca en "Moderar propiedades" por título, dirección web o inmobiliaria, **entonces** puede ocultar o restituir cualquier ficha. | ✅ `services/moderation` |
 
-### US-35 · Enterarme de que ocultaron mi ficha
+### US-36 · Enterarme de que ocultaron mi ficha
 
 **Como** agente o administradora de una inmobiliaria **quiero** recibir un aviso con el motivo y ver el estado en la ficha **para** entender qué pasó y corregirlo.
 
@@ -425,7 +435,7 @@ _Control de calidad del contenido por parte de la plataforma._
 | K9 | **Dado** una ficha oculta, **cuando** la inmobiliaria la abre, **entonces** ve un aviso con el motivo; no puede borrarla, volver a mostrarla ni cambiar la moderación (ni pausando y reactivando). | ✅ `services/moderation`, `isolation/h6-abuse` |
 | K11 | **Dado** que se oculta una ficha, **cuando** se confirma, **entonces** se avisa por email al agente responsable y a los administradores de su inmobiliaria con el motivo. | 🟡 (el envío real depende de Resend, P2) |
 
-### US-36 · Registro de acciones de moderación
+### US-37 · Registro de acciones de moderación
 
 **Como** administradora de la plataforma **quiero** que quede constancia de quién hizo qué y cuándo **para** tener trazabilidad ante cualquier reclamo.
 
@@ -439,7 +449,7 @@ _Control de calidad del contenido por parte de la plataforma._
 
 _Privacidad y derechos sobre los datos._
 
-### US-37 · Conocer la política de privacidad
+### US-38 · Conocer la política de privacidad
 
 **Como** visitante **quiero** leer cómo se usan mis datos antes de enviarlos **para** dar mi consentimiento informado.
 
@@ -448,24 +458,24 @@ _Privacidad y derechos sobre los datos._
 | L1 | **Dado** el pie de página, **cuando** se hace clic en "Privacidad", **entonces** se abre la política en español o inglés; el formulario de consulta enlaza a ella junto al consentimiento. | 🟡 |
 | L6 | **Dado** la política de privacidad, **cuando** se publica, **entonces** la revisó una persona del ámbito legal y muestra un email de contacto real. | ⏳ (P4) |
 
-### US-38 · Descargar mis datos
+### US-39 · Descargar mis datos
 
-**Como** persona con cuenta **quiero** descargar un archivo con todo lo que el sitio guarda de mí **para** ejercer mi derecho de acceso.
-
-| ID | Criterio de aceptación | Estado |
-|---|---|---|
-| L2 | **Dado** una persona con sesión, **cuando** descarga sus datos, **entonces** recibe un archivo con su cuenta, favoritos, consultas y denuncias, y nada de otras personas. | ✅ `services/account` |
-
-### US-39 · Eliminar mi cuenta
-
-**Como** persona con cuenta **quiero** eliminar mi cuenta y mis datos **para** ejercer mi derecho de supresión.
+**Como** profesional con cuenta **quiero** descargar un archivo con todo lo que el sitio guarda de mí **para** ejercer mi derecho de acceso.
 
 | ID | Criterio de aceptación | Estado |
 |---|---|---|
-| L3 | **Dado** una persona que no integra una inmobiliaria, **cuando** elimina su cuenta confirmando su email, **entonces** se borran sus favoritos, se anonimizan sus consultas y denuncias, se vacía su perfil y se borra su usuario de Supabase Auth. | ✅ `services/account` (el borrado en Supabase Auth se prueba al aplicarlo en producción) |
+| L2 | **Dado** una persona con sesión, **cuando** descarga sus datos, **entonces** recibe un archivo con su cuenta, consultas y denuncias, y nada de otras personas. | ✅ `services/account` |
+
+### US-40 · Eliminar mi cuenta
+
+**Como** profesional con cuenta **quiero** eliminar mi cuenta y mis datos **para** ejercer mi derecho de supresión.
+
+| ID | Criterio de aceptación | Estado |
+|---|---|---|
+| L3 | **Dado** una persona que no integra una inmobiliaria, **cuando** elimina su cuenta confirmando su email, **entonces** se anonimizan sus consultas y denuncias, se vacía su perfil y se borra su usuario de Supabase Auth. | ✅ `services/account` (el borrado en Supabase Auth se prueba al aplicarlo en producción) |
 | L4 | **Dado** un integrante de una inmobiliaria o la administración de la plataforma, **cuando** intenta eliminar su cuenta, **entonces** se le explica qué hacer primero. | ✅ `services/account` |
 
-### US-40 · Conservar solo lo necesario
+### US-41 · Conservar solo lo necesario
 
 **Como** plataforma **quiero** borrar o anonimizar datos personales cuando vence su plazo **para** cumplir con la minimización de datos.
 
@@ -480,7 +490,7 @@ _Privacidad y derechos sobre los datos._
 
 _Garantías transversales del sistema._
 
-### US-41 · Aislamiento entre inmobiliarias
+### US-42 · Aislamiento entre inmobiliarias
 
 **Como** inmobiliaria **quiero** que nadie de otra inmobiliaria vea o modifique mis datos **para** confiar en la plataforma con mi negocio.
 
@@ -492,7 +502,7 @@ _Garantías transversales del sistema._
 | M4 | **Dado** el contrato de la aplicación y las reglas de la base (estados, topes, tipos), **cuando** se desalinean, **entonces** un test falla. | ✅ `isolation/h2-contracts-vs-db` |
 | M9 | **Dado** el agente en el servidor, **cuando** se identifica a la persona, **entonces** siempre sale de la sesión, nunca de datos que mande el navegador. | ✅ `unit/actor`, `isolation/*` |
 
-### US-42 · Navegador protegido
+### US-43 · Navegador protegido
 
 **Como** visitante **quiero** que el sitio use las protecciones estándar del navegador **para** navegar con seguridad.
 
@@ -501,7 +511,7 @@ _Garantías transversales del sistema._
 | M5 | **Dado** el navegador, **cuando** carga cualquier página, **entonces** recibe una política de contenido (CSP), HSTS, `X-Frame-Options`, `Permissions-Policy` y `nosniff`; los scripts solo pueden venir del propio sitio. | ✅ `unit/csp` (política); verificada con Chrome en producción |
 | M6 | **Dado** el enlace de invitación, **cuando** se abre, **entonces** la dirección no se filtra a otros sitios (`Referrer-Policy: no-referrer`). | 🟡 |
 
-### US-43 · Errores y mantenimiento controlados
+### US-44 · Errores y mantenimiento controlados
 
 **Como** operadora de la plataforma **quiero** ver los errores sin datos personales y que el mantenimiento solo corra autorizado **para** operar el sitio con seguridad.
 
@@ -511,16 +521,16 @@ _Garantías transversales del sistema._
 | M8 | **Dado** la ruta de mantenimiento diario, **cuando** se llama sin la clave, con una incorrecta o sin la variable configurada, **entonces** no corre. | ✅ `unit/cron-route` |
 | O4 | **Dado** el mantenimiento diario, **cuando** corre, **entonces** deja constancia solo si cambió algo. | ✅ `services/maintenance` |
 
-### US-44 · Cambios de código y migraciones seguros
+### US-45 · Cambios de código y migraciones seguros
 
 **Como** equipo de desarrollo **quiero** que todo cambio pase tests y que las migraciones se apliquen con autorización **para** no romper la base real.
 
 | ID | Criterio de aceptación | Estado |
 |---|---|---|
-| O2 | **Dado** un cambio de código, **cuando** se prepara para guardar, **entonces** `npm test`, el chequeo de tipos, el lint y el build pasan. | ✅ (305 tests) |
+| O2 | **Dado** un cambio de código, **cuando** se prepara para guardar, **entonces** `npm test`, el chequeo de tipos, el lint y el build pasan. | ✅ (ver `npm test`) |
 | O3 | **Dado** las migraciones, **cuando** se aplican a la base real, **entonces** solo se hace desde `main` y con autorización de la dueña del proyecto. | 🟡 (regla de trabajo) |
 
-### US-45 · Promover administradoras de la plataforma
+### US-46 · Promover administradoras de la plataforma
 
 **Como** operadora de la plataforma **quiero** dar el rol de administración con un comando que primero simula **para** no otorgarlo por error.
 
@@ -534,7 +544,7 @@ _Garantías transversales del sistema._
 
 _Aspecto y usabilidad de TERRAE._
 
-### US-46 · Identidad TERRAE
+### US-47 · Identidad TERRAE
 
 **Como** usuaria **quiero** ver el nombre, los íconos y la paleta de la marca **para** reconocer el producto en cada pantalla y email.
 
@@ -544,7 +554,7 @@ _Aspecto y usabilidad de TERRAE._
 | N2 | **Dado** el panel de inicio y el Resumen de administración, **cuando** se abren, **entonces** cada tarjeta lleva un ícono según su tema. | 🟡 |
 | N3 | **Dado** el entorno de desarrollo, **cuando** se abre cualquier página, **entonces** hay un selector para alternar entre dos paletas de color (arcilla y salvia / tierra y turquesa) y se ve cuál está activa. | 🟡 (temporal, hasta elegir una) |
 
-### US-47 · Controles claros y accesibles
+### US-48 · Controles claros y accesibles
 
 **Como** usuaria **quiero** listas, campos y estados de carga consistentes y usables con teclado **para** usar el sitio sin fricción.
 
@@ -571,4 +581,4 @@ _Aspecto y usabilidad de TERRAE._
 
 ---
 
-**Resumen:** 14 features, 47 historias, 135 criterios.
+**Resumen:** 14 features, 48 historias, 138 criterios.

@@ -8,7 +8,7 @@ export const es = {
     nameLong: "TERRAE",
     description: "Propiedades y lotes en venta y alquiler en Tandil, de varias inmobiliarias.",
     properties: "Propiedades",
-    login: "Ingresar",
+    login: "Acceso inmobiliarias",
     favorites: "Favoritos",
     myPanel: "Mi panel",
     language: "Idioma",
@@ -86,7 +86,6 @@ export const es = {
     ownPropertyLink: "Consultas",
     noInquiries: "Esta propiedad ya no recibe consultas.",
     seeAllOfAgency: "Ver todas sus propiedades",
-    favLogin: "Ingresá para guardar en favoritos",
     favSave: "Guardar en favoritos", favSaved: "Guardada en favoritos",
   },
   facts: {
@@ -133,10 +132,10 @@ export const es = {
     myData: "Mis datos",
     sections: [
       { title: "Qué datos guardamos", body: [
-        "Cuenta: tu email y, si los completás, tu nombre y teléfono.",
+        "Cuenta (solo para quienes trabajan en una inmobiliaria): tu email y, si los completás, tu nombre y teléfono. Para buscar, consultar o denunciar no necesitás cuenta.",
         "Consultas: el nombre, email, teléfono (opcional) y mensaje que escribís en el formulario de una propiedad, junto con la fecha y tu consentimiento.",
         "Denuncias: el motivo y el detalle que indiques y, solo si querés, un email de contacto.",
-        "Favoritos: las propiedades que guardás con tu cuenta.",
+        "Favoritos: las propiedades que guardás se guardan solo en tu navegador y el sitio no las asocia a ninguna persona.",
         "Seguridad: una huella técnica de tu dirección IP (un código irreversible, no la IP) para frenar el uso abusivo de los formularios. Usamos solamente cookies técnicas de sesión; no hay publicidad ni seguimiento.",
       ] },
       { title: "Para qué los usamos", body: [
@@ -149,7 +148,7 @@ export const es = {
         "Consultas: 24 meses; después se anonimizan (nombre, email, teléfono y mensaje).",
         "Huella técnica de IP: 30 días.",
         "Email de quien denuncia: hasta un año después de resuelta la denuncia.",
-        "Cuenta y favoritos: hasta que elimines tu cuenta.",
+        "Cuenta (solo inmobiliarias): hasta que la elimines.",
       ] },
       { title: "Tus derechos", body: [
         "Podés acceder a tus datos, rectificarlos, actualizarlos y pedir que se supriman (Ley 25.326, arts. 14 a 16). Con una cuenta, podés descargar tus datos y eliminar tu cuenta en “Mis datos”.",
@@ -162,7 +161,7 @@ export const es = {
     intro: "Acá podés descargar una copia de los datos que guardamos sobre vos o eliminar tu cuenta.",
     download: "Descargar mis datos (JSON)",
     deleteTitle: "Eliminar mi cuenta",
-    deleteText: "Se borran tus favoritos y tus datos de contacto, y se anonimizan las consultas que enviaste. No se puede deshacer.",
+    deleteText: "Se borran tus datos de contacto y se anonimizan las consultas que enviaste. No se puede deshacer.",
     memberBlocked: "Sos parte del equipo de una inmobiliaria. Pedile a su administrador que te quite del equipo y después podrás eliminar tu cuenta.",
     confirmLabel: "Para confirmar, escribí tu email",
     confirmButton: "Eliminar definitivamente",
@@ -184,7 +183,7 @@ export const es = {
     title: "Mis favoritos",
     empty: "Todavía no guardaste propiedades. Entrá a una ficha y tocá",
     emptyAction: "Guardar en favoritos",
-    loadError: "No pudimos cargar tus favoritos.",
+    note: "Se guardan en este navegador. No hace falta cuenta, pero no se comparten con otros dispositivos.",
   },
 };
 

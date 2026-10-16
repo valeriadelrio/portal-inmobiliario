@@ -21,8 +21,6 @@ erDiagram
   PROPERTY ||--o{ INQUIRY : "recibe"
   AGENCY_MEMBER ||--o{ INQUIRY : "destinatario"
   USER_PROFILE |o--o{ INQUIRY : "envía (si tiene cuenta)"
-  USER_PROFILE ||--o{ FAVORITE : "guarda"
-  PROPERTY ||--o{ FAVORITE : "es guardada"
   PROPERTY ||--o{ PROPERTY_REPORT : "es denunciada"
   USER_PROFILE |o--o{ PROPERTY_REPORT : "denuncia (si tiene cuenta)"
 
@@ -94,10 +92,6 @@ erDiagram
     timestamp consent_at "Ley 25.326"
     text ip_hash "se borra a los 30 días"
   }
-  FAVORITE {
-    uuid user_id
-    uuid property_id
-  }
   PROPERTY_REPORT {
     text reason "fake, duplicate, wrong_info, inappropriate, sold, other"
     text status "open | dismissed | actioned"
@@ -129,7 +123,7 @@ flowchart TB
   policies["policies.ts<br/>can(actor, acción)"]
   subgraph svc["Servicios (src/server/services)"]
     s1["public, property, photo, zone"]
-    s2["agency, inquiry, favorite"]
+    s2["agency, inquiry"]
     s3["moderation, account"]
   end
   withactor["withActor()<br/>SET ROLE app_user + id de usuario"]
@@ -160,8 +154,8 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-  V(["Visitante<br/>sin cuenta"])
-  U(["Usuario<br/>con cuenta"])
+  V(["Público<br/>sin cuenta"])
+  U(["Profesional<br/>con cuenta"])
   A(["Agente"])
   AA(["Admin de<br/>inmobiliaria"])
   P(["Admin de<br/>plataforma"])
@@ -169,8 +163,8 @@ flowchart LR
   V --> v1["Buscar y ver fichas"]
   V --> v2["Enviar consulta"]
   V --> v3["Denunciar una ficha"]
+  V --> v4["Guardar favoritos<br/>(en su navegador)"]
   U --> V
-  U --> u1["Guardar favoritos"]
   U --> u2["Descargar o eliminar sus datos"]
   U --> u3["Registrar una inmobiliaria"]
   A --> U
@@ -404,10 +398,6 @@ classDiagram
     createInquiry()
     listInquiries() setInquiryStatus()
   }
-  class FavoriteService {
-    addFavorite() removeFavorite()
-    listFavorites()
-  }
   class ModerationService {
     reportProperty() listReports()
     resolveReport() moderateProperty()
@@ -427,7 +417,6 @@ classDiagram
   PhotoService ..> Actor
   AgencyService ..> Actor
   InquiryService ..> Actor
-  FavoriteService ..> Actor
   ModerationService ..> Actor
   AccountService ..> Actor
   ZoneService ..> Actor
@@ -449,7 +438,7 @@ flowchart LR
     agencia --> ficha
     ficha --> denuncia["Denunciar (formulario)"]
     ficha --> consulta["Consultar (formulario)"]
-    fav["Favoritos /cuenta/favoritos"]
+    fav["Favoritos /favoritos<br/>(guardados en el navegador)"]
     datos["Mis datos /cuenta/datos"]
     priv["Privacidad /privacidad"]
   end

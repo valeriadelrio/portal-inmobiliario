@@ -17,13 +17,12 @@ async function visitorActivity() {
 }
 
 describe("exportar mis datos", () => {
-  it("devuelve cuenta, favoritos, consultas y denuncias propias, y nada de otras personas", async () => {
+  it("devuelve cuenta, consultas y denuncias propias, y nada de otras personas", async () => {
     await visitorActivity();
     const r = await exportMyData(visitor);
     expect(r.ok).toBe(true);
     if (!r.ok) return;
     expect(r.data.account.email).toBe("visitor@x.com");
-    expect(r.data.favorites.map((f) => f.slug)).toEqual(["slug-" + P.a1]);
     expect(r.data.inquiries).toHaveLength(1);
     expect(r.data.inquiries[0].message).toBe("Hola me interesa");
     expect(r.data.reports.map((x) => x.reason)).toEqual(["fake"]);
@@ -39,11 +38,10 @@ describe("exportar mis datos", () => {
 });
 
 describe("eliminar mi cuenta", () => {
-  it("borra favoritos, anonimiza consultas y denuncias, y deja el perfil deshabilitado y sin datos", async () => {
+  it("anonimiza consultas y denuncias, y deja el perfil deshabilitado y sin datos", async () => {
     await visitorActivity();
     expect((await deleteMyAccount(visitor)).ok).toBe(true);
 
-    expect(await admin`select 1 from favorite where user_id = ${U.visitor}`).toHaveLength(0);
     const [inq] = await admin`select name, email, phone, message, user_id from inquiry where id = ${INQ.a1}`;
     expect(inq).toMatchObject({ name: "(eliminado)", email: "eliminado@invalid", phone: null, user_id: null });
     const [rep] = await admin`select user_id, reporter_email, ip_hash from property_report`;

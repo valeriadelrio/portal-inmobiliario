@@ -13,7 +13,7 @@ Portal donde varias inmobiliarias (cada una con sus agentes) publican propiedade
 ## Roles
 | Rol | Puede |
 |---|---|
-| Visitante | Buscar, ver fichas, contactar; con cuenta: favoritos |
+| Visitante (público, sin cuenta) | Buscar, ver fichas, contactar, denunciar y guardar favoritos en su navegador |
 | Agente | Crear/editar SUS propiedades, ver SUS consultas |
 | Admin de agencia | Gestionar agentes y todas las propiedades de su agencia |
 | Admin de plataforma | Aprobar agencias, moderar, ver todo |
@@ -24,7 +24,7 @@ Portal donde varias inmobiliarias (cada una con sus agentes) publican propiedade
 3. Búsqueda con filtros: operación, tipo, zona, precio USD, ambientes, superficie
 4. Ficha de propiedad: galería, datos, agente
 5. Formulario de contacto -> email al agente + bandeja en su panel
-6. Cuentas de visitante y favoritos
+6. Favoritos del público (guardados en el navegador; la cuenta es solo para inmobiliarias)
 7. Panel de agencia: listado, estados, consultas
 8. Página pública de agencia (logo, propiedades, agentes)
 

@@ -11,11 +11,11 @@ Los tests viven en `tests/`: `services/` (reglas de negocio), `isolation/` (perm
 
 ---
 
-## A. Cuentas y acceso
+## A. Cuentas y acceso (solo para inmobiliarias)
 
 | ID | Criterio | Estado |
 |---|---|---|
-| A1 | **Dado** una persona sin cuenta, **cuando** se registra con email y contraseña, **entonces** puede iniciar sesión y queda como usuaria sin inmobiliaria. | 🟡 |
+| A1 | **Dado** una persona que va a registrar su inmobiliaria o aceptar una invitación, **cuando** crea su cuenta con email y contraseña, **entonces** puede iniciar sesión y queda como usuaria sin inmobiliaria hasta completar el alta o aceptar la invitación. | 🟡 |
 | A2 | **Dado** que Supabase exige confirmar el email, **cuando** la persona se registra, **entonces** se le avisa que revise su correo antes de ingresar. | 🟡 (depende de configurar el correo de Supabase, ver P3) |
 | A3 | **Dado** una persona con sesión iniciada, **cuando** abre `/login`, **entonces** va directo a su panel. | 🟡 |
 | A4 | **Dado** una persona sin sesión, **cuando** abre `/panel`, `/admin`, `/cuenta` o `/registro-agencia`, **entonces** la llevan a `/login` y, tras ingresar, vuelve a la página que pedía. | 🟡 |
@@ -23,6 +23,8 @@ Los tests viven en `tests/`: `services/` (reglas de negocio), `isolation/` (perm
 | A6 | **Dado** una cuenta deshabilitada, **cuando** intenta operar como integrante, **entonces** no tiene permisos de inmobiliaria. | ✅ `isolation/h2-agencies` |
 | A7 | **Dado** el menú de la cuenta, **cuando** se cambia de idioma, **entonces** el menú (Favoritos, Mi panel, avatar) no desaparece. | 🟡 |
 | A8 | **Dado** cualquier usuaria, **cuando** abre el avatar, **entonces** ve su nombre, email y rol correctos y puede cerrar sesión. | ✅ `unit/role-label` (texto del rol); resto 🟡 |
+| A9 | **Dado** una persona que busca propiedades, **cuando** busca, consulta, escribe por WhatsApp, denuncia o guarda favoritos, **entonces** no necesita cuenta. El único acceso del encabezado es "Acceso inmobiliarias". | 🟡 |
+| A10 | **Dado** la pantalla de acceso, **cuando** se abre sin venir de "Registrar mi inmobiliaria" ni de una invitación, **entonces** solo permite ingresar (con un enlace para registrar la inmobiliaria); crear cuenta solo se ofrece en esos dos casos. | 🟡 (no impide que alguien cree una cuenta llamando directo a Supabase: esa cuenta no puede hacer nada hasta tener inmobiliaria) |
 
 ## B. Inmobiliarias y equipo
 
@@ -148,14 +150,15 @@ Los tests viven en `tests/`: `services/` (reglas de negocio), `isolation/` (perm
 | H11 | **Dado** un agente con WhatsApp público, **cuando** se abre la ficha, **entonces** aparece un botón que abre `wa.me` con un mensaje ya escrito sobre esa propiedad; sin número, no aparece. | ✅ `unit/lib` (armado del enlace) |
 | H12 | **Dado** una consulta, **cuando** pasan 24 meses, **entonces** se anonimizan nombre, email, teléfono y mensaje, y se conserva la fila. | ✅ `services/maintenance` |
 
-## I. Favoritos
+## I. Favoritos (sin cuenta)
 
 | ID | Criterio | Estado |
 |---|---|---|
-| I1 | **Dado** una persona sin sesión, **cuando** mira una ficha, **entonces** el botón de favoritos la lleva a ingresar y vuelve a la misma ficha. | 🟡 |
-| I2 | **Dado** una persona con sesión, **cuando** guarda o quita una ficha, **entonces** el cambio se refleja en `/cuenta/favoritos`. | ✅ `services/inquiry` (favoritos) |
-| I3 | **Dado** una ficha guardada que luego se pausa u oculta, **cuando** se abre la lista, **entonces** ya no aparece. | ✅ `services/inquiry`, `services/moderation` |
-| I4 | **Dado** dos personas, **cuando** una guarda favoritos, **entonces** la otra no los ve. | ✅ `isolation/rls` |
+| I1 | **Dado** cualquier visitante, **cuando** toca "Guardar en favoritos" en una ficha, **entonces** se guarda en su navegador (sin cuenta) y el botón pasa a "Guardada en favoritos"; al tocarlo de nuevo se quita. | 🟡 |
+| I2 | **Dado** un visitante con favoritos guardados, **cuando** abre `/favoritos` (o `/en/favoritos`), **entonces** ve las tarjetas de esas fichas, la más reciente primero. | 🟡 (las tarjetas se prueban en `services/public`) |
+| I3 | **Dado** una ficha guardada que luego se pausa, vuelve a borrador, se oculta por moderación o es de una inmobiliaria suspendida, **cuando** se abre la lista, **entonces** ya no aparece. | ✅ `services/public`, `services/moderation` |
+| I4 | **Dado** la lista de favoritos, **cuando** se piden las tarjetas, **entonces** el servidor solo recibe direcciones de fichas válidas (máximo 100), ignora el resto y no guarda ni asocia nada a la persona. | ✅ `services/public` |
+| I5 | **Dado** dos personas, dispositivos o navegadores distintos, **cuando** una guarda favoritos, **entonces** la otra no los ve (viven en cada navegador). | 🟡 (por diseño) |
 
 ## J. Idiomas
 
@@ -191,8 +194,8 @@ Los tests viven en `tests/`: `services/` (reglas de negocio), `isolation/` (perm
 | ID | Criterio | Estado |
 |---|---|---|
 | L1 | **Dado** el pie de página, **cuando** se hace clic en "Privacidad", **entonces** se abre la política en español o inglés; el formulario de consulta enlaza a ella junto al consentimiento. | 🟡 |
-| L2 | **Dado** una persona con sesión, **cuando** descarga sus datos, **entonces** recibe un archivo con su cuenta, favoritos, consultas y denuncias, y nada de otras personas. | ✅ `services/account` |
-| L3 | **Dado** una persona que no integra una inmobiliaria, **cuando** elimina su cuenta confirmando su email, **entonces** se borran sus favoritos, se anonimizan sus consultas y denuncias, se vacía su perfil y se borra su usuario de Supabase Auth. | ✅ `services/account` (el borrado en Supabase Auth se prueba al aplicarlo en producción) |
+| L2 | **Dado** una persona con sesión, **cuando** descarga sus datos, **entonces** recibe un archivo con su cuenta, consultas y denuncias, y nada de otras personas. | ✅ `services/account` |
+| L3 | **Dado** una persona que no integra una inmobiliaria, **cuando** elimina su cuenta confirmando su email, **entonces** se anonimizan sus consultas y denuncias, se vacía su perfil y se borra su usuario de Supabase Auth. | ✅ `services/account` (el borrado en Supabase Auth se prueba al aplicarlo en producción) |
 | L4 | **Dado** un integrante de una inmobiliaria o la administración de la plataforma, **cuando** intenta eliminar su cuenta, **entonces** se le explica qué hacer primero. | ✅ `services/account` |
 | L5 | **Dado** la huella de IP, **cuando** pasan 30 días, **entonces** se borra; el email de quien denuncia se borra al año de resuelta la denuncia. | ✅ `services/maintenance` |
 | L6 | **Dado** la política de privacidad, **cuando** se publica, **entonces** la revisó una persona del ámbito legal y muestra un email de contacto real. | ⏳ (P4) |
@@ -227,7 +230,7 @@ Los tests viven en `tests/`: `services/` (reglas de negocio), `isolation/` (perm
 | ID | Criterio | Estado |
 |---|---|---|
 | O1 | **Dado** el comando `npm run promote -- email --platform-admin`, **cuando** se corre con `--yes`, **entonces** esa cuenta pasa a ser administración de la plataforma; sin `--yes` solo simula. | 🟡 |
-| O2 | **Dado** un cambio de código, **cuando** se prepara para guardar, **entonces** `npm test`, el chequeo de tipos, el lint y el build pasan. | ✅ (305 tests) |
+| O2 | **Dado** un cambio de código, **cuando** se prepara para guardar, **entonces** `npm test`, el chequeo de tipos, el lint y el build pasan. | ✅ (ver `npm test`) |
 | O3 | **Dado** las migraciones, **cuando** se aplican a la base real, **entonces** solo se hace desde `main` y con autorización de la dueña del proyecto. | 🟡 (regla de trabajo) |
 | O4 | **Dado** el mantenimiento diario, **cuando** corre, **entonces** deja constancia solo si cambió algo. | ✅ `services/maintenance` |
 

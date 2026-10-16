@@ -9,7 +9,6 @@ export async function DashboardShell({ children }: { children: React.ReactNode }
   const actor = await getActor();
   const groups: NavGroup[] = [{ title: "General", items: [{ href: "/panel", label: "Inicio", icon: "home", exact: true }] }];
   if (actor.kind === "user") {
-    groups[0].items.push({ href: "/cuenta/favoritos", label: "Favoritos", icon: "heart" });
     const mine: NavGroup = { title: "Mi inmobiliaria", items: [{ href: "/panel/agencia", label: "Mi inmobiliaria", icon: "building" }] };
     if (actor.membership) {
       mine.items.push({ href: "/panel/propiedades", label: "Propiedades", icon: "grid" });

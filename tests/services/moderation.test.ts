@@ -6,7 +6,7 @@ import { listMyProperties } from "@/server/services/property";
 import {
   countOpenReports, listAuditLog, listPropertiesForModeration, listReports, moderateProperty, reportProperty, resolveReport,
 } from "@/server/services/moderation";
-import { getPublicProperty, searchProperties } from "@/server/services/public";
+import { getPublicProperty, listPublicCardsBySlugs, searchProperties } from "@/server/services/public";
 import { AG, ANON, M, P, U, admin, as, asUser, seed } from "../helpers/seed";
 
 beforeEach(seed);
@@ -117,10 +117,12 @@ describe("ocultar y restituir", () => {
     const missing = await moderateProperty(root, "00000000-0000-4000-8000-0000000000ff", true, "motivo");
     expect(!missing.ok && missing.error.code).toBe("not_found");
   });
-  it("una ficha oculta desaparece del sitio público, de las consultas y de los favoritos, pero no de su inmobiliaria", async () => {
+  it("una ficha oculta desaparece del sitio público, de las consultas y de las tarjetas de favoritos, pero no de su inmobiliaria", async () => {
     await moderateProperty(root, P.a1, true, "Contenido inapropiado");
     const s = await searchProperties({} as never);
     expect(s.ok && JSON.stringify(s.data)).not.toContain("slug-" + P.a1);
+    const cards = await listPublicCardsBySlugs(["slug-" + P.a1, "slug-" + P.a2]);
+    expect(cards.ok && cards.data.map((c) => c.slug)).toEqual(["slug-" + P.a2]);
     const detail = await getPublicProperty("slug-" + P.a1);
     expect(detail.ok && detail.data).toBeFalsy();
     const inq = await createInquiry(ANON, { propertyId: P.a1, name: "Carla", email: "c@x.com", message: "Hola, quiero visitarla", locale: "es", consent: true }, { ipHash: "h1" });

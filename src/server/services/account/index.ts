@@ -2,7 +2,7 @@ import { and, eq, sql } from "drizzle-orm";
 import { fail, mapDbError, ok, type Actor, type ServiceResult } from "@/contracts";
 import { db } from "@/server/db/client";
 import {
-  agency, agencyInvitation, agencyMember, auditLog, favorite, inquiry, property, propertyReport, userProfile,
+  agency, agencyInvitation, agencyMember, auditLog, inquiry, property, propertyReport, userProfile,
 } from "@/server/db/schema";
 
 // H6. Derechos sobre los datos personales (Ley 25.326): acceso (descarga) y supresión (eliminar la cuenta).
@@ -13,7 +13,6 @@ export type MyData = {
   generatedAt: string;
   account: { email: string; fullName: string | null; phone: string | null; locale: string; createdAt: string };
   team: { agency: string; role: string } | null;
-  favorites: { title: string; slug: string; savedAt: string }[];
   inquiries: { property: string; message: string; sentAt: string; status: string }[];
   reports: { property: string; reason: string; message: string | null; sentAt: string; status: string }[];
 };
@@ -28,8 +27,6 @@ export async function exportMyData(actor: Actor): Promise<ServiceResult<MyData>>
     if (!me) return fail("not_found", "Cuenta no encontrada");
     const [team] = await db.select({ agency: agency.name, role: agencyMember.role }).from(agencyMember)
       .innerJoin(agency, eq(agency.id, agencyMember.agencyId)).where(and(eq(agencyMember.userId, uid), eq(agencyMember.status, "active")));
-    const favs = await db.select({ title: property.title, slug: property.slug, savedAt: favorite.createdAt }).from(favorite)
-      .innerJoin(property, eq(property.id, favorite.propertyId)).where(eq(favorite.userId, uid));
     const inqs = await db.select({ property: property.title, message: inquiry.message, sentAt: inquiry.createdAt, status: inquiry.status })
       .from(inquiry).innerJoin(property, eq(property.id, inquiry.propertyId)).where(eq(inquiry.userId, uid));
     const reps = await db.select({ property: property.title, reason: propertyReport.reason, message: propertyReport.message, sentAt: propertyReport.createdAt, status: propertyReport.status })
@@ -38,7 +35,6 @@ export async function exportMyData(actor: Actor): Promise<ServiceResult<MyData>>
       generatedAt: new Date().toISOString(),
       account: { email: me.email, fullName: me.fullName, phone: me.phone, locale: me.locale, createdAt: me.createdAt.toISOString() },
       team: team ?? null,
-      favorites: favs.map((f) => ({ ...f, savedAt: f.savedAt.toISOString() })),
       inquiries: inqs.map((i) => ({ ...i, sentAt: i.sentAt.toISOString() })),
       reports: reps.map((r) => ({ ...r, sentAt: r.sentAt.toISOString() })),
     });
@@ -48,7 +44,7 @@ export async function exportMyData(actor: Actor): Promise<ServiceResult<MyData>>
 }
 
 /**
- * Elimina la cuenta: borra favoritos, anonimiza las consultas y denuncias que envió, deja el perfil sin datos personales
+ * Elimina la cuenta: anonimiza las consultas y denuncias que envió, deja el perfil sin datos personales
  * y deshabilitado (otras tablas lo referencian) y borra el usuario de Supabase Auth, todo en una transacción.
  * Quien integra el equipo de una inmobiliaria no puede: primero lo debe quitar el administrador.
  */
@@ -66,7 +62,6 @@ export async function deleteMyAccount(actor: Actor): Promise<ServiceResult<void>
       if (!me) return fail("not_found", "Cuenta no encontrada");
       const gone = `deleted-${uid}@invalid`;
 
-      await tx.delete(favorite).where(eq(favorite.userId, uid));
       await tx.update(inquiry)
         .set({ name: "(eliminado)", email: "eliminado@invalid", phone: null, message: "(eliminado por la persona)", userId: null, ipHash: null })
         .where(eq(inquiry.userId, uid));

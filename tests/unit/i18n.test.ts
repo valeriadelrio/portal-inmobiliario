@@ -55,7 +55,7 @@ describe("rutas por idioma", () => {
   it("valida el idioma", () => {
     expect(isLocale("en")).toBe(true);
     expect(isLocale("fr")).toBe(false);
-    expect(getDict("en").site.login).toBe("Log in");
+    expect(getDict("en").site.login).toBe("Agency login");
   });
   it("la zona cae al español si no hay traducción", () => {
     expect(zoneLabel("en", "Centro", "Downtown")).toBe("Downtown");

@@ -23,7 +23,7 @@ export const ids = (rows: Iterable<Record<string, unknown>>) => [...rows].map((r
 export const sorted = (...x: string[]) => [...x].sort();
 
 export async function seed() {
-  await admin.unsafe(`truncate audit_log, property_report, agency_invitation, favorite, inquiry, property_photo, property_lot, property_building,
+  await admin.unsafe(`truncate audit_log, property_report, agency_invitation, inquiry, property_photo, property_lot, property_building,
     property, agency_member, zone, user_profile, agency restart identity cascade`);
 
   const agencies = [
@@ -69,6 +69,5 @@ export async function seed() {
     await admin`insert into inquiry (id, property_id, agency_id, agent_id, name, email, message, consent_at)
       values (${i}, ${p}, ${a}, ${m}, 'Ana', 'ana@x.com', 'Hola me interesa', now())`;
 
-  await admin`insert into favorite (user_id, property_id) values (${U.visitor}, ${P.a1}), (${U.a1}, ${P.b1})`;
 }
 

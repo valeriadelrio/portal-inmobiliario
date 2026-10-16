@@ -1,6 +1,5 @@
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import type { Actor } from "@/contracts";
-import { addFavorite, isFavorite, listFavorites, removeFavorite } from "@/server/services/favorite";
 import { countNewInquiries, createInquiry, isOwnAgencyProperty, listInquiries, setInquiryStatus } from "@/server/services/inquiry";
 import { AG, ANON, INQ, M, P, U, admin, asUser, seed } from "../helpers/seed";
 
@@ -108,33 +107,3 @@ describe("bandeja", () => {
   });
 });
 
-describe("favoritos", () => {
-  it("agregar, listar y quitar", async () => {
-    const v = asUser(U.visitor);
-    expect(await isFavorite(v, P.a2)).toBe(false);
-    expect((await addFavorite(v, P.a2)).ok).toBe(true);
-    expect((await addFavorite(v, P.a2)).ok).toBe(true); // idempotente
-    expect(await isFavorite(v, P.a2)).toBe(true);
-    const list = await listFavorites(v);
-    expect(list.ok && list.data.map((c) => c.id).sort()).toEqual([P.a1, P.a2].sort());
-    expect((await removeFavorite(v, P.a2)).ok).toBe(true);
-    expect(await isFavorite(v, P.a2)).toBe(false);
-  });
-  it("cada usuario ve solo los suyos", async () => {
-    const r = await listFavorites(asUser(U.a1));
-    expect(r.ok && r.data.map((c) => c.id)).toEqual([P.b1]);
-  });
-  it("sin sesión no hay favoritos", async () => {
-    const r = await addFavorite(ANON, P.a1);
-    expect(!r.ok && r.error.code).toBe("unauthenticated");
-  });
-  it("no se pueden marcar borradores ni propiedades ocultas", async () => {
-    const r = await addFavorite(asUser(U.visitor), P.a1draft);
-    expect(!r.ok && r.error.code).toBe("not_found");
-  });
-  it("una propiedad que deja de ser pública sale de la lista", async () => {
-    await admin`update property set status = 'paused' where id = ${P.a1}`;
-    const r = await listFavorites(asUser(U.visitor));
-    expect(r.ok && r.data).toEqual([]);
-  });
-});

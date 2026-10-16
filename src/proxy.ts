@@ -5,7 +5,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 const PROTECTED = ["/panel", "/admin", "/cuenta", "/registro-agencia"];
 // páginas públicas con idioma: el español va sin prefijo (se reescribe a /es/…) y el inglés bajo /en
-const LOCALIZED = ["/propiedades", "/inmobiliarias", "/cuenta", "/privacidad"];
+const LOCALIZED = ["/propiedades", "/inmobiliarias", "/cuenta", "/favoritos", "/privacidad"];
 const isLocalized = (p: string) => p === "/" || LOCALIZED.some((l) => p === l || p.startsWith(`${l}/`));
 
 /** Refresca la sesión de Supabase y manda a /login si falta. La autorización fina NO va acá (ver policies.ts). */

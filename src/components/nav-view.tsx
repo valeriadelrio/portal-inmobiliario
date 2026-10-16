@@ -20,10 +20,18 @@ export function clearNavCache() { last = undefined; }
 
 function View({ data, locale }: { data: NavData; locale: Locale }) {
   const t = getDict(locale).site;
-  if (!data) return <Link href="/login" className="btn btn-primary">{t.login}</Link>;
+  const favorites = <NavLink href={localePath(locale, "/favoritos")}>{t.favorites}</NavLink>;
+  if (!data) {
+    return (
+      <div className="flex flex-wrap items-center gap-2">
+        {favorites}
+        <Link href="/login" className="btn">{t.login}</Link>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <NavLink href={localePath(locale, "/cuenta/favoritos")}>{t.favorites}</NavLink>
+      {favorites}
       <NavLink href="/panel">{t.myPanel}</NavLink>
       <UserMenu initials={data.initials} name={data.name} email={data.email} role={data.role} />
     </div>

@@ -22,10 +22,9 @@ describe("lectura pública (anónimo)", () => {
     const lots = await as(ANON, (tx) => tx.execute(sql`select property_id as id from property_lot`));
     expect(ids(lots)).toEqual([P.a1]);
   });
-  it("no ve consultas, perfiles ni favoritos", async () => {
+  it("no ve consultas ni perfiles", async () => {
     expect(await as(ANON, (tx) => tx.execute(sql`select 1 from inquiry`))).toHaveLength(0);
     expect(await as(ANON, (tx) => tx.execute(sql`select 1 from user_profile`))).toHaveLength(0);
-    expect(await as(ANON, (tx) => tx.execute(sql`select 1 from favorite`))).toHaveLength(0);
   });
   it("no puede escribir propiedades", async () => {
     await expect(as(ANON, (tx) => tx.execute(sql`update property set title = 'hack'`))).resolves.toHaveLength(0);
@@ -38,11 +37,9 @@ describe("lectura pública (anónimo)", () => {
 });
 
 describe("visitante con cuenta", () => {
-  it("ve lo público y sus propios favoritos, no los ajenos", async () => {
+  it("ve lo público", async () => {
     const props = await as(asUser(U.visitor), (tx) => tx.execute(sql`select id from property`));
     expect(ids(props)).toEqual(sorted(P.a1, P.a2, P.b1));
-    const favs = await as(asUser(U.visitor), (tx) => tx.execute(sql`select property_id as id from favorite`));
-    expect(ids(favs)).toEqual([P.a1]);
   });
   it("ve solo su perfil (los emails ajenos no son visibles)", async () => {
     const rows = await as(asUser(U.visitor), (tx) => tx.execute(sql`select id from user_profile`));
@@ -56,13 +53,10 @@ describe("visitante con cuenta", () => {
     const r = await admin`select platform_role from user_profile where id = ${U.visitor}`;
     expect(r[0].platform_role).toBeNull();
   });
-  it("no puede crear una propiedad ni un favorito a nombre de otro", async () => {
+  it("no puede crear una propiedad", async () => {
     await expect(
       as(asUser(U.visitor), (tx) => tx.execute(sql`insert into property (agency_id, agent_id, operation, type, title,
         description, zone_id, price, total_area_m2, slug) values (${AG.A}, ${M.a1}, 'sale', 'lot', 'x', 'y', ${ZONE}, 1, 1, 'hack')`)),
-    ).rejects.toThrow();
-    await expect(
-      as(asUser(U.visitor), (tx) => tx.execute(sql`insert into favorite (user_id, property_id) values (${U.a1}, ${P.a1})`)),
     ).rejects.toThrow();
   });
 });

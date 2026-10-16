@@ -1,12 +1,10 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { inquiryInput, reportInput } from "@/contracts";
 import { getDict, isLocale } from "@/i18n";
 import { errorText, type ActionState } from "@/lib/form-state";
 import { requestIpHash } from "@/lib/ip-hash";
 import { getActor } from "@/server/auth/get-actor";
-import { addFavorite, removeFavorite } from "@/server/services/favorite";
 import { createInquiry } from "@/server/services/inquiry";
 import { reportProperty } from "@/server/services/moderation";
 
@@ -37,12 +35,6 @@ export async function inquiryAction(_prev: ActionState, f: FormData): Promise<Ac
   return { ok: true, message: t.done };
 }
 
-export async function toggleFavoriteAction(propertyId: string, makeFavorite: boolean): Promise<{ ok: boolean }> {
-  const actor = await getActor();
-  const r = makeFavorite ? await addFavorite(actor, propertyId) : await removeFavorite(actor, propertyId);
-  if (r.ok) { revalidatePath("/cuenta/favoritos"); revalidatePath("/en/cuenta/favoritos"); }
-  return { ok: r.ok };
-}
 
 export async function reportAction(_prev: ActionState, f: FormData): Promise<ActionState> {
   const loc = s(f, "locale");

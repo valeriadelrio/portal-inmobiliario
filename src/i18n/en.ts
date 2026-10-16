@@ -6,7 +6,7 @@ export const en: Dict = {
     nameLong: "TERRAE",
     description: "Properties and lots for sale and rent in Tandil, Argentina, from several real estate agencies.",
     properties: "Properties",
-    login: "Log in",
+    login: "Agency login",
     favorites: "Favorites",
     myPanel: "My dashboard",
     language: "Language",
@@ -84,7 +84,6 @@ export const en: Dict = {
     ownPropertyLink: "Inquiries",
     noInquiries: "This property no longer accepts inquiries.",
     seeAllOfAgency: "See all their properties",
-    favLogin: "Log in to save to favorites",
     favSave: "Save to favorites", favSaved: "Saved to favorites",
   },
   facts: {
@@ -131,10 +130,10 @@ export const en: Dict = {
     myData: "My data",
     sections: [
       { title: "What data we store", body: [
-        "Account: your email and, if you add them, your name and phone number.",
+        "Account (only for people who work at an agency): your email and, if you add them, your name and phone number. You do not need an account to search, send inquiries or report listings.",
         "Inquiries: the name, email, phone (optional) and message you write in a property's form, plus the date and your consent.",
         "Reports: the reason and details you provide and, only if you wish, a contact email.",
-        "Favorites: the properties you save with your account.",
+        "Favorites: the properties you save are saved only in your browser and the site does not link them to any person.",
         "Security: a technical fingerprint of your IP address (an irreversible code, not the IP itself) to stop abuse of the forms. We only use technical session cookies; there is no advertising or tracking.",
       ] },
       { title: "What we use it for", body: [
@@ -147,7 +146,7 @@ export const en: Dict = {
         "Inquiries: 24 months; afterwards they are anonymized (name, email, phone and message).",
         "Technical IP fingerprint: 30 days.",
         "Reporter's email: up to one year after the report is resolved.",
-        "Account and favorites: until you delete your account.",
+        "Account (agency staff only): until you delete it.",
       ] },
       { title: "Your rights", body: [
         "You can access, rectify and update your data and ask for it to be deleted (Argentine law 25.326, arts. 14–16). With an account, you can download your data and delete your account under “My data”.",
@@ -160,7 +159,7 @@ export const en: Dict = {
     intro: "Here you can download a copy of the data we store about you or delete your account.",
     download: "Download my data (JSON)",
     deleteTitle: "Delete my account",
-    deleteText: "Your favorites and contact details are deleted, and the inquiries you sent are anonymized. This cannot be undone.",
+    deleteText: "Your contact details are deleted and the inquiries you sent are anonymized. This cannot be undone.",
     memberBlocked: "You are part of an agency's team. Ask its administrator to remove you from the team, then you will be able to delete your account.",
     confirmLabel: "To confirm, type your email",
     confirmButton: "Delete permanently",
@@ -182,6 +181,6 @@ export const en: Dict = {
     title: "My favorites",
     empty: "You haven't saved any properties yet. Open a listing and click",
     emptyAction: "Save to favorites",
-    loadError: "We couldn't load your favorites.",
+    note: "They are saved in this browser. No account needed, but they are not shared across devices.",
   },
 };

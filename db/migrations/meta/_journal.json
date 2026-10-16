@@ -50,6 +50,13 @@
       "when": 1792074568392,
       "tag": "0006_h6_rate_limits",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792158010724,
+      "tag": "0007_h6_drop_favorite",
+      "breakpoints": true
     }
   ]
 }

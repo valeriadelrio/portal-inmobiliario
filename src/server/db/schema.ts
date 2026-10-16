@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   type AnyPgColumn,
-  boolean, check, doublePrecision, index, integer, jsonb, numeric, pgTable, primaryKey,
+  boolean, check, doublePrecision, index, integer, jsonb, numeric, pgTable,
   text, timestamp, uniqueIndex, uuid,
 } from "drizzle-orm/pg-core";
 
@@ -249,16 +249,6 @@ export const inquiry = pgTable(
     index("inquiry_agency_idx").on(t.agencyId, t.agentId, t.status),
     check("inquiry_status_ck", inList("status", ["new", "read", "answered", "archived"])),
   ],
-);
-
-export const favorite = pgTable(
-  "favorite",
-  {
-    userId: uuid("user_id").notNull().references(() => userProfile.id, { onDelete: "cascade" }),
-    propertyId: uuid("property_id").notNull().references(() => property.id, { onDelete: "cascade" }),
-    createdAt: createdAt(),
-  },
-  (t) => [primaryKey({ columns: [t.userId, t.propertyId] })],
 );
 
 export const auditLog = pgTable("audit_log", {
