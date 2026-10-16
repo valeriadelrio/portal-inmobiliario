@@ -14,11 +14,11 @@ _El público no necesita cuenta. El acceso es para quienes trabajan en una inmob
 
 ### US-01 · Usar el sitio sin registrarme
 
-**Como** persona que busca una propiedad **quiero** buscar, consultar, escribir por WhatsApp, denunciar y guardar favoritos sin crear una cuenta **para** no perder tiempo en trámites.
+**Como** persona que busca una propiedad **quiero** buscar, consultar, escribir por WhatsApp y denunciar sin crear una cuenta **para** no perder tiempo en trámites.
 
 | ID | Criterio de aceptación | Estado |
 |---|---|---|
-| A9 | **Dado** una persona que busca propiedades, **cuando** busca, consulta, escribe por WhatsApp, denuncia o guarda favoritos, **entonces** no necesita cuenta. El único acceso del encabezado es "Acceso inmobiliarias". | 🟡 |
+| A9 | **Dado** una persona que busca propiedades, **cuando** busca, consulta, escribe por WhatsApp o denuncia, **entonces** no necesita cuenta. El único acceso del encabezado es "Acceso inmobiliarias". | 🟡 |
 | A10 | **Dado** la pantalla de acceso, **cuando** se abre sin venir de "Registrar mi inmobiliaria" ni de una invitación, **entonces** solo permite ingresar (con un enlace para registrar la inmobiliaria); crear cuenta solo se ofrece en esos dos casos. | 🟡 (no impide que alguien cree una cuenta llamando directo a Supabase: esa cuenta no puede hacer nada hasta tener inmobiliaria) |
 
 ### US-02 · Crear mi cuenta de inmobiliaria e ingresar
@@ -47,7 +47,7 @@ _El público no necesita cuenta. El acceso es para quienes trabajan en una inmob
 
 | ID | Criterio de aceptación | Estado |
 |---|---|---|
-| A7 | **Dado** el menú de la cuenta, **cuando** se cambia de idioma, **entonces** el menú (Favoritos, Mi panel, avatar) no desaparece. | 🟡 |
+| A7 | **Dado** el menú de la cuenta, **cuando** se cambia de idioma, **entonces** el menú (Mi panel, avatar) no desaparece. | 🟡 |
 | A8 | **Dado** cualquier usuaria, **cuando** abre el avatar, **entonces** ve su nombre, email y rol correctos y puede cerrar sesión. | ✅ `unit/role-label` (texto del rol); resto 🟡 |
 
 ---
@@ -347,29 +347,11 @@ _Contacto entre interesados y agentes._
 
 ---
 
-## Feature 9 — Favoritos (sin cuenta)
-
-_Guardar propiedades en el navegador para verlas después._
-
-### US-30 · Guardar propiedades favoritas
-
-**Como** visitante **quiero** guardar y quitar fichas de mis favoritos sin registrarme **para** volver a verlas sin buscarlas de nuevo.
-
-| ID | Criterio de aceptación | Estado |
-|---|---|---|
-| I1 | **Dado** cualquier visitante, **cuando** toca "Guardar en favoritos" en una ficha, **entonces** se guarda en su navegador (sin cuenta) y el botón pasa a "Guardada en favoritos"; al tocarlo de nuevo se quita. | 🟡 |
-| I2 | **Dado** un visitante con favoritos guardados, **cuando** abre `/favoritos` (o `/en/favoritos`), **entonces** ve las tarjetas de esas fichas, la más reciente primero. | 🟡 (las tarjetas se prueban en `services/public`) |
-| I3 | **Dado** una ficha guardada que luego se pausa, vuelve a borrador, se oculta por moderación o es de una inmobiliaria suspendida, **cuando** se abre la lista, **entonces** ya no aparece. | ✅ `services/public`, `services/moderation` |
-| I4 | **Dado** la lista de favoritos, **cuando** se piden las tarjetas, **entonces** el servidor solo recibe direcciones de fichas válidas (máximo 100), ignora el resto y no guarda ni asocia nada a la persona. | ✅ `services/public` |
-| I5 | **Dado** dos personas, dispositivos o navegadores distintos, **cuando** una guarda favoritos, **entonces** la otra no los ve (viven en cada navegador). | 🟡 (por diseño) |
-
----
-
-## Feature 10 — Idiomas
+## Feature 9 — Idiomas
 
 _Sitio público en español e inglés._
 
-### US-31 · Usar el sitio en español o inglés
+### US-30 · Usar el sitio en español o inglés
 
 **Como** visitante **quiero** ver el sitio público en mi idioma y cambiarlo sin perder la página **para** entender las fichas aunque no hable español.
 
@@ -380,7 +362,7 @@ _Sitio público en español e inglés._
 | J3 | **Dado** el selector de idioma (bandera, a la derecha), **cuando** se cambia, **entonces** se mantiene la misma página en el otro idioma. | 🟡 |
 | J5 | **Dado** una zona con nombre en inglés, **cuando** se ve el sitio en inglés, **entonces** se usa; si no tiene, se usa el español. | ✅ `unit/i18n` |
 
-### US-32 · Mantener las traducciones al día
+### US-31 · Mantener las traducciones al día
 
 **Como** equipo de desarrollo **quiero** que falte una traducción sea un error de compilación **para** no publicar textos sin traducir.
 
@@ -391,11 +373,11 @@ _Sitio público en español e inglés._
 
 ---
 
-## Feature 11 — Moderación y denuncias
+## Feature 10 — Moderación y denuncias
 
 _Control de calidad del contenido por parte de la plataforma._
 
-### US-33 · Denunciar una ficha
+### US-32 · Denunciar una ficha
 
 **Como** visitante **quiero** denunciar una ficha falsa, duplicada o incorrecta **para** que la plataforma la revise.
 
@@ -406,7 +388,7 @@ _Control de calidad del contenido por parte de la plataforma._
 | K3 | **Dado** una IP o cuenta, **cuando** hace más de 5 denuncias en una hora, **entonces** se rechaza (lo aplica la base). | ✅ `services/moderation` |
 | K4 | **Dado** una denuncia, **cuando** intenta escribirse ya resuelta, a nombre de otra cuenta o con una nota de resolución, **entonces** la base lo rechaza. | ✅ `isolation/h6-abuse` |
 
-### US-34 · Revisar denuncias
+### US-33 · Revisar denuncias
 
 **Como** administradora de la plataforma **quiero** ver las denuncias abiertas con su contexto y descartarlas si no corresponden **para** atender primero lo más urgente.
 
@@ -416,17 +398,17 @@ _Control de calidad del contenido por parte de la plataforma._
 | K6 | **Dado** la administración, **cuando** abre "Denuncias", **entonces** ve las abiertas primero, con la ficha, la inmobiliaria, el motivo, el detalle y cuántas denuncias abiertas tiene esa ficha; el menú muestra el total abierto. | ✅ `services/moderation` (datos); pantalla 🟡 |
 | K7 | **Dado** una denuncia abierta, **cuando** se descarta, **entonces** queda cerrada con su nota y la ficha no cambia. | ✅ `services/moderation` |
 
-### US-35 · Ocultar y restituir fichas
+### US-34 · Ocultar y restituir fichas
 
 **Como** administradora de la plataforma **quiero** ocultar una ficha con un motivo y restituirla si corresponde **para** sacar contenido dañino sin borrarlo.
 
 | ID | Criterio de aceptación | Estado |
 |---|---|---|
-| K8 | **Dado** una denuncia abierta, **cuando** se oculta la ficha, **entonces** se exige un motivo, la ficha deja de verse en el sitio público, en las consultas y en los favoritos, y se cierran todas las denuncias abiertas de esa ficha. | ✅ `services/moderation` |
+| K8 | **Dado** una denuncia abierta, **cuando** se oculta la ficha, **entonces** se exige un motivo, la ficha deja de verse en el sitio público y en las consultas, y se cierran todas las denuncias abiertas de esa ficha. | ✅ `services/moderation` |
 | K10 | **Dado** una ficha oculta, **cuando** la administración la restituye, **entonces** vuelve al sitio público y se borra el motivo. | ✅ `services/moderation` |
 | K12 | **Dado** la administración, **cuando** busca en "Moderar propiedades" por título, dirección web o inmobiliaria, **entonces** puede ocultar o restituir cualquier ficha. | ✅ `services/moderation` |
 
-### US-36 · Enterarme de que ocultaron mi ficha
+### US-35 · Enterarme de que ocultaron mi ficha
 
 **Como** agente o administradora de una inmobiliaria **quiero** recibir un aviso con el motivo y ver el estado en la ficha **para** entender qué pasó y corregirlo.
 
@@ -435,7 +417,7 @@ _Control de calidad del contenido por parte de la plataforma._
 | K9 | **Dado** una ficha oculta, **cuando** la inmobiliaria la abre, **entonces** ve un aviso con el motivo; no puede borrarla, volver a mostrarla ni cambiar la moderación (ni pausando y reactivando). | ✅ `services/moderation`, `isolation/h6-abuse` |
 | K11 | **Dado** que se oculta una ficha, **cuando** se confirma, **entonces** se avisa por email al agente responsable y a los administradores de su inmobiliaria con el motivo. | 🟡 (el envío real depende de Resend, P2) |
 
-### US-37 · Registro de acciones de moderación
+### US-36 · Registro de acciones de moderación
 
 **Como** administradora de la plataforma **quiero** que quede constancia de quién hizo qué y cuándo **para** tener trazabilidad ante cualquier reclamo.
 
@@ -445,11 +427,11 @@ _Control de calidad del contenido por parte de la plataforma._
 
 ---
 
-## Feature 12 — Datos personales (Ley 25.326)
+## Feature 11 — Datos personales (Ley 25.326)
 
 _Privacidad y derechos sobre los datos._
 
-### US-38 · Conocer la política de privacidad
+### US-37 · Conocer la política de privacidad
 
 **Como** visitante **quiero** leer cómo se usan mis datos antes de enviarlos **para** dar mi consentimiento informado.
 
@@ -458,7 +440,7 @@ _Privacidad y derechos sobre los datos._
 | L1 | **Dado** el pie de página, **cuando** se hace clic en "Privacidad", **entonces** se abre la política en español o inglés; el formulario de consulta enlaza a ella junto al consentimiento. | 🟡 |
 | L6 | **Dado** la política de privacidad, **cuando** se publica, **entonces** la revisó una persona del ámbito legal y muestra un email de contacto real. | ⏳ (P4) |
 
-### US-39 · Descargar mis datos
+### US-38 · Descargar mis datos
 
 **Como** profesional con cuenta **quiero** descargar un archivo con todo lo que el sitio guarda de mí **para** ejercer mi derecho de acceso.
 
@@ -466,7 +448,7 @@ _Privacidad y derechos sobre los datos._
 |---|---|---|
 | L2 | **Dado** una persona con sesión, **cuando** descarga sus datos, **entonces** recibe un archivo con su cuenta, consultas y denuncias, y nada de otras personas. | ✅ `services/account` |
 
-### US-40 · Eliminar mi cuenta
+### US-39 · Eliminar mi cuenta
 
 **Como** profesional con cuenta **quiero** eliminar mi cuenta y mis datos **para** ejercer mi derecho de supresión.
 
@@ -475,7 +457,7 @@ _Privacidad y derechos sobre los datos._
 | L3 | **Dado** una persona que no integra una inmobiliaria, **cuando** elimina su cuenta confirmando su email, **entonces** se anonimizan sus consultas y denuncias, se vacía su perfil y se borra su usuario de Supabase Auth. | ✅ `services/account` (el borrado en Supabase Auth se prueba al aplicarlo en producción) |
 | L4 | **Dado** un integrante de una inmobiliaria o la administración de la plataforma, **cuando** intenta eliminar su cuenta, **entonces** se le explica qué hacer primero. | ✅ `services/account` |
 
-### US-41 · Conservar solo lo necesario
+### US-40 · Conservar solo lo necesario
 
 **Como** plataforma **quiero** borrar o anonimizar datos personales cuando vence su plazo **para** cumplir con la minimización de datos.
 
@@ -486,11 +468,11 @@ _Privacidad y derechos sobre los datos._
 
 ---
 
-## Feature 13 — Seguridad y operación técnica
+## Feature 12 — Seguridad y operación técnica
 
 _Garantías transversales del sistema._
 
-### US-42 · Aislamiento entre inmobiliarias
+### US-41 · Aislamiento entre inmobiliarias
 
 **Como** inmobiliaria **quiero** que nadie de otra inmobiliaria vea o modifique mis datos **para** confiar en la plataforma con mi negocio.
 
@@ -502,7 +484,7 @@ _Garantías transversales del sistema._
 | M4 | **Dado** el contrato de la aplicación y las reglas de la base (estados, topes, tipos), **cuando** se desalinean, **entonces** un test falla. | ✅ `isolation/h2-contracts-vs-db` |
 | M9 | **Dado** el agente en el servidor, **cuando** se identifica a la persona, **entonces** siempre sale de la sesión, nunca de datos que mande el navegador. | ✅ `unit/actor`, `isolation/*` |
 
-### US-43 · Navegador protegido
+### US-42 · Navegador protegido
 
 **Como** visitante **quiero** que el sitio use las protecciones estándar del navegador **para** navegar con seguridad.
 
@@ -511,7 +493,7 @@ _Garantías transversales del sistema._
 | M5 | **Dado** el navegador, **cuando** carga cualquier página, **entonces** recibe una política de contenido (CSP), HSTS, `X-Frame-Options`, `Permissions-Policy` y `nosniff`; los scripts solo pueden venir del propio sitio. | ✅ `unit/csp` (política); verificada con Chrome en producción |
 | M6 | **Dado** el enlace de invitación, **cuando** se abre, **entonces** la dirección no se filtra a otros sitios (`Referrer-Policy: no-referrer`). | 🟡 |
 
-### US-44 · Errores y mantenimiento controlados
+### US-43 · Errores y mantenimiento controlados
 
 **Como** operadora de la plataforma **quiero** ver los errores sin datos personales y que el mantenimiento solo corra autorizado **para** operar el sitio con seguridad.
 
@@ -521,7 +503,7 @@ _Garantías transversales del sistema._
 | M8 | **Dado** la ruta de mantenimiento diario, **cuando** se llama sin la clave, con una incorrecta o sin la variable configurada, **entonces** no corre. | ✅ `unit/cron-route` |
 | O4 | **Dado** el mantenimiento diario, **cuando** corre, **entonces** deja constancia solo si cambió algo. | ✅ `services/maintenance` |
 
-### US-45 · Cambios de código y migraciones seguros
+### US-44 · Cambios de código y migraciones seguros
 
 **Como** equipo de desarrollo **quiero** que todo cambio pase tests y que las migraciones se apliquen con autorización **para** no romper la base real.
 
@@ -530,7 +512,7 @@ _Garantías transversales del sistema._
 | O2 | **Dado** un cambio de código, **cuando** se prepara para guardar, **entonces** `npm test`, el chequeo de tipos, el lint y el build pasan. | ✅ (ver `npm test`) |
 | O3 | **Dado** las migraciones, **cuando** se aplican a la base real, **entonces** solo se hace desde `main` y con autorización de la dueña del proyecto. | 🟡 (regla de trabajo) |
 
-### US-46 · Promover administradoras de la plataforma
+### US-45 · Promover administradoras de la plataforma
 
 **Como** operadora de la plataforma **quiero** dar el rol de administración con un comando que primero simula **para** no otorgarlo por error.
 
@@ -540,11 +522,11 @@ _Garantías transversales del sistema._
 
 ---
 
-## Feature 14 — Interfaz e identidad
+## Feature 13 — Interfaz e identidad
 
 _Aspecto y usabilidad de TERRAE._
 
-### US-47 · Identidad TERRAE
+### US-46 · Identidad TERRAE
 
 **Como** usuaria **quiero** ver el nombre, los íconos y la paleta de la marca **para** reconocer el producto en cada pantalla y email.
 
@@ -554,7 +536,7 @@ _Aspecto y usabilidad de TERRAE._
 | N2 | **Dado** el panel de inicio y el Resumen de administración, **cuando** se abren, **entonces** cada tarjeta lleva un ícono según su tema. | 🟡 |
 | N3 | **Dado** el entorno de desarrollo, **cuando** se abre cualquier página, **entonces** hay un selector para alternar entre dos paletas de color (arcilla y salvia / tierra y turquesa) y se ve cuál está activa. | 🟡 (temporal, hasta elegir una) |
 
-### US-48 · Controles claros y accesibles
+### US-47 · Controles claros y accesibles
 
 **Como** usuaria **quiero** listas, campos y estados de carga consistentes y usables con teclado **para** usar el sitio sin fricción.
 
@@ -581,4 +563,4 @@ _Aspecto y usabilidad de TERRAE._
 
 ---
 
-**Resumen:** 14 features, 48 historias, 138 criterios.
+**Resumen:** 13 features, 47 historias, 133 criterios.

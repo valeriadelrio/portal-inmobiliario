@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
-import { getDict, localePath, type Locale } from "@/i18n";
+import { getDict, type Locale } from "@/i18n";
 import { NavLink } from "./nav-link";
 import { UserMenu } from "./user-menu";
 
@@ -20,18 +20,9 @@ export function clearNavCache() { last = undefined; }
 
 function View({ data, locale }: { data: NavData; locale: Locale }) {
   const t = getDict(locale).site;
-  const favorites = <NavLink href={localePath(locale, "/favoritos")}>{t.favorites}</NavLink>;
-  if (!data) {
-    return (
-      <div className="flex flex-wrap items-center gap-2">
-        {favorites}
-        <Link href="/login" className="btn">{t.login}</Link>
-      </div>
-    );
-  }
+  if (!data) return <Link href="/login" className="btn">{t.login}</Link>;
   return (
     <div className="flex flex-wrap items-center gap-2">
-      {favorites}
       <NavLink href="/panel">{t.myPanel}</NavLink>
       <UserMenu initials={data.initials} name={data.name} email={data.email} role={data.role} />
     </div>

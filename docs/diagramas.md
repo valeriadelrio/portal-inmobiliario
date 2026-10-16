@@ -114,7 +114,7 @@ flowchart TB
   nav["Navegador<br/>(visitante, agente, admin)"]
   proxy["proxy.ts<br/>sesión, idioma /en, rutas protegidas"]
   subgraph app["Next.js (src/app)"]
-    pub["Páginas públicas<br/>[locale]: inicio, buscador, ficha,<br/>inmobiliarias, favoritos, privacidad"]
+    pub["Páginas públicas<br/>[locale]: inicio, buscador, ficha,<br/>inmobiliarias, privacidad"]
     panel["Panel y administración<br/>(app): panel, admin, login, invitación"]
     actions["Server Actions<br/>formularios"]
     routes["Rutas /api<br/>exportar datos, cron, subida local"]
@@ -163,7 +163,6 @@ flowchart LR
   V --> v1["Buscar y ver fichas"]
   V --> v2["Enviar consulta"]
   V --> v3["Denunciar una ficha"]
-  V --> v4["Guardar favoritos<br/>(en su navegador)"]
   U --> V
   U --> u2["Descargar o eliminar sus datos"]
   U --> u3["Registrar una inmobiliaria"]
@@ -349,7 +348,7 @@ sequenceDiagram
   Pl->>S: resolveReport(ocultar, nota)
   S->>DB: app_resolve_report: oculta la ficha, cierra las denuncias y deja registro
   S-->>Ag: email con el motivo
-  Note over DB: La ficha deja de verse en el sitio público,<br/>en las consultas y en los favoritos
+  Note over DB: La ficha deja de verse en el sitio público y en las consultas
 ```
 
 ## 6. Servicios y contratos
@@ -438,7 +437,6 @@ flowchart LR
     agencia --> ficha
     ficha --> denuncia["Denunciar (formulario)"]
     ficha --> consulta["Consultar (formulario)"]
-    fav["Favoritos /favoritos<br/>(guardados en el navegador)"]
     datos["Mis datos /cuenta/datos"]
     priv["Privacidad /privacidad"]
   end

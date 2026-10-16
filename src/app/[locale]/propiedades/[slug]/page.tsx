@@ -13,7 +13,6 @@ import { siteUrl } from "@/lib/site";
 import { whatsappUrl } from "@/lib/whatsapp";
 import { cachedPublicProperty } from "@/server/cache/public";
 import { FichaSkeleton, Bone } from "@/components/skeletons";
-import { FavoriteButton } from "@/components/public/favorite-button";
 import { InquirySlot } from "@/components/public/ficha-actions";
 import { ReportForm } from "@/components/public/report-form";
 
@@ -130,7 +129,6 @@ async function Ficha({ params }: { params: Params }) {
             <h2 className="font-medium">{t.sendInquiry}</h2>
             <Suspense fallback={<Bone className="h-64 w-full" />}><InquirySlot propertyId={p.id} title={p.title} locale={locale} open={p.status === "active" || p.status === "reserved"} /></Suspense>
           </section>
-          <FavoriteButton slug={p.slug} locale={locale} />
           <section className="card space-y-1">
             <p className="font-medium">{p.agency.name}</p>
             {p.agency.phone && <p className="muted text-sm">{p.agency.phone}</p>}

@@ -70,26 +70,6 @@ export async function searchProperties(
   }
 }
 
-/** Tarjetas públicas para una lista de slugs (favoritos guardados en el navegador). Conserva el orden pedido y omite lo que ya no es público. */
-export async function listPublicCardsBySlugs(slugs: string[]): Promise<ServiceResult<PublicCardDto[]>> {
-  const valid = [...new Set(slugs.filter((s) => typeof s === "string" && s.length <= 120 && /^[a-z0-9]+(-[a-z0-9]+)*$/.test(s)))].slice(0, 100);
-  if (valid.length === 0) return ok([]);
-  try {
-    return await withActor(ANON, async (tx) => {
-      const rows = await tx.select(cardColumns).from(property)
-        .innerJoin(zone, eq(zone.id, property.zoneId))
-        .innerJoin(agency, eq(agency.id, property.agencyId))
-        .leftJoin(propertyBuilding, eq(propertyBuilding.propertyId, property.id))
-        .leftJoin(propertyPhoto, and(eq(propertyPhoto.propertyId, property.id), eq(propertyPhoto.isCover, true), eq(propertyPhoto.status, "ready")))
-        .where(inArray(property.slug, valid));
-      const bySlug = new Map(rows.map((r) => [r.slug, toCard(r)]));
-      return ok(valid.flatMap((s) => bySlug.get(s) ?? []));
-    });
-  } catch (e) {
-    return mapDbError(e);
-  }
-}
-
 /** Ficha pública por slug. `ok(null)` si no existe o no es visible (borrador, pausada, inmobiliaria no aprobada). */
 export async function getPublicProperty(slug: string): Promise<ServiceResult<PublicPropertyDto | null>> {
   if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug) || slug.length > 120) return ok(null);

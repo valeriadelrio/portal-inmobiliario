@@ -1,6 +1,6 @@
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { searchFilters } from "@/contracts";
-import { getPublicProperty, listPublicCardsBySlugs, listPublicSlugs, searchProperties } from "@/server/services/public";
+import { getPublicProperty, listPublicSlugs, searchProperties } from "@/server/services/public";
 import { AG, M, P, U, ZONE, admin, id, seed } from "../helpers/seed";
 
 beforeEach(seed);
@@ -47,24 +47,6 @@ describe("visibilidad pública", () => {
     await add(1, { status: "sold_rented", published: new Date(2026, 5, 1).toISOString() });
     const items = (await search()).items;
     expect(items[items.length - 1].status).toBe("sold_rented");
-  });
-});
-
-describe("tarjetas para favoritos guardados en el navegador", () => {
-  it("devuelve las públicas en el orden pedido y omite borradores, pausadas y slugs inexistentes", async () => {
-    const r = await listPublicCardsBySlugs([slugOf(P.b1), "no-existe", slugOf(P.a1draft), slugOf(P.a1), slugOf(P.b1)]);
-    expect(r.ok && r.data.map((c) => c.slug)).toEqual([slugOf(P.b1), slugOf(P.a1)]);
-  });
-  it("una inmobiliaria suspendida deja de aparecer", async () => {
-    await admin`update agency set status = 'suspended' where id = ${AG.A}`;
-    const r = await listPublicCardsBySlugs([slugOf(P.a1), slugOf(P.b1)]);
-    expect(r.ok && r.data.map((c) => c.slug)).toEqual([slugOf(P.b1)]);
-  });
-  it("ignora entradas con formato inválido y limita la cantidad", async () => {
-    const bad = await listPublicCardsBySlugs(["'; drop table property;--", "A B", "x".repeat(200), 5 as never]);
-    expect(bad.ok && bad.data).toEqual([]);
-    const many = await listPublicCardsBySlugs(Array.from({ length: 500 }, (_, i) => `s-${i}`));
-    expect(many.ok && many.data).toEqual([]);
   });
 });
 

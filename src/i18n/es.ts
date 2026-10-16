@@ -9,7 +9,6 @@ export const es = {
     description: "Propiedades y lotes en venta y alquiler en Tandil, de varias inmobiliarias.",
     properties: "Propiedades",
     login: "Acceso inmobiliarias",
-    favorites: "Favoritos",
     myPanel: "Mi panel",
     language: "Idioma",
     notFoundTitle: "No encontramos esa página",
@@ -86,7 +85,6 @@ export const es = {
     ownPropertyLink: "Consultas",
     noInquiries: "Esta propiedad ya no recibe consultas.",
     seeAllOfAgency: "Ver todas sus propiedades",
-    favSave: "Guardar en favoritos", favSaved: "Guardada en favoritos",
   },
   facts: {
     totalArea: "Superficie total", coveredArea: "Superficie cubierta", frontage: "Frente", depth: "Fondo", corner: "Lote de esquina",
@@ -135,7 +133,6 @@ export const es = {
         "Cuenta (solo para quienes trabajan en una inmobiliaria): tu email y, si los completás, tu nombre y teléfono. Para buscar, consultar o denunciar no necesitás cuenta.",
         "Consultas: el nombre, email, teléfono (opcional) y mensaje que escribís en el formulario de una propiedad, junto con la fecha y tu consentimiento.",
         "Denuncias: el motivo y el detalle que indiques y, solo si querés, un email de contacto.",
-        "Favoritos: las propiedades que guardás se guardan solo en tu navegador y el sitio no las asocia a ninguna persona.",
         "Seguridad: una huella técnica de tu dirección IP (un código irreversible, no la IP) para frenar el uso abusivo de los formularios. Usamos solamente cookies técnicas de sesión; no hay publicidad ni seguimiento.",
       ] },
       { title: "Para qué los usamos", body: [
@@ -178,12 +175,6 @@ export const es = {
     website: "Sitio web", team: "Equipo", agentFallback: "Agente",
     whatsappText: (name: string) => `Hola ${name}, te escribo desde el portal de propiedades.`,
     properties: "Propiedades", noProperties: "Por ahora no tiene propiedades publicadas.",
-  },
-  favorites: {
-    title: "Mis favoritos",
-    empty: "Todavía no guardaste propiedades. Entrá a una ficha y tocá",
-    emptyAction: "Guardar en favoritos",
-    note: "Se guardan en este navegador. No hace falta cuenta, pero no se comparten con otros dispositivos.",
   },
 };
 

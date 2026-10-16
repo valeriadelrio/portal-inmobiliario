@@ -21,9 +21,9 @@ Los tests viven en `tests/`: `services/` (reglas de negocio), `isolation/` (perm
 | A4 | **Dado** una persona sin sesión, **cuando** abre `/panel`, `/admin`, `/cuenta` o `/registro-agencia`, **entonces** la llevan a `/login` y, tras ingresar, vuelve a la página que pedía. | 🟡 |
 | A5 | **Dado** que se intenta un redirect a otro sitio por el parámetro `next`, **cuando** se ingresa, **entonces** solo se aceptan rutas internas. | ✅ `tests/unit/lib.test.ts` |
 | A6 | **Dado** una cuenta deshabilitada, **cuando** intenta operar como integrante, **entonces** no tiene permisos de inmobiliaria. | ✅ `isolation/h2-agencies` |
-| A7 | **Dado** el menú de la cuenta, **cuando** se cambia de idioma, **entonces** el menú (Favoritos, Mi panel, avatar) no desaparece. | 🟡 |
+| A7 | **Dado** el menú de la cuenta, **cuando** se cambia de idioma, **entonces** el menú (Mi panel, avatar) no desaparece. | 🟡 |
 | A8 | **Dado** cualquier usuaria, **cuando** abre el avatar, **entonces** ve su nombre, email y rol correctos y puede cerrar sesión. | ✅ `unit/role-label` (texto del rol); resto 🟡 |
-| A9 | **Dado** una persona que busca propiedades, **cuando** busca, consulta, escribe por WhatsApp, denuncia o guarda favoritos, **entonces** no necesita cuenta. El único acceso del encabezado es "Acceso inmobiliarias". | 🟡 |
+| A9 | **Dado** una persona que busca propiedades, **cuando** busca, consulta, escribe por WhatsApp o denuncia, **entonces** no necesita cuenta. El único acceso del encabezado es "Acceso inmobiliarias". | 🟡 |
 | A10 | **Dado** la pantalla de acceso, **cuando** se abre sin venir de "Registrar mi inmobiliaria" ni de una invitación, **entonces** solo permite ingresar (con un enlace para registrar la inmobiliaria); crear cuenta solo se ofrece en esos dos casos. | 🟡 (no impide que alguien cree una cuenta llamando directo a Supabase: esa cuenta no puede hacer nada hasta tener inmobiliaria) |
 
 ## B. Inmobiliarias y equipo
@@ -150,16 +150,6 @@ Los tests viven en `tests/`: `services/` (reglas de negocio), `isolation/` (perm
 | H11 | **Dado** un agente con WhatsApp público, **cuando** se abre la ficha, **entonces** aparece un botón que abre `wa.me` con un mensaje ya escrito sobre esa propiedad; sin número, no aparece. | ✅ `unit/lib` (armado del enlace) |
 | H12 | **Dado** una consulta, **cuando** pasan 24 meses, **entonces** se anonimizan nombre, email, teléfono y mensaje, y se conserva la fila. | ✅ `services/maintenance` |
 
-## I. Favoritos (sin cuenta)
-
-| ID | Criterio | Estado |
-|---|---|---|
-| I1 | **Dado** cualquier visitante, **cuando** toca "Guardar en favoritos" en una ficha, **entonces** se guarda en su navegador (sin cuenta) y el botón pasa a "Guardada en favoritos"; al tocarlo de nuevo se quita. | 🟡 |
-| I2 | **Dado** un visitante con favoritos guardados, **cuando** abre `/favoritos` (o `/en/favoritos`), **entonces** ve las tarjetas de esas fichas, la más reciente primero. | 🟡 (las tarjetas se prueban en `services/public`) |
-| I3 | **Dado** una ficha guardada que luego se pausa, vuelve a borrador, se oculta por moderación o es de una inmobiliaria suspendida, **cuando** se abre la lista, **entonces** ya no aparece. | ✅ `services/public`, `services/moderation` |
-| I4 | **Dado** la lista de favoritos, **cuando** se piden las tarjetas, **entonces** el servidor solo recibe direcciones de fichas válidas (máximo 100), ignora el resto y no guarda ni asocia nada a la persona. | ✅ `services/public` |
-| I5 | **Dado** dos personas, dispositivos o navegadores distintos, **cuando** una guarda favoritos, **entonces** la otra no los ve (viven en cada navegador). | 🟡 (por diseño) |
-
 ## J. Idiomas
 
 | ID | Criterio | Estado |
@@ -182,7 +172,7 @@ Los tests viven en `tests/`: `services/` (reglas de negocio), `isolation/` (perm
 | K5 | **Dado** cualquier persona que no sea administración de la plataforma, **cuando** intenta leer, modificar o borrar denuncias, **entonces** no puede. | ✅ `isolation/h6-abuse` |
 | K6 | **Dado** la administración, **cuando** abre "Denuncias", **entonces** ve las abiertas primero, con la ficha, la inmobiliaria, el motivo, el detalle y cuántas denuncias abiertas tiene esa ficha; el menú muestra el total abierto. | ✅ `services/moderation` (datos); pantalla 🟡 |
 | K7 | **Dado** una denuncia abierta, **cuando** se descarta, **entonces** queda cerrada con su nota y la ficha no cambia. | ✅ `services/moderation` |
-| K8 | **Dado** una denuncia abierta, **cuando** se oculta la ficha, **entonces** se exige un motivo, la ficha deja de verse en el sitio público, en las consultas y en los favoritos, y se cierran todas las denuncias abiertas de esa ficha. | ✅ `services/moderation` |
+| K8 | **Dado** una denuncia abierta, **cuando** se oculta la ficha, **entonces** se exige un motivo, la ficha deja de verse en el sitio público y en las consultas, y se cierran todas las denuncias abiertas de esa ficha. | ✅ `services/moderation` |
 | K9 | **Dado** una ficha oculta, **cuando** la inmobiliaria la abre, **entonces** ve un aviso con el motivo; no puede borrarla, volver a mostrarla ni cambiar la moderación (ni pausando y reactivando). | ✅ `services/moderation`, `isolation/h6-abuse` |
 | K10 | **Dado** una ficha oculta, **cuando** la administración la restituye, **entonces** vuelve al sitio público y se borra el motivo. | ✅ `services/moderation` |
 | K11 | **Dado** que se oculta una ficha, **cuando** se confirma, **entonces** se avisa por email al agente responsable y a los administradores de su inmobiliaria con el motivo. | 🟡 (el envío real depende de Resend, P2) |

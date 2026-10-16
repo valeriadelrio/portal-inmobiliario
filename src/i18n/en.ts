@@ -7,7 +7,6 @@ export const en: Dict = {
     description: "Properties and lots for sale and rent in Tandil, Argentina, from several real estate agencies.",
     properties: "Properties",
     login: "Agency login",
-    favorites: "Favorites",
     myPanel: "My dashboard",
     language: "Language",
     notFoundTitle: "We couldn't find that page",
@@ -84,7 +83,6 @@ export const en: Dict = {
     ownPropertyLink: "Inquiries",
     noInquiries: "This property no longer accepts inquiries.",
     seeAllOfAgency: "See all their properties",
-    favSave: "Save to favorites", favSaved: "Saved to favorites",
   },
   facts: {
     totalArea: "Total area", coveredArea: "Covered area", frontage: "Frontage", depth: "Depth", corner: "Corner lot",
@@ -133,7 +131,6 @@ export const en: Dict = {
         "Account (only for people who work at an agency): your email and, if you add them, your name and phone number. You do not need an account to search, send inquiries or report listings.",
         "Inquiries: the name, email, phone (optional) and message you write in a property's form, plus the date and your consent.",
         "Reports: the reason and details you provide and, only if you wish, a contact email.",
-        "Favorites: the properties you save are saved only in your browser and the site does not link them to any person.",
         "Security: a technical fingerprint of your IP address (an irreversible code, not the IP itself) to stop abuse of the forms. We only use technical session cookies; there is no advertising or tracking.",
       ] },
       { title: "What we use it for", body: [
@@ -176,11 +173,5 @@ export const en: Dict = {
     website: "Website", team: "Team", agentFallback: "Agent",
     whatsappText: (name: string) => `Hello ${name}, I'm writing from the property portal.`,
     properties: "Properties", noProperties: "No properties listed at the moment.",
-  },
-  favorites: {
-    title: "My favorites",
-    empty: "You haven't saved any properties yet. Open a listing and click",
-    emptyAction: "Save to favorites",
-    note: "They are saved in this browser. No account needed, but they are not shared across devices.",
   },
 };
